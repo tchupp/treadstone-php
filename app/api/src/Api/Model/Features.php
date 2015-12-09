@@ -2,22 +2,18 @@
 
 namespace Api\Model;
 
-class Features
-{
+class Features {
     protected $features;
 
-    protected function getHref($id)
-    {
+    protected function getHref($id) {
         return './api/features/' . $id;
     }
 
-    public function __construct($features)
-    {
+    public function __construct($features) {
         $this->features = $features;
     }
 
-    public function getFeatures()
-    {
+    public function getFeatures() {
         $features = array();
         foreach ($this->features as $id => $feature) {
             $features[] = array(
@@ -29,8 +25,7 @@ class Features
         return $features;
     }
 
-    public function getFeature($id)
-    {
+    public function getFeature($id) {
         if (!array_key_exists($id, $this->features)) {
             return null;
         }

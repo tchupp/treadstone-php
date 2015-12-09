@@ -2,21 +2,18 @@
 
 namespace Test\Functional;
 
-use \Slim\Environment;
-use \Api\Application;
+use Api\Application;
+use Slim\Environment;
 
-class FeaturesTest extends \PHPUnit_Framework_TestCase
-{
+class FeaturesTest extends \PHPUnit_Framework_TestCase {
     protected $app;
 
-    public function setUp()
-    {
+    public function setUp() {
         $_SESSION = array();
         $this->app = new Application();
     }
 
-    public function testIndex()
-    {
+    public function testIndex() {
         Environment::mock(array(
             'PATH_INFO' => '/features',
         ));
@@ -35,8 +32,7 @@ class FeaturesTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(200, $response->getStatus());
     }
 
-    public function testGet()
-    {
+    public function testGet() {
         $this->assertNotEquals(0, count($this->app->config['features']));
         foreach ($this->app->config['features'] as $id => $feature) {
             $app = new Application();
@@ -52,8 +48,7 @@ class FeaturesTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testUnknownFeatureGets404()
-    {
+    public function testUnknownFeatureGets404() {
         Environment::mock(array(
             'PATH_INFO' => '/features/unknown',
         ));

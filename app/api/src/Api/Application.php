@@ -3,17 +3,16 @@
 namespace Api;
 
 use Api\Model\Features;
-use \Slim\Slim;
-use \Exception;
+use Api\Web\Rest\UserResource;
+use Exception;
+use Slim\Slim;
 
 // TODO Move all "features" things to a class with index() and get() methods
-class Application extends Slim
-{
+class Application extends Slim {
     public $configDirectory;
     public $config;
 
-    protected function initConfig()
-    {
+    protected function initConfig() {
         $config = array();
         if (!file_exists($this->configDirectory) || !is_dir($this->configDirectory)) {
             throw new Exception('Config directory is missing: ' . $this->configDirectory, 500);
@@ -24,8 +23,7 @@ class Application extends Slim
         return $config;
     }
 
-    public function __construct(array $userSettings = array(), $configDirectory = 'config')
-    {
+    public function __construct(array $userSettings = array(), $configDirectory = 'config') {
         // Slim initialization
         parent::__construct($userSettings);
         $this->config('debug', false);
@@ -56,10 +54,11 @@ class Application extends Slim
             $this->response->headers->set('Content-Type', 'application/json');
             $this->response->setBody(json_encode($feature));
         });
+
+        UserResource::registerApi($this);
     }
 
-    public function handleNotFound()
-    {
+    public function handleNotFound() {
         throw new Exception(
             'Resource ' . $this->request->getResourceUri() . ' using '
             . $this->request->getMethod() . ' method does not exist.',
@@ -67,8 +66,7 @@ class Application extends Slim
         );
     }
 
-    public function handleException(Exception $e)
-    {
+    public function handleException(Exception $e) {
         $status = $e->getCode();
         $statusText = \Slim\Http\Response::getMessageForCode($status);
         if ($statusText === null) {
@@ -88,8 +86,7 @@ class Application extends Slim
     /**
      * @return \Slim\Http\Response
      */
-    public function invoke()
-    {
+    public function invoke() {
         foreach ($this->middleware as $middleware) {
             $middleware->call();
         }

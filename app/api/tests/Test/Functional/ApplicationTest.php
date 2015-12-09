@@ -2,27 +2,23 @@
 
 namespace Test\Functional;
 
-use \Slim\Environment;
-use \Api\Application;
-use \Exception;
+use Api\Application;
+use Exception;
+use Slim\Environment;
 
-class ApplicationTest extends \PHPUnit_Framework_TestCase
-{
-    public function setUp()
-    {
+class ApplicationTest extends \PHPUnit_Framework_TestCase {
+    public function setUp() {
         $_SESSION = array();
     }
 
     /**
      * @expectedException Exception
      */
-    public function testMissingConfigurationDirectoryGeneratesException()
-    {
+    public function testMissingConfigurationDirectoryGeneratesException() {
         new Application(array(), 'missingConfigDirectory');
     }
 
-    public function testHttpExceptionGenerates500()
-    {
+    public function testHttpExceptionGenerates500() {
         $app = new Application();
         $app->get('/api/test/http-exception', function () {
             throw new Exception('HTTP exception', 406);
@@ -40,8 +36,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(406, $response->getStatus());
     }
 
-    public function testUndefinedExceptionGenerates500()
-    {
+    public function testUndefinedExceptionGenerates500() {
         $app = new Application();
         $app->get('/api/test/undefined-exception', function () {
             throw new Exception('Undefined exception');
@@ -59,8 +54,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(500, $response->getStatus());
     }
 
-    public function testUnkownHttpStatusExceptionGenerates500()
-    {
+    public function testUnkownHttpStatusExceptionGenerates500() {
         $app = new Application();
         $app->get('/api/test/undefined-exception', function () {
             throw new Exception('Exception with unknown HTTP status', 999);

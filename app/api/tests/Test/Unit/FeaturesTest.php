@@ -4,10 +4,8 @@ namespace Test\Unit;
 
 use Api\Model\Features;
 
-class FeaturesTest extends \PHPUnit_Framework_TestCase
-{
-    public function testGetFeaturesReturnsExpectedFeatures()
-    {
+class FeaturesTest extends \PHPUnit_Framework_TestCase {
+    public function testGetFeaturesReturnsExpectedFeatures() {
         $allFeatures = array(
             'f1' => array('name' => 'feature 1', 'description' => 'description 1'),
             'f2' => array('name' => 'feature 2', 'description' => 'description 2'),
@@ -19,8 +17,7 @@ class FeaturesTest extends \PHPUnit_Framework_TestCase
         ), $features->getFeatures());
     }
 
-    public function testGetFeatureReturnsExpectedFeature()
-    {
+    public function testGetFeatureReturnsExpectedFeature() {
         $allFeatures = array(
             'f1' => array('name' => 'feature 1', 'description' => 'description 1'),
             'f2' => array('name' => 'feature 2', 'description' => 'description 2'),
@@ -46,8 +43,7 @@ class FeaturesTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testGetUnknownFeatureReturnsNull()
-    {
+    public function testGetUnknownFeatureReturnsNull() {
         $allFeatures = array(
             'f1' => array('name' => 'feature 1', 'description' => 'description 1'),
             'f2' => array('name' => 'feature 2', 'description' => 'description 2'),
