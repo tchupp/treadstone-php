@@ -2,5 +2,4 @@
 
 define('DB_USER', 'Treadstone');
 define('DB_PASS', 'jasonborne');
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'treadstone_dev');
+define('DB_HOST', 'mysql:host=localhost;dbname=treadstone_dev');

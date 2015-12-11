@@ -3,7 +3,7 @@
 // Unit Test Bootstrap and Slim PHP Testing Framework
 // =============================================================================
 //
-// SlimpPHP is a little hard to test - but with this harness we can load our
+// SlimPHP is a little hard to test - but with this harness we can load our
 // routes into our own `$app` container for unit testing, and then `run()` and
 // hand a reference to the `$app` to our tests so that they have access to the
 // dependency injection container and such.
@@ -19,3 +19,5 @@ ini_set('display_startup_errors', 1);
 date_default_timezone_set('UTC');
 
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/phake/phake/src/Phake.php';
+Phake::setClient(Phake::CLIENT_PHPUNIT);
