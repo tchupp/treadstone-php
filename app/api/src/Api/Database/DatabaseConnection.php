@@ -41,11 +41,11 @@ class DatabaseConnection {
         $this->init($query, $params);
         $rawStatement = explode(" ", $query);
 
-        $statement = strtolower($rawStatement[0]);
+        $statement = trim(strtolower($rawStatement[0]));
 
         if ($statement === 'select' || $statement === 'show') {
             return $this->sQuery->fetchAll($fetchMode);
-        } elseif ($statement === 'insert' || $statement === 'update' || $statement === 'delete') {
+        } else if ($statement === 'insert' || $statement === 'update' || $statement === 'delete') {
             return $this->sQuery->rowCount();
         } else {
             return NULL;

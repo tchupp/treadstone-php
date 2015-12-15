@@ -3,6 +3,7 @@
 namespace Api;
 
 use Api\Model\Features;
+use Api\Web\Rest\AccountResource;
 use Api\Web\Rest\UserResource;
 use Exception;
 use Slim\Slim;
@@ -56,6 +57,7 @@ class Application extends Slim {
         });
 
         UserResource::registerApi($this);
+        AccountResource::registerApi($this);
     }
 
     public function handleNotFound() {

@@ -3,6 +3,9 @@
 namespace Api\Database;
 
 class UserRepository {
+
+    private $userParams = ['login', 'password', 'firstName', 'lastName', 'email', 'activated', 'activationKey'];
+
     private $databaseConnection;
 
     /**
@@ -13,12 +16,30 @@ class UserRepository {
         $this->databaseConnection = $databaseConnection;
     }
 
+    public function save(&$user) {
+        if (!$this->verifyUser($user)) {
+            return 0;
+        }
+
+        $query = "INSERT
+                  INTO TREADSTONE_USER(login, PASSWORD, first_name, last_name, email, activated, activation_key)
+                  VALUES(:login, :password, :firstName, :lastName, :email, :activated, :activationKey)";
+
+        $user['activated'] = $user['activated'] ? 1 : 0;
+
+        $this->databaseConnection->bindMore($user);
+        $rows = $this->databaseConnection->query($query);
+        return $rows;
+    }
+
     /**
-     *
-     * @return array of Users, indexed by login
+     * @return array of Users, indexed by id
      */
     public function findAll() {
-        return $this->databaseConnection->query("SELECT * FROM TREADSTONE_USER");
+        $query = "SELECT *
+                  FROM TREADSTONE_USER";
+
+        return $this->databaseConnection->query($query);
     }
 
     /**
@@ -26,7 +47,27 @@ class UserRepository {
      * @return array user if exists, null if not
      */
     public function findOneByLogin($login) {
+        $query = "SELECT *
+                  FROM TREADSTONE_USER WHERE login = :login LIMIT 1";
+
         $this->databaseConnection->bind('login', $login);
-        return $this->databaseConnection->query("SELECT * FROM TREADSTONE_USER WHERE login = :login LIMIT 1");
+        return $this->databaseConnection->query($query);
+    }
+
+    public function findOneByEmail($email) {
+        $query = "SELECT *
+                  FROM TREADSTONE_USER WHERE email = :email LIMIT 1";
+
+        $this->databaseConnection->bind('email', $email);
+        return $this->databaseConnection->query($query);
+    }
+
+    private function verifyUser($user) {
+        foreach ($this->userParams as $param) {
+            if (!array_key_exists($param, $user)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
