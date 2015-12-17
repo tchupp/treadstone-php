@@ -6,6 +6,7 @@ use Api\Model\Features;
 use Api\Web\Rest\AccountResource;
 use Api\Web\Rest\UserResource;
 use Exception;
+use Slim\Http\Response;
 use Slim\Slim;
 
 // TODO Move all "features" things to a class with index() and get() methods
@@ -27,7 +28,7 @@ class Application extends Slim {
     public function __construct(array $userSettings = array(), $configDirectory = 'config') {
         // Slim initialization
         parent::__construct($userSettings);
-        $this->config('debug', false);
+        $this->config('debug', true);
         $this->notFound(function () {
             $this->handleNotFound();
         });
@@ -42,18 +43,17 @@ class Application extends Slim {
         // /features
         $this->get('/features', function () {
             $features = new Features($this->config['features']);
-            $this->response->headers->set('Content-Type', 'application/json');
-            $this->response->setBody(json_encode($features->getFeatures()));
+            $this->response->setBody(json_encode($features->getFeatures(), JSON_PRETTY_PRINT));
         });
 
         $this->get('/features/:id', function ($id) {
             $features = new Features($this->config['features']);
             $feature = $features->getFeature($id);
             if ($feature === null) {
-                return $this->notFound();
+                $this->notFound();
+                return;
             }
-            $this->response->headers->set('Content-Type', 'application/json');
-            $this->response->setBody(json_encode($feature));
+            $this->response->setBody(json_encode($feature, JSON_PRETTY_PRINT));
         });
 
         UserResource::registerApi($this);
@@ -70,14 +70,13 @@ class Application extends Slim {
 
     public function handleException(Exception $e) {
         $status = $e->getCode();
-        $statusText = \Slim\Http\Response::getMessageForCode($status);
+        $statusText = Response::getMessageForCode($status);
         if ($statusText === null) {
             $status = 500;
             $statusText = 'Internal Server Error';
         }
 
         $this->response->setStatus($status);
-        $this->response->headers->set('Content-Type', 'application/json');
         $this->response->setBody(json_encode(array(
             'status' => $status,
             'statusText' => preg_replace('/^[0-9]+ (.*)$/', '$1', $statusText),
@@ -86,7 +85,7 @@ class Application extends Slim {
     }
 
     /**
-     * @return \Slim\Http\Response
+     * @return Response
      */
     public function invoke() {
         foreach ($this->middleware as $middleware) {

@@ -31,8 +31,6 @@ class UserResource {
             $response = $app->response;
             if (isset($users)) {
                 $response->status(200);
-                $response->headers->set('Content-Type', 'application/json');
-
                 $response->body(json_encode($users, JSON_PRETTY_PRINT));
             } else {
                 $response->status(404);
@@ -54,8 +52,6 @@ class UserResource {
             $response = $app->response;
             if (!empty($users)) {
                 $response->status(200);
-                $response->headers->set('Content-Type', 'application/json');
-
                 $response->body(json_encode($users[0], JSON_PRETTY_PRINT));
             } else {
                 $response->status(404);

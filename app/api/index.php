@@ -1,4 +1,7 @@
 <?php
+use Api\Application;
+use Api\Middleware\JsonMiddleware;
+
 error_reporting(-1);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -6,10 +9,11 @@ date_default_timezone_set('UTC');
 
 try {
     // Initialize Composer autoloader
-    if (!file_exists($autoload = __DIR__ . '/vendor/autoload.php')) {
+    $autoload = __DIR__ . '/vendor/autoload.php';
+    if (!file_exists($autoload)) {
         throw new \Exception('Composer dependencies not installed. Run `make install --directory app/api`');
     }
-    require_once $autoload;
+    require_once "$autoload";
 
     // Initialize Slim Framework
     if (!class_exists('\\Slim\\Slim')) {
@@ -18,9 +22,10 @@ try {
             . ' Ensure slim/slim is in composer.json and run `make update --directory app/api`'
         );
     }
+    $app = new Application();
 
-    // Run application
-    $app = new \Api\Application();
+    $app->add(new JsonMiddleware('/'));
+
     $app->run();
 
 } catch (\Exception $e) {

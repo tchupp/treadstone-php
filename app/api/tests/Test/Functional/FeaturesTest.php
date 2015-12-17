@@ -28,7 +28,7 @@ class FeaturesTest extends \PHPUnit_Framework_TestCase {
         }
 
         $response = $this->app->invoke();
-        $this->assertEquals(json_encode($expected), $response->getBody());
+        $this->assertEquals(json_encode($expected, JSON_PRETTY_PRINT), $response->getBody());
         $this->assertEquals(200, $response->getStatus());
     }
 
@@ -41,7 +41,9 @@ class FeaturesTest extends \PHPUnit_Framework_TestCase {
             ));
             $response = $app->invoke();
             $this->assertEquals(
-                json_encode(array_merge(array('id' => $id), $feature, array('href' => './api/features/' . $id))),
+                json_encode(
+                    array_merge(array('id' => $id), $feature, array('href' => './api/features/' . $id)),
+                    JSON_PRETTY_PRINT),
                 $response->getBody()
             );
             $this->assertEquals(200, $response->getStatus());
