@@ -90,7 +90,7 @@ class DatabaseConnection {
      * Makes a connection to the database
      */
     private function connect() {
-        require_once __DIR__ . '/config.php';
+        require_once __DIR__ . '/../../../config/db/config.php';
 
         try {
             $this->pdo = new PDO(DB_HOST, DB_USER, DB_PASS);
