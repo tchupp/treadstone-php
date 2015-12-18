@@ -22,7 +22,7 @@ class UserRepository {
         }
 
         $query = "INSERT
-                  INTO TREADSTONE_USER(login, PASSWORD, first_name, last_name, email, activated, activation_key)
+                  INTO treadstone_user(login, password_hash, first_name, last_name, email, activated, activation_key)
                   VALUES(:login, :password, :firstName, :lastName, :email, :activated, :activationKey)";
 
         $user['activated'] = $user['activated'] ? 1 : 0;

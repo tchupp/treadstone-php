@@ -30,6 +30,10 @@ class UserResource {
 
             $response = $app->response;
             if (isset($users)) {
+                foreach ($users as &$user) {
+                    unset($user['password_hash']);
+                }
+
                 $response->status(200);
                 $response->body(json_encode($users, JSON_PRETTY_PRINT));
             } else {
@@ -51,8 +55,11 @@ class UserResource {
 
             $response = $app->response;
             if (!empty($users)) {
+                $user = $users[0];
+                unset($user['password_hash']);
+
                 $response->status(200);
-                $response->body(json_encode($users[0], JSON_PRETTY_PRINT));
+                $response->body(json_encode($user, JSON_PRETTY_PRINT));
             } else {
                 $response->status(404);
             }

@@ -2,7 +2,6 @@
 
 namespace Api\Service;
 
-
 use Api\Database\UserRepository;
 use Api\Security\BCryptPasswordEncoder;
 use Api\Service\Util\RandomUtil;
@@ -15,13 +14,7 @@ class UserService {
 
     private $randomUtil;
 
-    /**
-     * UserService constructor.
-     * @param $userRepository UserRepository
-     * @param $passwordEncoder BCryptPasswordEncoder
-     * @param $randomUtil RandomUtil
-     */
-    public function __construct($userRepository, $passwordEncoder, $randomUtil) {
+    public function __construct(UserRepository $userRepository, BCryptPasswordEncoder $passwordEncoder, RandomUtil $randomUtil) {
         $this->userRepository = $userRepository;
         $this->passwordEncoder = $passwordEncoder;
         $this->randomUtil = $randomUtil;

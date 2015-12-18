@@ -2,7 +2,6 @@
 
 namespace Api\Security;
 
-
 class BCryptPasswordEncoder {
 
     private static $algorithm = '$2a';
@@ -15,11 +14,22 @@ class BCryptPasswordEncoder {
     public function verify($hash, $password) {
         $salt = substr($hash, 0, 29);
         $newHash = crypt($password, $salt);
-        return $hash == $newHash;
+        return self::timeConstantEquals($hash, $newHash);
     }
 
     private static function uniqueSalt() {
-        return bin2hex(openssl_random_pseudo_bytes(22));
+        return substr(bin2hex(openssl_random_pseudo_bytes(30)), 0, 22);
     }
 
+    private static function timeConstantEquals($a, $b) {
+        if (strlen($a) !== strlen($b)) {
+            return false;
+        } else {
+            $equal = 0;
+            for ($i = 0; $i < strlen($a); $i++) {
+                $equal |= $a[$i] ^ $b[$i];
+            }
+            return $equal === 0;
+        }
+    }
 }
