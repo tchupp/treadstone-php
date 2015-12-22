@@ -5,6 +5,9 @@ namespace Api\Web\Rest;
 use Api\Application;
 use Api\Database\DatabaseConnection;
 use Api\Database\UserRepository;
+use Api\Security\BCryptPasswordEncoder;
+use Api\Security\TokenProvider;
+use Api\Service\AuthenticationProvider;
 use Api\Service\UserDetailsService;
 
 class UserXAuthTokenController {
@@ -28,11 +31,20 @@ class UserXAuthTokenController {
                 return;
             }
 
-            //TODO: finish XAuthController
-
             $databaseConnection = new DatabaseConnection();
             $userRepository = new UserRepository($databaseConnection);
             $userDetailsService = new UserDetailsService($userRepository);
+
+            $passwordEncoder = new BCryptPasswordEncoder();
+            $authenticationProvider = new AuthenticationProvider($userDetailsService, $passwordEncoder);
+
+            $tokenProvider = new TokenProvider();
+
+            $authenticatedUser = $authenticationProvider->authenticate($login, $password);
+            $token = $tokenProvider->createToken($authenticatedUser['login'], $authenticatedUser['password']);
+
+            $response->status(200);
+            $response->body(json_encode($token, JSON_PRETTY_PRINT));
         };
     }
 }

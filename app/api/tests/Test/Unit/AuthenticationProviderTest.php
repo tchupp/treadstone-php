@@ -56,6 +56,7 @@ class AuthenticationProviderTest extends PHPUnit_Framework_TestCase {
             $this->fail("Exception should have been thrown");
         } catch (Exception $ex) {
             $this->assertEquals("Invalid username/password", $ex->getMessage());
+            $this->assertEquals(401, $ex->getCode());
         }
     }
 }

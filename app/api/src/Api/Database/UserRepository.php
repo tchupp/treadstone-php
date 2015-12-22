@@ -37,7 +37,7 @@ class UserRepository {
      */
     public function findAll() {
         $query = "SELECT *
-                  FROM TREADSTONE_USER";
+                  FROM treadstone_user";
 
         return $this->databaseConnection->query($query);
     }
@@ -48,15 +48,15 @@ class UserRepository {
      */
     public function findOneByLogin($login) {
         $query = "SELECT *
-                  FROM TREADSTONE_USER WHERE login = :login LIMIT 1";
+                  FROM treadstone_user WHERE login = :login LIMIT 1";
 
         $this->databaseConnection->bind('login', $login);
-        return $this->databaseConnection->query($query);
+        return $this->databaseConnection->query($query)[0];
     }
 
     public function findOneByEmail($email) {
         $query = "SELECT *
-                  FROM TREADSTONE_USER WHERE email = :email LIMIT 1";
+                  FROM treadstone_user WHERE email = :email LIMIT 1";
 
         $this->databaseConnection->bind('email', $email);
         return $this->databaseConnection->query($query);

@@ -50,7 +50,7 @@ class UserRepositoryTest extends PHPUnit_Framework_TestCase {
 
     public function testFindAllCallsQueryOnDatabaseConnectionWithCorrectQuery() {
         $query = "SELECT *
-                  FROM TREADSTONE_USER";
+                  FROM treadstone_user";
 
         $data = array(
             '0' => array('login' => 'chuppthe', 'email' => 'theo@theoiscool.com'),
@@ -68,10 +68,11 @@ class UserRepositoryTest extends PHPUnit_Framework_TestCase {
 
     public function testFindOneByLoginCallsQueryOnDatabaseConnectionWithCorrectQuery() {
         $query = "SELECT *
-                  FROM TREADSTONE_USER WHERE login = :login LIMIT 1";
+                  FROM treadstone_user WHERE login = :login LIMIT 1";
 
+        $user = array('login' => 'chuppthe', 'email' => 'theo@theoiscool.com');
         $data = array(
-            '0' => array('login' => 'chuppthe', 'email' => 'theo@theoiscool.com'));
+            '0' => $user);
 
         $databaseConnection = Phake::mock('Api\Database\DatabaseConnection');
         Phake::when($databaseConnection)
@@ -82,7 +83,7 @@ class UserRepositoryTest extends PHPUnit_Framework_TestCase {
 
         $loginKey = 'login';
         $loginValue = 'chuppthe';
-        $this->assertSame($data, $userRepository->findOneByLogin($loginValue));
+        $this->assertSame($user, $userRepository->findOneByLogin($loginValue));
 
         Phake::inOrder(
             Phake::verify($databaseConnection)->bind($loginKey, $loginValue),
@@ -92,7 +93,7 @@ class UserRepositoryTest extends PHPUnit_Framework_TestCase {
 
     public function testFindOneByEmailCallsQueryOnDatabaseConnectionWithCorrectQuery() {
         $query = "SELECT *
-                  FROM TREADSTONE_USER WHERE email = :email LIMIT 1";
+                  FROM treadstone_user WHERE email = :email LIMIT 1";
 
         $data = array(
             '0' => array('login' => 'chuppthe', 'email' => 'theo@theoiscool.com'));

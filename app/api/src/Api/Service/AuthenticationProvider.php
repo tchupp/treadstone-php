@@ -20,7 +20,7 @@ class AuthenticationProvider {
 
         $passwordHash = $user['password'];
         if (!$this->passwordEncoder->verify($passwordHash, $password)) {
-            throw new Exception("Invalid username/password");
+            throw new Exception("Invalid username/password", 401);
         }
         return $user;
     }
