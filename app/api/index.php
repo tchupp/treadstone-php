@@ -1,6 +1,11 @@
 <?php
 use Api\Application;
+use Api\Database\DatabaseConnection;
+use Api\Database\UserRepository;
 use Api\Middleware\JsonMiddleware;
+use Api\Middleware\XAuthTokenMiddleware;
+use Api\Security\TokenProvider;
+use Api\Service\UserDetailsService;
 
 error_reporting(-1);
 ini_set('display_errors', 1);
@@ -24,7 +29,11 @@ try {
     }
     $app = new Application();
 
+    $userDetailService = new UserDetailsService(new UserRepository(new DatabaseConnection()));
+    $pureResources = array('/authenticate', '/register');
+
     $app->add(new JsonMiddleware('/'));
+    $app->add(new XAuthTokenMiddleware($userDetailService, new TokenProvider(), $pureResources));
 
     $app->run();
 

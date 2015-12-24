@@ -13,15 +13,19 @@ class JsonMiddleware extends Middleware {
     }
 
     public function call() {
-        if (strpos($this->app->request->getResourceUri(), $this->root) === 0) {
-            $this->app->response->headers->set('Content-Type', 'application/json');
+        $req = $this->app->request;
+        $res = $this->app->response;
 
-            $method = strtolower($this->app->request->getMethod());
-            $mediaType = $this->app->request->getMediaType();
+        if (strpos($req->getResourceUri(), $this->root) === 0) {
+            $res->headers->set('Content-Type', 'application/json');
+
+            $method = strtolower($req->getMethod());
+            $mediaType = $req->getMediaType();
 
             if (in_array($method, array('post', 'put', 'patch')) && '' !== $this->app->request()->getBody()) {
                 if (empty($mediaType) || $mediaType !== 'application/json') {
-                    $this->app->halt(415);
+                    $res->status(415);
+                    return;
                 }
             }
         }
