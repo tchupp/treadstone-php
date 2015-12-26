@@ -8,11 +8,7 @@ class UserRepository {
 
     private $databaseConnection;
 
-    /**
-     * UserRepository constructor.
-     * @param $databaseConnection DatabaseConnection
-     */
-    public function __construct($databaseConnection) {
+    public function __construct(DatabaseConnection $databaseConnection) {
         $this->databaseConnection = $databaseConnection;
     }
 
@@ -32,34 +28,38 @@ class UserRepository {
         return $rows;
     }
 
-    /**
-     * @return array of Users, indexed by id
-     */
     public function findAll() {
-        $query = "SELECT *
-                  FROM treadstone_user";
+        $query = "SELECT User.*, Auth.authority_name AS role
+                  FROM treadstone_user User, treadstone_user_authority Auth
+                  WHERE User.id = Auth.user_id";
+        $rows = $this->databaseConnection->query($query);
 
-        return $this->databaseConnection->query($query);
+        $users = $this->convertRowsToUsers($rows);
+        return $users;
     }
 
-    /**
-     * @param $login string login of the user to find
-     * @return array user if exists, null if not
-     */
     public function findOneByLogin($login) {
-        $query = "SELECT *
-                  FROM treadstone_user WHERE login = :login LIMIT 1";
-
+        $query = "SELECT User.*, Auth.authority_name AS role
+                  FROM treadstone_user User, treadstone_user_authority Auth
+                  WHERE login = :login
+                  AND User.id = Auth.user_id";
         $this->databaseConnection->bind('login', $login);
-        return $this->databaseConnection->query($query)[0];
+        $rows = $this->databaseConnection->query($query);
+
+        $users = $this->convertRowsToUsers($rows);
+        return reset($users);
     }
 
     public function findOneByEmail($email) {
-        $query = "SELECT *
-                  FROM treadstone_user WHERE email = :email LIMIT 1";
-
+        $query = "SELECT User.*, Auth.authority_name AS role
+                  FROM treadstone_user User, treadstone_user_authority Auth
+                  WHERE email = :email
+                  AND User.id = Auth.user_id";
         $this->databaseConnection->bind('email', $email);
-        return $this->databaseConnection->query($query);
+        $rows = $this->databaseConnection->query($query);
+
+        $users = $this->convertRowsToUsers($rows);
+        return reset($users);
     }
 
     private function verifyUser($user) {
@@ -69,5 +69,18 @@ class UserRepository {
             }
         }
         return true;
+    }
+
+    private function convertRowsToUsers($rows) {
+        $users = array();
+        foreach ($rows as $row) {
+            if (empty($users[$row['login']])) {
+                $users[$row['login']] = $row;
+                $users[$row['login']]['role'] = array($row['role']);
+            } else {
+                $users[$row['login']]['role'][] = $row['role'];
+            }
+        }
+        return $users;
     }
 }

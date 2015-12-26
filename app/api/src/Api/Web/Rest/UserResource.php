@@ -2,26 +2,19 @@
 
 namespace Api\Web\Rest;
 
+use Api\Application;
 use Api\Database\DatabaseConnection;
 use Api\Database\UserRepository;
-use Slim\Slim;
 
 class UserResource {
 
-    /**
-     * @param $app Slim context to register too
-     */
-    public static function registerApi($app) {
+    public static function registerApi(Application $app) {
         $app->get('/users', self::getAll($app));
 
         $app->get('/users/:login', self::getUser($app));
     }
 
-    /**
-     * @param $app Slim
-     * @return \Closure
-     */
-    private static function getAll($app) {
+    private static function getAll(Application $app) {
         return function () use ($app) {
             $databaseConnection = new DatabaseConnection();
             $userRepository = new UserRepository($databaseConnection);
@@ -29,7 +22,7 @@ class UserResource {
             $users = $userRepository->findAll();
 
             $response = $app->response;
-            if (isset($users)) {
+            if (!empty($users)) {
                 foreach ($users as &$user) {
                     unset($user['password_hash']);
                 }
@@ -42,20 +35,15 @@ class UserResource {
         };
     }
 
-    /**
-     * @param $app Slim
-     * @return \Closure
-     */
-    private static function getUser($app) {
+    private static function getUser(Application $app) {
         return function ($login) use ($app) {
             $databaseConnection = new DatabaseConnection();
             $userRepository = new UserRepository($databaseConnection);
 
-            $users = $userRepository->findOneByLogin($login);
+            $user = $userRepository->findOneByLogin($login);
 
             $response = $app->response;
-            if (!empty($users)) {
-                $user = $users[0];
+            if (!empty($user)) {
                 unset($user['password_hash']);
 
                 $response->status(200);

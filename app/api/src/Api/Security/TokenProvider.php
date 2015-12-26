@@ -48,11 +48,11 @@ class TokenProvider {
         if (strlen($a) !== strlen($b)) {
             return false;
         } else {
-            $equal = 0;
+            $equal = true;
             for ($i = 0; $i < strlen($a); $i++) {
-                $equal |= $a[$i] ^ $b[$i];
+                $equal = $equal && ($a[$i] === $b[$i]);
             }
-            return $equal === 0;
+            return $equal;
         }
     }
 
