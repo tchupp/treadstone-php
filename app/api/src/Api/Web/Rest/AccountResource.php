@@ -2,27 +2,20 @@
 
 namespace Api\Web\Rest;
 
+use Api\Application;
 use Api\Database\DatabaseConnection;
 use Api\Database\UserRepository;
 use Api\Security\BCryptPasswordEncoder;
 use Api\Service\UserService;
 use Api\Service\Util\RandomUtil;
-use Slim\Slim;
 
 class AccountResource {
 
-    /**
-     * @param $app Slim context to register too
-     */
-    public static function registerApi($app) {
+    public static function registerApi(Application $app) {
         $app->post('/register', self::registerAccount($app));
     }
 
-    /**
-     * @param $app Slim
-     * @return \Closure
-     */
-    private static function registerAccount($app) {
+    private static function registerAccount(Application $app) {
         return function () use ($app) {
             $request = $app->request;
             $response = $app->response;

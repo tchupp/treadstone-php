@@ -4,7 +4,7 @@ namespace Api\Database;
 
 class UserRepository {
 
-    private $userParams = ['login', 'password', 'firstName', 'lastName', 'email', 'activated', 'activationKey'];
+    private $userParams = ['login', 'password', 'firstName', 'lastName', 'email', 'activated', 'activationKey', 'role'];
 
     private $databaseConnection;
 
@@ -17,14 +17,28 @@ class UserRepository {
             return 0;
         }
 
-        $query = "INSERT
+        $userQuery = "INSERT
                   INTO treadstone_user(login, password_hash, first_name, last_name, email, activated, activation_key)
                   VALUES(:login, :password, :firstName, :lastName, :email, :activated, :activationKey)";
+        $roleQuery = "INSERT
+                  INTO treadstone_user_authority(user_id, authority_name)
+                  VALUES(:id, :role)";
 
         $user['activated'] = $user['activated'] ? 1 : 0;
 
+        $roles = $user['role'];
+        unset($user['role']);
+
         $this->databaseConnection->bindMore($user);
-        $rows = $this->databaseConnection->query($query);
+        $rows = $this->databaseConnection->query($userQuery);
+        $userId = $this->databaseConnection->lastInsertId();
+        print_r("$userId, $rows\n");
+
+        foreach($roles as $role) {
+            $data = array('id' => $userId, 'role' => $role);
+            $this->databaseConnection->bindMore($data);
+            $rows += $this->databaseConnection->query($roleQuery);
+        }
         return $rows;
     }
 

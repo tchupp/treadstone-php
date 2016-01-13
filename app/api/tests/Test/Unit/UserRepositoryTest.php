@@ -13,10 +13,11 @@ class UserRepositoryTest extends PHPUnit_Framework_TestCase {
                   INTO treadstone_user(login, password_hash, first_name, last_name, email, activated, activation_key)
                   VALUES(:login, :password, :firstName, :lastName, :email, :activated, :activationKey)";
 
-        $user = array('login' => 'chuppthe', 'password' => 'super',
+        $data = $user = array('login' => 'chuppthe', 'password' => 'super',
             'firstName' => 'theo', 'lastName' => 'chupp',
             'email' => 'theo@thisiscool.com', 'activated' => false,
             'activationKey' => 'blahHA473810ji903h1');
+        $user['role'] = array('ROLE_USER');
 
         $rowsModified = 1;
 
@@ -30,8 +31,52 @@ class UserRepositoryTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($rowsModified, $userRepository->save($user));
 
         Phake::inOrder(
-            Phake::verify($databaseConnection)->bindMore($user),
+            Phake::verify($databaseConnection)->bindMore($data),
             Phake::verify($databaseConnection)->query($query)
+        );
+    }
+
+    public function testSaveInsertsIntoAuthorityTableOncePerRole() {
+        $userQuery = "INSERT
+                  INTO treadstone_user(login, password_hash, first_name, last_name, email, activated, activation_key)
+                  VALUES(:login, :password, :firstName, :lastName, :email, :activated, :activationKey)";
+        $roleQuery = "INSERT
+                  INTO treadstone_user_authority(user_id, authority_name)
+                  VALUES(:id, :role)";
+
+        $roleUser = 'ROLE_USER';
+        $roleAdmin = 'ROLE_ADMIN';
+        $user = array('login' => 'chuppthe', 'password' => 'super',
+            'firstName' => 'theo', 'lastName' => 'chupp',
+            'email' => 'theo@thisiscool.com', 'activated' => false,
+            'activationKey' => 'blahHA473810ji903h1',
+            'role' => array($roleUser, $roleAdmin));
+
+        $rowsModified = 3;
+        $userId = 13;
+
+        $databaseConnection = Phake::mock('Api\Database\DatabaseConnection');
+        Phake::when($databaseConnection)
+            ->query($userQuery)
+            ->thenReturn(1);
+        Phake::when($databaseConnection)
+            ->query($roleQuery)
+            ->thenReturn(1);
+        Phake::when($databaseConnection)
+            ->lastInsertId()
+            ->thenReturn($userId);
+
+        $userRepository = new UserRepository($databaseConnection);
+
+        $this->assertEquals($rowsModified, $userRepository->save($user));
+
+        $userParams = array('id' => $userId, 'role' => $roleUser);
+        $adminParams = array('id' => $userId, 'role' => $roleAdmin);
+        Phake::inOrder(
+            Phake::verify($databaseConnection)->query($userQuery),
+            Phake::verify($databaseConnection)->bindMore($userParams),
+            Phake::verify($databaseConnection, Phake::times(2))->query($roleQuery),
+            Phake::verify($databaseConnection)->bindMore($adminParams)
         );
     }
 

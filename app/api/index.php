@@ -30,10 +30,10 @@ try {
     $app = new Application();
 
     $userDetailService = new UserDetailsService(new UserRepository(new DatabaseConnection()));
-    $pureResources = array('/authenticate', '/register');
 
+    // (middleware) first one added -> last one run
     $app->add(new JsonMiddleware('/'));
-    $app->add(new XAuthTokenMiddleware($userDetailService, new TokenProvider(), $pureResources));
+    $app->add(new XAuthTokenMiddleware($userDetailService, new TokenProvider(), '/api'));
 
     $app->run();
 

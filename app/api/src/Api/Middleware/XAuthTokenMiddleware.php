@@ -13,19 +13,19 @@ class XAuthTokenMiddleware extends Middleware {
 
     private $userDetailService;
     private $tokenProvider;
-    private $pureResources;
+    private $root;
 
-    public function __construct(UserDetailsService $userDetailService, TokenProvider $tokenProvider, $pureResources = array()) {
+    public function __construct(UserDetailsService $userDetailService, TokenProvider $tokenProvider, $root = array()) {
         $this->userDetailService = $userDetailService;
         $this->tokenProvider = $tokenProvider;
-        $this->pureResources = $pureResources;
+        $this->root = $root;
     }
 
     public function call() {
         $req = $this->app->request;
         $res = $this->app->response;
 
-        if (!in_array($req->getResourceUri(), $this->pureResources)) {
+        if (strpos($req->getResourceUri(), $this->root) === 0) {
             $xAuthHeader = $req->headers(self::$XAUTH_TOKEN_HEADER);
             if (empty($xAuthHeader)) {
                 $res->status(401);

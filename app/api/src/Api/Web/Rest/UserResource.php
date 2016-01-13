@@ -9,9 +9,9 @@ use Api\Database\UserRepository;
 class UserResource {
 
     public static function registerApi(Application $app) {
-        $app->get('/users', self::getAll($app));
+        $app->get('/api/users', self::getAll($app));
 
-        $app->get('/users/:login', self::getUser($app));
+        $app->get('/api/users/:login', self::getUser($app));
     }
 
     private static function getAll(Application $app) {

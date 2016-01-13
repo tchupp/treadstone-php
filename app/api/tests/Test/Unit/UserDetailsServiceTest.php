@@ -73,7 +73,7 @@ class UserDetailsServiceTest extends PHPUnit_Framework_TestCase {
             $this->fail("Should have thrown an exception");
         } catch (Exception $ex) {
             $expectedMessage = "User " . $login . " was not activated";
-            $expectedCode = 404;
+            $expectedCode = 401;
 
             $this->assertEquals($expectedMessage, $ex->getMessage());
             $this->assertEquals($expectedCode, $ex->getCode());

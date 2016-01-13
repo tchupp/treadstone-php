@@ -27,7 +27,8 @@ class UserService {
         $user = array('login' => $login, 'password' => $encodedPassword,
             'firstName' => $firstName, 'lastName' => $lastName,
             'email' => $email, 'activated' => false,
-            'activationKey' => $activationKey);
+            'activationKey' => $activationKey,
+            'role' => array('ROLE_USER'));
 
         $this->userRepository->save($user);
 
