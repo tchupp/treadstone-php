@@ -5,6 +5,7 @@ namespace Api\Middleware;
 use Api\Security\TokenProvider;
 use Api\Service\UserDetailsService;
 use Exception;
+use Slim\Http\Request;
 use Slim\Middleware;
 
 class XAuthTokenMiddleware extends Middleware {
@@ -13,19 +14,19 @@ class XAuthTokenMiddleware extends Middleware {
 
     private $userDetailService;
     private $tokenProvider;
-    private $root;
+    private $protectedRoots;
 
-    public function __construct(UserDetailsService $userDetailService, TokenProvider $tokenProvider, $root = array()) {
+    public function __construct(UserDetailsService $userDetailService, TokenProvider $tokenProvider, $protectedRoots = array()) {
         $this->userDetailService = $userDetailService;
         $this->tokenProvider = $tokenProvider;
-        $this->root = $root;
+        $this->protectedRoots = $protectedRoots;
     }
 
     public function call() {
         $req = $this->app->request;
         $res = $this->app->response;
 
-        if (strpos($req->getResourceUri(), $this->root) === 0) {
+        if ($this->needsAuthentication($req)) {
             $xAuthHeader = $req->headers(self::$XAUTH_TOKEN_HEADER);
             if (empty($xAuthHeader)) {
                 $res->status(401);
@@ -45,5 +46,14 @@ class XAuthTokenMiddleware extends Middleware {
             }
         }
         $this->next->call();
+    }
+
+    private function needsAuthentication(Request $req) {
+        foreach($this->protectedRoots as $root) {
+            if (strpos($req->getResourceUri(), $root) === 0) {
+                return true;
+            }
+        }
+        return false;
     }
 }

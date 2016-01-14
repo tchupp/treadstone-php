@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="DataSourceManagerImpl" format="xml" hash="3647600472">
+  <component name="DataSourceManagerImpl" format="xml" hash="3915452235">
     <data-source source="LOCAL" name="MySQL - treadstone_dev@localhost" uuid="4a36bb1d-3c97-45bc-8a8a-5b3d54851a57">
       <driver-ref>mysql</driver-ref>
       <synchronize>true</synchronize>

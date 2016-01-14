@@ -22,7 +22,7 @@ angular.module('treadstoneApp')
     $scope.loading = true;
 
     // Get awesome things list
-    $http({method: 'GET', url: '/features'}).
+    $http({method: 'GET', url: '/api/features'}).
 
       success(function (data) {
         $scope.loading = false;

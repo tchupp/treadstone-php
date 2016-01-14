@@ -57,9 +57,12 @@ class Application extends Slim {
             $this->response->setBody(json_encode($feature, JSON_PRETTY_PRINT));
         });
 
-        UserResource::registerApi($this);
-        AccountResource::registerApi($this);
-        UserXAuthTokenController::registerApi($this);
+        $this->group('/api', function() {
+            UserResource::registerApi($this);
+            AccountResource::registerApi($this);
+            UserXAuthTokenController::registerApi($this);
+        });
+
     }
 
     public function handleNotFound() {
