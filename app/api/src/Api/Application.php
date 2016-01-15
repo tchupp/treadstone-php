@@ -42,12 +42,12 @@ class Application extends Slim {
         $this->config = $this->initConfig();
 
         // /features
-        $this->get('/features', function () {
+        $this->get('/api/features', function () {
             $features = new Features($this->config['features']);
             $this->response->setBody(json_encode($features->getFeatures(), JSON_PRETTY_PRINT));
         });
 
-        $this->get('/features/:id', function ($id) {
+        $this->get('/api/features/:id', function ($id) {
             $features = new Features($this->config['features']);
             $feature = $features->getFeature($id);
             if ($feature === null) {

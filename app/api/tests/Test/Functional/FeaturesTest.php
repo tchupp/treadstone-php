@@ -3,9 +3,10 @@
 namespace Test\Functional;
 
 use Api\Application;
+use PHPUnit_Framework_TestCase;
 use Slim\Environment;
 
-class FeaturesTest extends \PHPUnit_Framework_TestCase {
+class FeaturesTest extends PHPUnit_Framework_TestCase {
     protected $app;
 
     public function setUp() {
@@ -15,7 +16,7 @@ class FeaturesTest extends \PHPUnit_Framework_TestCase {
 
     public function testIndex() {
         Environment::mock(array(
-            'PATH_INFO' => '/features',
+            'PATH_INFO' => '/api/features',
         ));
 
         $expected = array();
@@ -37,7 +38,7 @@ class FeaturesTest extends \PHPUnit_Framework_TestCase {
         foreach ($this->app->config['features'] as $id => $feature) {
             $app = new Application();
             Environment::mock(array(
-                'PATH_INFO' => '/features/' . $id,
+                'PATH_INFO' => '/api/features/' . $id,
             ));
             $response = $app->invoke();
             $this->assertEquals(
