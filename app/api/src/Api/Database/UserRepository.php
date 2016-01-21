@@ -4,7 +4,9 @@ namespace Api\Database;
 
 class UserRepository {
 
-    private $userParams = ['login', 'password', 'firstName', 'lastName', 'email', 'activated', 'activationKey', 'role'];
+    private $userParams = array('login', 'password',
+        'firstName', 'lastName', 'email',
+        'activated', 'activationKey', 'role');
 
     private $databaseConnection;
 
@@ -32,7 +34,6 @@ class UserRepository {
         $this->databaseConnection->bindMore($user);
         $rows = $this->databaseConnection->query($userQuery);
         $userId = $this->databaseConnection->lastInsertId();
-        print_r("$userId, $rows\n");
 
         foreach($roles as $role) {
             $data = array('id' => $userId, 'role' => $role);

@@ -156,44 +156,57 @@ class UserRepositoryTest extends PHPUnit_Framework_TestCase {
         );
     }
 
-    private function buildFindAllData() {
-        $data = $this->buildFindOneData();
+    private function buildFindOneData() {
         $data[] = array(
-            "id" => 17,
-            "login" => "chullupabatman",
-            "password_hash" => "$2a$10\$fd27ad9546b355d167jb1*BNR7qTDYyVTj/7BqFtdNjAIQMwKBbKe",
-            "first_name" => "batman", "last_name" => "chullupa", "email" => "chullupabatman@msu.edu",
-            "activated" => 1, "activation_key" => NULL, "reset_key" => NULL,
-            "created_date" => "2015-12-22 14:31:54", "reset_date" => NULL,
-            "last_modified_by" => NULL, "last_modified_date" => NULL,
-            "role" => "ROLE_USER");
+            'id' => 4, 'login' => 'administrator',
+            'password_hash' => '$2a$10$mE.qfsV0mji5NcKhb:0w.z4ueI/.bDWbj0T1BYyqP481kGGarKLG',
+            'first_name' => 'Admin', 'last_name' => 'Admin', 'email' => 'admin@localhost',
+            'activated' => 0, 'activation_key' => NULL, 'reset_key' => NULL,
+            'created_date' => '2015-04-39 21:48:37', 'reset_date' => NULL,
+            'last_modified_by' => NULL, 'last_modified_date' => NULL,
+            'role' => 'ROLE_ADMIN');
+        $data[] = array(
+            'id' => 4, 'login' => 'administrator',
+            'password_hash' => '$2a$10$mE.qfsV0mji5NcKhb:0w.z4ueI/.bDWbj0T1BYyqP481kGGarKLG',
+            'first_name' => 'Admin', 'last_name' => 'Admin', 'email' => 'admin@localhost',
+            'activated' => 0, 'activation_key' => NULL, 'reset_key' => NULL,
+            'created_date' => '2015-04-39 21:48:37', 'reset_date' => NULL,
+            'last_modified_by' => NULL, 'last_modified_date' => NULL,
+            'role' => 'ROLE_USER');
         return $data;
     }
 
-    private function buildFindOneData() {
-        return array(
-            array(
-                "id" => 4, "login" => "administrator",
-                "password_hash" => "$2a$10\$mE.qfsV0mji5NcKhb:0w.z4ueI/.bDWbj0T1BYyqP481kGGarKLG",
-                "first_name" => "Admin", "last_name" => "Admin", "email" => "admin@localhost",
-                "activated" => 0, "activation_key" => NULL, "reset_key" => NULL,
-                "created_date" => "2015-04-39 21:48:37", "reset_date" => NULL,
-                "last_modified_by" => NULL, "last_modified_date" => NULL,
-                "role" => "ROLE_ADMIN"),
-            array(
-                "id" => 4, "login" => "administrator",
-                "password_hash" => "$2a$10\$mE.qfsV0mji5NcKhb:0w.z4ueI/.bDWbj0T1BYyqP481kGGarKLG",
-                "first_name" => "Admin", "last_name" => "Admin", "email" => "admin@localhost",
-                "activated" => 0, "activation_key" => NULL, "reset_key" => NULL,
-                "created_date" => "2015-04-39 21:48:37", "reset_date" => NULL,
-                "last_modified_by" => NULL, "last_modified_date" => NULL,
-                "role" => "ROLE_USER")
-        );
+    private function buildFindAllData() {
+        $data = $this->buildFindOneData();
+        $data[] = array(
+            'id' => 17, 'login' => 'chullupabatman',
+            'password_hash' => '$2a$10$fd27ad9546b355d167jb1*BNR7qTDYyVTj/7BqFtdNjAIQMwKBbKe',
+            'first_name' => 'batman', 'last_name' => 'chullupa', 'email' => 'chullupabatman@msu.edu',
+            'activated' => 1, 'activation_key' => NULL, 'reset_key' => NULL,
+            'created_date' => '2015-12-22 14:31:54', 'reset_date' => NULL,
+            'last_modified_by' => NULL, 'last_modified_date' => NULL,
+            'role' => 'ROLE_USER');
+        return $data;
+    }
+
+    private function buildFindOneUser() {
+        $user = array(
+            'id' => 4, 'login' => 'administrator',
+            'password_hash' => '$2a$10$mE.qfsV0mji5NcKhb:0w.z4ueI/.bDWbj0T1BYyqP481kGGarKLG',
+            'first_name' => 'Admin', 'last_name' => 'Admin', 'email' => 'admin@localhost',
+            'activated' => 0, 'activation_key' => null,
+            'reset_key' => null,
+            'created_date' => '2015-04-39 21:48:37',
+            'reset_date' => null,
+            'last_modified_by' => null,
+            'last_modified_date' => null,
+            'role' => array('ROLE_ADMIN', 'ROLE_USER'));
+        return $user;
     }
 
     private function buildFindAllUsers() {
-        $data = array('administrator' => $this->buildFindOneUser());
-        $data['chullupabatman'] = array(
+        $users['administrator'] = $this->buildFindOneUser();
+        $users['chullupabatman'] = array(
             'id' => 17,
             'login' => 'chullupabatman',
             'password_hash' => '$2a$10$fd27ad9546b355d167jb1*BNR7qTDYyVTj/7BqFtdNjAIQMwKBbKe',
@@ -208,25 +221,6 @@ class UserRepositoryTest extends PHPUnit_Framework_TestCase {
             'last_modified_by' => null,
             'last_modified_date' => null,
             'role' => array('ROLE_USER'));
-        return $data;
-    }
-
-    private function buildFindOneUser() {
-        return array(
-            'id' => 4,
-            'login' => 'administrator',
-            'password_hash' => '$2a$10$mE.qfsV0mji5NcKhb:0w.z4ueI/.bDWbj0T1BYyqP481kGGarKLG',
-            'first_name' => 'Admin',
-            'last_name' => 'Admin',
-            'email' => 'admin@localhost',
-            'activated' => 0,
-            'activation_key' => null,
-            'reset_key' => null,
-            'created_date' => '2015-04-39 21:48:37',
-            'reset_date' => null,
-            'last_modified_by' => null,
-            'last_modified_date' => null,
-            'role' => array('ROLE_ADMIN', 'ROLE_USER')
-        );
+        return $users;
     }
 }
