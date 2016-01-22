@@ -30,6 +30,7 @@ class XAuthTokenMiddleware extends Middleware {
             $xAuthHeader = $req->headers(self::$XAUTH_TOKEN_HEADER);
             if (empty($xAuthHeader)) {
                 $res->status(401);
+                $res->body("Authentication Missing");
                 return;
             }
 

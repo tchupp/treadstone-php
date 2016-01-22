@@ -42,12 +42,12 @@ class Application extends Slim {
         $this->config = $this->initConfig();
 
         // /features
-        $this->get('/api/features', function () {
+        $this->get('/features', function () {
             $features = new Features($this->config['features']);
             $this->response->setBody(json_encode($features->getFeatures(), JSON_PRETTY_PRINT));
         });
 
-        $this->get('/api/features/:id', function ($id) {
+        $this->get('/features/:id', function ($id) {
             $features = new Features($this->config['features']);
             $feature = $features->getFeature($id);
             if ($feature === null) {
@@ -57,12 +57,9 @@ class Application extends Slim {
             $this->response->setBody(json_encode($feature, JSON_PRETTY_PRINT));
         });
 
-        $this->group('/api', function() {
-            UserResource::registerApi($this);
-            AccountResource::registerApi($this);
-            UserXAuthTokenController::registerApi($this);
-        });
-
+        UserResource::registerApi($this);
+        AccountResource::registerApi($this);
+        UserXAuthTokenController::registerApi($this);
     }
 
     public function handleNotFound() {

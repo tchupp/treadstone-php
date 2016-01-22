@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="d82297eb-8733-43a6-a33a-c03d0270d7a7" name="treadcourse/dev" url="http://treadcourse.com">
+        <fileTransfer host="treadcourse.com" port="22" rootFolder="/home/theochup" accessType="SFTP" password="dfe2dfcfdfe2dfcfdfe3dfc6df9bdfe1dfefdffadfe3dfef" username="theochup">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

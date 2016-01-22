@@ -16,7 +16,7 @@ class FeaturesTest extends PHPUnit_Framework_TestCase {
 
     public function testIndex() {
         Environment::mock(array(
-            'PATH_INFO' => '/api/features',
+            'PATH_INFO' => '/features',
         ));
 
         $expected = array();
@@ -38,7 +38,7 @@ class FeaturesTest extends PHPUnit_Framework_TestCase {
         foreach ($this->app->config['features'] as $id => $feature) {
             $app = new Application();
             Environment::mock(array(
-                'PATH_INFO' => '/api/features/' . $id,
+                'PATH_INFO' => '/features/' . $id,
             ));
             $response = $app->invoke();
             $this->assertEquals(

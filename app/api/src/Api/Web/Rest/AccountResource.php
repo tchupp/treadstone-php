@@ -37,13 +37,15 @@ class AccountResource {
             $databaseConnection = new DatabaseConnection();
             $userRepository = new UserRepository($databaseConnection);
 
-            if (!empty($userRepository->findOneByLogin($login))) {
+            $oneByLogin = $userRepository->findOneByLogin($login);
+            if (!empty($oneByLogin)) {
                 $response->status(400);
                 $response->body("login already in use");
                 return;
             }
 
-            if (!empty($userRepository->findOneByEmail($email))) {
+            $oneByEmail = $userRepository->findOneByEmail($email);
+            if (!empty($oneByEmail)) {
                 $response->status(400);
                 $response->body("e-mail address already in use");
                 return;
