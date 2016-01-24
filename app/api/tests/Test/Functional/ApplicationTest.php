@@ -11,11 +11,15 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase {
         $_SESSION = array();
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testMissingConfigurationDirectoryGeneratesException() {
-        new Application(array(), 'missingConfigDirectory');
+        try {
+            new Application(array(), 'missingConfigDirectory');
+
+            $this->fail("Expected Exception");
+        } catch (Exception $ex) {
+            $this->assertEquals("Config directory is missing: ", substr($ex->getMessage(), 0, 29));
+            $this->assertEquals(500, $ex->getCode());
+        }
     }
 
     public function testHttpExceptionGenerates500() {

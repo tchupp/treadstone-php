@@ -11,7 +11,7 @@ class UserResource {
     public static function registerApi(Application $app) {
         $app->get('/users', self::getAll($app));
 
-        $app->get('/users/:login', self::getUser($app));
+        $app->get('/users/:login', self::getOne($app));
     }
 
     private static function getAll(Application $app) {
@@ -24,6 +24,7 @@ class UserResource {
             $response = $app->response;
             if (!empty($users)) {
                 foreach ($users as &$user) {
+                    unset($user['id']);
                     unset($user['password_hash']);
                 }
 
@@ -35,7 +36,7 @@ class UserResource {
         };
     }
 
-    private static function getUser(Application $app) {
+    private static function getOne(Application $app) {
         return function ($login) use ($app) {
             $databaseConnection = new DatabaseConnection();
             $userRepository = new UserRepository($databaseConnection);
@@ -44,6 +45,7 @@ class UserResource {
 
             $response = $app->response;
             if (!empty($user)) {
+                unset($user['id']);
                 unset($user['password_hash']);
 
                 $response->status(200);

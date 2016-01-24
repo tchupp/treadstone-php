@@ -3,8 +3,9 @@
 namespace Test\Unit;
 
 use Api\Model\Features;
+use PHPUnit_Framework_TestCase;
 
-class FeaturesTest extends \PHPUnit_Framework_TestCase {
+class FeaturesTest extends PHPUnit_Framework_TestCase {
     public function testGetFeaturesReturnsExpectedFeatures() {
         $allFeatures = array(
             'f1' => array('name' => 'feature 1', 'description' => 'description 1'),

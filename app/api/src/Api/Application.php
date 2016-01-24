@@ -2,15 +2,15 @@
 
 namespace Api;
 
-use Api\Model\Features;
 use Api\Web\Rest\AccountResource;
+use Api\Web\Rest\FeaturesResource;
 use Api\Web\Rest\UserResource;
 use Api\Web\Rest\UserXAuthTokenController;
 use Exception;
 use Slim\Http\Response;
+use Slim\Middleware;
 use Slim\Slim;
 
-// TODO Move all "features" things to a class with index() and get() methods
 class Application extends Slim {
     public $configDirectory;
     public $config;
@@ -27,7 +27,6 @@ class Application extends Slim {
     }
 
     public function __construct(array $userSettings = array(), $configDirectory = 'config') {
-        // Slim initialization
         parent::__construct($userSettings);
         $this->config('debug', false);
         $this->notFound(function () {
@@ -37,26 +36,10 @@ class Application extends Slim {
             $this->handleException($e);
         });
 
-        // Config
         $this->configDirectory = __DIR__ . '/../../' . $configDirectory;
         $this->config = $this->initConfig();
 
-        // /features
-        $this->get('/features', function () {
-            $features = new Features($this->config['features']);
-            $this->response->setBody(json_encode($features->getFeatures(), JSON_PRETTY_PRINT));
-        });
-
-        $this->get('/features/:id', function ($id) {
-            $features = new Features($this->config['features']);
-            $feature = $features->getFeature($id);
-            if ($feature === null) {
-                $this->notFound();
-                return;
-            }
-            $this->response->setBody(json_encode($feature, JSON_PRETTY_PRINT));
-        });
-
+        FeaturesResource::registerApi($this);
         UserResource::registerApi($this);
         AccountResource::registerApi($this);
         UserXAuthTokenController::registerApi($this);
@@ -64,8 +47,8 @@ class Application extends Slim {
 
     public function handleNotFound() {
         throw new Exception(
-            'Resource ' . $this->request->getResourceUri() . ' using '
-            . $this->request->getMethod() . ' method does not exist.',
+            'Resource ' . $this->request->getResourceUri() .
+            ' using ' . $this->request->getMethod() . ' method does not exist.',
             404
         );
     }
@@ -82,15 +65,13 @@ class Application extends Slim {
         $this->response->setBody(json_encode(array(
             'status' => $status,
             'statusText' => preg_replace('/^[0-9]+ (.*)$/', '$1', $statusText),
-            'description' => $e->getMessage(),
+            'description' => $e->getMessage()
         )));
     }
 
-    /**
-     * @return Response
-     */
     public function invoke() {
         foreach ($this->middleware as $middleware) {
+            /** @var Middleware $middleware */
             $middleware->call();
         }
         $this->response()->finalize();

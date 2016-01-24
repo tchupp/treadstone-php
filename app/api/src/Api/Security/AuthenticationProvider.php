@@ -1,8 +1,8 @@
 <?php
 
-namespace Api\Service;
+namespace Api\Security;
 
-use Api\Security\BCryptPasswordEncoder;
+use Api\Service\UserDetailsService;
 use Exception;
 
 class AuthenticationProvider {

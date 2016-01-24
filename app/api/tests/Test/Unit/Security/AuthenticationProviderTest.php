@@ -2,7 +2,7 @@
 
 namespace Test\Unit;
 
-use Api\Service\AuthenticationProvider;
+use Api\Security\AuthenticationProvider;
 use Exception;
 use Phake;
 use PHPUnit_Framework_TestCase;
