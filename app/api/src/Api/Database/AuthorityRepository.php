@@ -6,6 +6,10 @@ class AuthorityRepository {
 
     private $databaseConnection;
 
+    public static function autowire() {
+        return new AuthorityRepository(new DatabaseConnection());
+    }
+
     public function __construct(DatabaseConnection $databaseConnection) {
         $this->databaseConnection = $databaseConnection;
     }

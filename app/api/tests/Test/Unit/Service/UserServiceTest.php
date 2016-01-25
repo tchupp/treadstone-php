@@ -2,11 +2,26 @@
 
 namespace Test\Unit;
 
+use Api\Database\UserRepository;
+use Api\Security\BCryptPasswordEncoder;
 use Api\Service\UserService;
+use Api\Service\Util\RandomUtil;
 use Phake;
-use PHPUnit_Framework_TestCase;
+use Test\TreadstoneTestCase;
 
-class UserServiceTest extends PHPUnit_Framework_TestCase {
+class UserServiceTest extends TreadstoneTestCase {
+
+    public function testAutowire() {
+        $userService = UserService::autowire();
+
+        $userRepository = $this->getPrivateProperty($userService, 'userRepository');
+        $passwordEncoder = $this->getPrivateProperty($userService, 'passwordEncoder');
+        $randomUtil = $this->getPrivateProperty($userService, 'randomUtil');
+
+        $this->assertEquals(UserRepository::class, get_class($userRepository));
+        $this->assertEquals(BCryptPasswordEncoder::class, get_class($passwordEncoder));
+        $this->assertEquals(RandomUtil::class, get_class($randomUtil));
+    }
 
     public function testCreateUserInformationCallsEncodeOnPasswordEncoder() {
         $password = 'awesomePassword';

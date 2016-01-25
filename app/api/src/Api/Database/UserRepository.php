@@ -10,6 +10,10 @@ class UserRepository {
 
     private $databaseConnection;
 
+    public static function autowire() {
+        return new UserRepository(new DatabaseConnection());
+    }
+
     public function __construct(DatabaseConnection $databaseConnection) {
         $this->databaseConnection = $databaseConnection;
     }

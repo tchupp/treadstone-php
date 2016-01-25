@@ -13,6 +13,8 @@ class AccountResource {
 
     public static function registerApi(Application $app) {
         $app->post('/register', self::registerAccount($app));
+
+        $app->get('/activate', self::activateAccount($app));
     }
 
     private static function registerAccount(Application $app) {
@@ -55,6 +57,14 @@ class AccountResource {
             $userService->createUserInformation($login, $password, $firstName, $lastName, $email);
 
             $response->status(201);
+        };
+    }
+
+    private static function activateAccount(Application $app) {
+        return function () use ($app) {
+//            $request = $app->request;
+//            $response = $app->response;
+//            $userService = UserService::autowire();
         };
     }
 }

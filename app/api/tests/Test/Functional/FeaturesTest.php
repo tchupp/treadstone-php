@@ -7,20 +7,19 @@ use PHPUnit_Framework_TestCase;
 use Slim\Environment;
 
 class FeaturesTest extends PHPUnit_Framework_TestCase {
-    protected $app;
-
     public function setUp() {
         $_SESSION = array();
-        $this->app = new Application();
     }
 
     public function testIndex() {
+        $app = new Application();
+
         Environment::mock(array(
             'PATH_INFO' => '/features',
         ));
 
         $expected = array();
-        foreach ($this->app->config['features'] as $id => $feature) {
+        foreach ($app->config['features'] as $id => $feature) {
             $expected[] = array(
                 'id' => $id,
                 'name' => $feature['name'],
@@ -28,14 +27,16 @@ class FeaturesTest extends PHPUnit_Framework_TestCase {
             );
         }
 
-        $response = $this->app->invoke();
+        $response = $app->invoke();
         $this->assertEquals(json_encode($expected, JSON_PRETTY_PRINT), $response->getBody());
         $this->assertEquals(200, $response->getStatus());
     }
 
     public function testGet() {
-        $this->assertNotEquals(0, count($this->app->config['features']));
-        foreach ($this->app->config['features'] as $id => $feature) {
+        $app = new Application();
+
+        $this->assertNotEquals(0, count($app->config['features']));
+        foreach ($app->config['features'] as $id => $feature) {
             $app = new Application();
             Environment::mock(array(
                 'PATH_INFO' => '/features/' . $id,
@@ -52,10 +53,12 @@ class FeaturesTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testUnknownFeatureGets404() {
+        $app = new Application();
+
         Environment::mock(array(
             'PATH_INFO' => '/features/unknown',
         ));
-        $response = $this->app->invoke();
+        $response = $app->invoke();
         $this->assertEquals(json_encode(array(
             "status" => 404,
             "statusText" => "Not Found",

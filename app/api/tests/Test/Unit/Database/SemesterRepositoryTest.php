@@ -2,11 +2,20 @@
 
 namespace Test\Unit;
 
+use Api\Database\DatabaseConnection;
 use Api\Database\SemesterRepository;
 use Phake;
-use PHPUnit_Framework_TestCase;
+use Test\TreadstoneTestCase;
 
-class SemesterRepositoryTest extends PHPUnit_Framework_TestCase {
+class SemesterRepositoryTest extends TreadstoneTestCase {
+
+    public function testAutowire() {
+        $semesterRepository = SemesterRepository::autowire();
+
+        $databaseConnection = $this->getPrivateProperty($semesterRepository, 'databaseConnection');
+
+        $this->assertEquals(DatabaseConnection::class, get_class($databaseConnection));
+    }
 
     public function testSaveCallsQueryOnDatabaseConnectionWithCorrectQuery() {
         $query = "INSERT

@@ -8,6 +8,10 @@ class SemesterRepository {
 
     private $databaseConnection;
 
+    public static function autowire() {
+        return new SemesterRepository(new DatabaseConnection());
+    }
+
     public function __construct(DatabaseConnection $databaseConnection) {
         $this->databaseConnection = $databaseConnection;
     }

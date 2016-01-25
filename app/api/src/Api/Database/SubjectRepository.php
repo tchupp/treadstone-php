@@ -8,6 +8,10 @@ class SubjectRepository {
 
     private $databaseConnection;
 
+    public static function autowire() {
+        return new SubjectRepository(new DatabaseConnection());
+    }
+
     public function __construct(DatabaseConnection $databaseConnection) {
         $this->databaseConnection = $databaseConnection;
     }

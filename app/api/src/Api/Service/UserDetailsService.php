@@ -10,6 +10,10 @@ class UserDetailsService {
 
     private $userRepository;
 
+    public static function autowire() {
+        return new UserDetailsService(UserRepository::autowire());
+    }
+
     public function __construct(UserRepository $userRepository) {
         $this->userRepository = $userRepository;
     }

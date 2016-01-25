@@ -14,6 +14,10 @@ class UserService {
 
     private $randomUtil;
 
+    public static function autowire() {
+        return new UserService(UserRepository::autowire(), new BCryptPasswordEncoder(), new RandomUtil());
+    }
+
     public function __construct(UserRepository $userRepository, BCryptPasswordEncoder $passwordEncoder, RandomUtil $randomUtil) {
         $this->userRepository = $userRepository;
         $this->passwordEncoder = $passwordEncoder;

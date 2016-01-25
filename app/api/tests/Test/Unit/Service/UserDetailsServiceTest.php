@@ -2,12 +2,21 @@
 
 namespace Test\Unit;
 
+use Api\Database\UserRepository;
 use Api\Service\UserDetailsService;
 use Exception;
 use Phake;
-use PHPUnit_Framework_TestCase;
+use Test\TreadstoneTestCase;
 
-class UserDetailsServiceTest extends PHPUnit_Framework_TestCase {
+class UserDetailsServiceTest extends TreadstoneTestCase {
+
+    public function testAutowire() {
+        $userDetailsService = UserDetailsService::autowire();
+
+        $userRepository = $this->getPrivateProperty($userDetailsService, 'userRepository');
+
+        $this->assertEquals(UserRepository::class, get_class($userRepository));
+    }
 
     public function testLoadUserByLoginReturnsArrayWithOneUsernameAndPassword() {
         $login = "chuppthe";

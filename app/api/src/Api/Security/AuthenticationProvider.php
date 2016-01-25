@@ -10,6 +10,10 @@ class AuthenticationProvider {
     private $userDetailService;
     private $passwordEncoder;
 
+    public static function autowire() {
+        return new AuthenticationProvider(UserDetailsService::autowire(), new BCryptPasswordEncoder());
+    }
+
     public function __construct(UserDetailsService $userDetailService, BCryptPasswordEncoder $passwordEncoder) {
         $this->userDetailService = $userDetailService;
         $this->passwordEncoder = $passwordEncoder;

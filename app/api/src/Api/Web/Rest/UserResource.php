@@ -3,7 +3,6 @@
 namespace Api\Web\Rest;
 
 use Api\Application;
-use Api\Database\DatabaseConnection;
 use Api\Database\UserRepository;
 
 class UserResource {
@@ -16,8 +15,7 @@ class UserResource {
 
     private static function getAll(Application $app) {
         return function () use ($app) {
-            $databaseConnection = new DatabaseConnection();
-            $userRepository = new UserRepository($databaseConnection);
+            $userRepository = UserRepository::autowire();
 
             $users = $userRepository->findAll();
 
@@ -38,8 +36,7 @@ class UserResource {
 
     private static function getOne(Application $app) {
         return function ($login) use ($app) {
-            $databaseConnection = new DatabaseConnection();
-            $userRepository = new UserRepository($databaseConnection);
+            $userRepository = UserRepository::autowire();
 
             $user = $userRepository->findOneByLogin($login);
 

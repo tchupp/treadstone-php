@@ -3,11 +3,23 @@
 namespace Test\Unit;
 
 use Api\Security\AuthenticationProvider;
+use Api\Security\BCryptPasswordEncoder;
+use Api\Service\UserDetailsService;
 use Exception;
 use Phake;
-use PHPUnit_Framework_TestCase;
+use Test\TreadstoneTestCase;
 
-class AuthenticationProviderTest extends PHPUnit_Framework_TestCase {
+class AuthenticationProviderTest extends TreadstoneTestCase {
+
+    public function testAutowire() {
+        $authenticationProvider = AuthenticationProvider::autowire();
+
+        $userDetailService = $this->getPrivateProperty($authenticationProvider, 'userDetailService');
+        $passwordEncoder = $this->getPrivateProperty($authenticationProvider, 'passwordEncoder');
+
+        $this->assertEquals(UserDetailsService::class, get_class($userDetailService));
+        $this->assertEquals(BCryptPasswordEncoder::class, get_class($passwordEncoder));
+    }
 
     public function testAuthenticateCallsVerifyOnPasswordEncoderWithPasswordFromUserDetailsService() {
         $login = "chuppthe";

@@ -13,7 +13,7 @@ class TokenProvider {
     }
 
     public function createToken($login, $password) {
-        $expires = time() + 1000 * $this->tokenDuration;
+        $expires = time() + $this->tokenDuration;
         $authToken = $login . ":$expires:" . $this->computeSignature($login, $password, $expires);
         return array('expires' => $expires, 'authToken' => $authToken);
     }

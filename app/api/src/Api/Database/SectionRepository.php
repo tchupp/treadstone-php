@@ -6,6 +6,10 @@ class SectionRepository {
 
     private $databaseConnection;
 
+    public static function autowire() {
+        return new SectionRepository(new DatabaseConnection());
+    }
+
     public function __construct(DatabaseConnection $databaseConnection) {
         $this->databaseConnection = $databaseConnection;
     }
