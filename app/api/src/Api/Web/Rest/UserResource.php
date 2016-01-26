@@ -22,8 +22,7 @@ class UserResource {
             $response = $app->response;
             if (!empty($users)) {
                 foreach ($users as &$user) {
-                    unset($user['id']);
-                    unset($user['password_hash']);
+                    unset($user['password']);
                 }
 
                 $response->status(200);
@@ -42,8 +41,7 @@ class UserResource {
 
             $response = $app->response;
             if (!empty($user)) {
-                unset($user['id']);
-                unset($user['password_hash']);
+                unset($user['password']);
 
                 $response->status(200);
                 $response->body(json_encode($user, JSON_PRETTY_PRINT));

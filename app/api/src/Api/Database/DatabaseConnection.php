@@ -48,7 +48,7 @@ class DatabaseConnection {
         } else if ($statement === 'insert' || $statement === 'update' || $statement === 'delete') {
             return $this->sQuery->rowCount();
         } else {
-            return NULL;
+            return null;
         }
     }
 

@@ -23,11 +23,10 @@ class UserDetailsServiceTest extends TreadstoneTestCase {
         $password = "$2a$10hergblargimmapassword";
 
         $user = array(
-            "id" => 1, "login" => $login, "password_hash" => $password,
+            "id" => 1, "login" => $login, "password" => $password,
             "first_name" => "System", "last_name" => "System", "email" => "system@localhost",
-            "activated" => 1, "activation_key" => NULL,
-            "reset_key" => NULL, "created_date" => "2015-08-18 21:48:37",
-            "reset_date" => NULL, "last_modified_by" => NULL, "last_modified_date" => NULL);
+            "activated" => 1, "activation_key" => null,
+            "reset_key" => null, "reset_date" => null);
 
         $userRepository = Phake::mock('Api\Database\UserRepository');
         Phake::when($userRepository)->findOneByLogin($login)->thenReturn($user);
@@ -68,7 +67,7 @@ class UserDetailsServiceTest extends TreadstoneTestCase {
         $login = "chuppthe";
         $password = "$2a$10hergblargimmapassword";
 
-        $user = array("login" => $login, "password_hash" => $password,
+        $user = array("login" => $login, "password" => $password,
             "activated" => 0);
 
         $userRepository = Phake::mock('Api\Database\UserRepository');

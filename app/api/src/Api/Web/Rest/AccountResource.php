@@ -8,6 +8,7 @@ use Api\Database\UserRepository;
 use Api\Security\BCryptPasswordEncoder;
 use Api\Service\UserService;
 use Api\Service\Util\RandomUtil;
+use Exception;
 
 class AccountResource {
 
@@ -62,9 +63,23 @@ class AccountResource {
 
     private static function activateAccount(Application $app) {
         return function () use ($app) {
-//            $request = $app->request;
-//            $response = $app->response;
-//            $userService = UserService::autowire();
+            $request = $app->request;
+            $response = $app->response;
+
+            $key = $request->params('key');
+
+            if (empty($key)) {
+                throw new Exception("Missing parameter 'key'", 400);
+            }
+
+            $userService = UserService::autowire();
+            $user = $userService->activateRegistration($key);
+
+            if (!empty($user)) {
+                $response->status(200);
+            } else {
+                throw new Exception("User could not be found by activation key", 500);
+            }
         };
     }
 }
