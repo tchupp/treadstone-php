@@ -255,6 +255,14 @@ AddDefaultCharset utf-8
 #    RewriteRule ^ http://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 # </IfModule>
 
+# ------------------------------------------------------------------------------
+# | Redirecting this folder to sub-domain                                      |
+# ------------------------------------------------------------------------------
+
+<IfModule mod_rewrite.c>
+    RewriteCond %{HTTP_HOST} ^treadcourse\.com$
+    RewriteRule ^(.*)$ http://dev.treadcourse.com/$1 [R=301,L]
+</IfModule>
 
 # ##############################################################################
 # # SECURITY                                                                   #

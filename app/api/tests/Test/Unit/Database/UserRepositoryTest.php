@@ -105,13 +105,15 @@ class UserRepositoryTest extends TreadstoneTestCase {
         $query = "UPDATE treadstone_user
                   SET password_hash = :password,
                       first_name = :first_name, last_name = :last_name, email = :email,
-                      activated = :activated, activation_key = :activation_key
+                      activated = :activated, activation_key = :activation_key,
+                      reset_key = :reset_key, reset_date = :reset_date
                   WHERE login = :login";
 
         $user = array('login' => 'chuppthe', 'password' => 'super',
             'first_name' => 'theo', 'last_name' => 'chupp',
             'email' => 'theo@thisiscool.com',
-            'activated' => false, 'activation_key' => 'blahHA473810ji903h1');
+            'activated' => false, 'activation_key' => 'blahHA473810ji903h1',
+            'reset_key' => 'reset!!', 'reset_date' => '2015-01-12');
 
         $rowsModified = 1;
 
@@ -133,31 +135,39 @@ class UserRepositoryTest extends TreadstoneTestCase {
     public function testUpdateDoesNotCallQueryOnDatabaseConnectionIfUserIsMalformed() {
         $loginMissing = array('password' => 'super',
             'first_name' => 'theo', 'last_name' => 'chupp',
-            'email' => 'theo@thisiscool.com',
-            'activated' => false, 'activation_key' => 'blahHA473810ji903h1');
+            'email' => 'theo@thisiscool.com', 'activated' => false, 'activation_key' => 'blahHA473810ji903h1',
+            'reset_key' => 'reset!!', 'reset_date' => '2015-01-12');
         $passwordMissing = array('login' => 'chuppthe',
             'first_name' => 'theo', 'last_name' => 'chupp',
-            'email' => 'theo@thisiscool.com',
-            'activated' => false, 'activation_key' => 'blahHA473810ji903h1');
+            'email' => 'theo@thisiscool.com', 'activated' => false, 'activation_key' => 'blahHA473810ji903h1',
+            'reset_key' => 'reset!!', 'reset_date' => '2015-01-12');
         $firstNameMissing = array('login' => 'chuppthe', 'password' => 'super',
-            'last_name' => 'chupp',
-            'email' => 'theo@thisiscool.com',
-            'activated' => false, 'activation_key' => 'blahHA473810ji903h1');
+            'last_name' => 'chupp', 'email' => 'theo@thisiscool.com',
+            'activated' => false, 'activation_key' => 'blahHA473810ji903h1',
+            'reset_key' => 'reset!!', 'reset_date' => '2015-01-12');
         $lastNameMissing = array('login' => 'chuppthe', 'password' => 'super',
-            'first_name' => 'theo',
-            'email' => 'theo@thisiscool.com',
+            'first_name' => 'theo', 'email' => 'theo@thisiscool.com',
             'activated' => false, 'activation_key' => 'blahHA473810ji903h1');
         $emailMissing = array('login' => 'chuppthe', 'password' => 'super',
             'first_name' => 'theo', 'last_name' => 'chupp',
-            'activated' => false, 'activation_key' => 'blahHA473810ji903h1');
+            'activated' => false, 'activation_key' => 'blahHA473810ji903h1',
+            'reset_key' => 'reset!!', 'reset_date' => '2015-01-12');
         $activatedMissing = array('login' => 'chuppthe', 'password' => 'super',
             'first_name' => 'theo', 'last_name' => 'chupp',
-            'email' => 'theo@thisiscool.com',
-            'activation_key' => 'blahHA473810ji903h1');
+            'email' => 'theo@thisiscool.com', 'activation_key' => 'blahHA473810ji903h1',
+            'reset_key' => 'reset!!', 'reset_date' => '2015-01-12');
         $activationKeyMissing = array('login' => 'chuppthe', 'password' => 'super',
             'first_name' => 'theo', 'last_name' => 'chupp',
+            'email' => 'theo@thisiscool.com', 'activated' => false,
+            'reset_key' => 'reset!!', 'reset_date' => '2015-01-12');
+        $resetKeyMissing = array('login' => 'chuppthe', 'password' => 'super',
+            'first_name' => 'theo', 'last_name' => 'chupp',
             'email' => 'theo@thisiscool.com',
-            'activated' => false);
+            'activated' => false, 'activation_key' => 'blahHA473810ji903h1', 'reset_date' => '2015-01-12');
+        $resetDateMissing = array('login' => 'chuppthe', 'password' => 'super',
+            'first_name' => 'theo', 'last_name' => 'chupp',
+            'email' => 'theo@thisiscool.com',
+            'activated' => false, 'activation_key' => 'blahHA473810ji903h1', 'reset_key' => 'reset!!');
 
         $databaseConnection = Phake::mock('Api\Database\DatabaseConnection');
 
@@ -182,6 +192,12 @@ class UserRepositoryTest extends TreadstoneTestCase {
         Phake::verifyNoInteraction($databaseConnection);
 
         $this->assertEquals(0, $userRepository->update($activationKeyMissing));
+        Phake::verifyNoInteraction($databaseConnection);
+
+        $this->assertEquals(0, $userRepository->update($resetKeyMissing));
+        Phake::verifyNoInteraction($databaseConnection);
+
+        $this->assertEquals(0, $userRepository->update($resetDateMissing));
         Phake::verifyNoInteraction($databaseConnection);
     }
 
@@ -314,7 +330,7 @@ class UserRepositoryTest extends TreadstoneTestCase {
         return $data;
     }
 
-    private function buildFindOneUser() {
+    public static function buildFindOneUser() {
         $user = array(
             'login' => 'administrator', 'password' => '$2a$10$mE.qfsV0mji5NcKhb:0w.z4ueI/.bDWbj0T1BYyqP481kGGarKLG',
             'first_name' => 'Admin', 'last_name' => 'Admin', 'email' => 'admin@localhost',

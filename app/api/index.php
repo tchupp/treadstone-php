@@ -30,7 +30,7 @@ try {
     $app = new Application();
 
     $userDetailService = new UserDetailsService(new UserRepository(new DatabaseConnection()));
-    $protectedRoots = array('/users');
+    $protectedRoots = array('/users', '/account');
 
     // (middleware) first one added -> last one run
     $app->add(new JsonMiddleware('/'));

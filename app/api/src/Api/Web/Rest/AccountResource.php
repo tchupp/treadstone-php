@@ -14,6 +14,8 @@ class AccountResource {
         $app->post('/register', self::registerAccount($app));
 
         $app->get('/activate', self::activateAccount($app));
+
+        $app->post('/account/change_password', self::changePassword($app));
     }
 
     private static function registerAccount(Application $app) {
@@ -29,8 +31,7 @@ class AccountResource {
             $login = $body->login;
             $password = $body->password;
 
-            if (empty($email) || empty($firstName) || empty($lastName)
-                || empty($login) || empty($password)) {
+            if (empty($email) || empty($firstName) || empty($lastName) || empty($login) || empty($password)) {
                 throw new Exception("Malformed body", 400);
             }
 
@@ -80,6 +81,27 @@ class AccountResource {
             } else {
                 throw new Exception("User could not be found by activation key", 500);
             }
+        };
+    }
+
+    private static function changePassword(Application $app) {
+        return function () use ($app) {
+            $request = $app->request;
+            $response = $app->response;
+
+            $login = $request->headers('User');
+
+            $body = json_decode($request->getBody());
+            $password = $body->password;
+
+            if (empty($password)) {
+                throw new Exception("Malformed body", 400);
+            }
+
+            $userService = UserService::autowire();
+            $userService->changePassword($login, $password);
+
+            $response->status(200);
         };
     }
 }

@@ -6,6 +6,7 @@ use Api\Database\UserRepository;
 use Api\Security\BCryptPasswordEncoder;
 use Api\Service\UserService;
 use Api\Service\Util\RandomUtil;
+use Exception;
 use Phake;
 use Test\TreadstoneTestCase;
 
@@ -73,7 +74,7 @@ class UserServiceTest extends TreadstoneTestCase {
     }
 
     public function testActivateRegistrationCallsFindOneByActivationKeyAndSaveOnUserRepository() {
-        $user = $this->buildFindOneUser();
+        $user = UserRepositoryTest::buildFindOneUser();
         $activationKey = $user['activation_key'];
 
         $passwordEncoder = Phake::mock('Api\Security\BCryptPasswordEncoder');
@@ -88,10 +89,11 @@ class UserServiceTest extends TreadstoneTestCase {
 
         $user['activated'] = true;
         $user['activation_key'] = null;
+        unset($user['role']);
 
         $this->assertSame($this->buildSavedUser(), $userService->activateRegistration($activationKey));
 
-        Phake::verify($userRepository)->update($this->buildSavedUser());
+        Phake::verify($userRepository)->update($user);
     }
 
     public function testActivateRegistrationDoesNotCallSaveOnUserRepositoryIfNoUserIsFound() {
@@ -113,21 +115,61 @@ class UserServiceTest extends TreadstoneTestCase {
         Phake::verify($userRepository, Phake::never())->update(Phake::anyParameters());
     }
 
-    private function buildFindOneUser() {
-        $user = array(
-            'login' => 'administrator', 'password' => '$2a$10$mE.qfsV0mji5NcKhb:0w.z4ueI/.bDWbj0T1BYyqP481kGGarKLG',
-            'first_name' => 'Admin', 'last_name' => 'Admin', 'email' => 'admin@localhost',
-            'activated' => 0, 'activation_key' => null,
-            'reset_key' => null, 'reset_date' => null,
-            'role' => array('ROLE_ADMIN', 'ROLE_USER'));
-        return $user;
+    public function testChangePasswordCallsUpdateOnUserRepositoryWithCorrectUser() {
+        $login = 'awesomeLogin';
+        $password = 'awesomePassword';
+        $passwordHash = 'awesomePassword$H4sH3D';
+        $user = UserRepositoryTest::buildFindOneUser();
+
+        $userRepository = Phake::mock('Api\Database\UserRepository');
+        $passwordEncoder = Phake::mock('Api\Security\BCryptPasswordEncoder');
+        $randomUtil = Phake::mock('Api\Service\Util\RandomUtil');
+
+        $userService = new UserService($userRepository, $passwordEncoder, $randomUtil);
+
+        Phake::when($userRepository)
+            ->findOneByLogin($login)
+            ->thenReturn($user);
+
+        Phake::when($passwordEncoder)
+            ->encode($password)
+            ->thenReturn($passwordHash);
+
+        $userService->changePassword($login, $password);
+
+        $user['password'] = $passwordHash;
+        unset($user['role']);
+
+        Phake::verify($userRepository)->update($user);
+    }
+
+    public function testChangePasswordThrowsExceptionIfUserIsNotFound() {
+        $login = 'awesomeLogin';
+        $password = 'awesomePassword';
+
+        $userRepository = Phake::mock('Api\Database\UserRepository');
+        $passwordEncoder = Phake::mock('Api\Security\BCryptPasswordEncoder');
+        $randomUtil = Phake::mock('Api\Service\Util\RandomUtil');
+
+        $userService = new UserService($userRepository, $passwordEncoder, $randomUtil);
+
+        Phake::when($userRepository)
+            ->findOneByLogin($login)
+            ->thenReturn(array());
+
+        try {
+            $userService->changePassword($login, $password);
+        } catch(Exception $ex) {
+            $this->assertEquals(500, $ex->getCode());
+            $this->assertEquals('User not found', $ex->getMessage());
+        }
     }
 
     private function buildSavedUser() {
         $user = array(
             'login' => 'administrator', 'password' => '$2a$10$mE.qfsV0mji5NcKhb:0w.z4ueI/.bDWbj0T1BYyqP481kGGarKLG',
             'first_name' => 'Admin', 'last_name' => 'Admin', 'email' => 'admin@localhost',
-            'activated' => true, 'activation_key' => null
+            'activated' => true, 'activation_key' => null, 'reset_key' => null, 'reset_date' => null
         );
         return $user;
     }

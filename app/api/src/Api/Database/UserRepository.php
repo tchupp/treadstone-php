@@ -4,10 +4,6 @@ namespace Api\Database;
 
 class UserRepository {
 
-    private $userParams = array('login', 'password',
-        'first_name', 'last_name', 'email',
-        'activated', 'activation_key');
-
     private $databaseConnection;
 
     public static function autowire() {
@@ -19,7 +15,7 @@ class UserRepository {
     }
 
     public function save($user) {
-        if (!$this->verifyUser($user)) {
+        if (!$this->verifyUserForSave($user)) {
             return 0;
         }
 
@@ -48,14 +44,15 @@ class UserRepository {
     }
 
     public function update($user) {
-        if (!$this->verifyUser($user)) {
+        if (!$this->verifyUserForUpdate($user)) {
             return 0;
         }
 
         $query = "UPDATE treadstone_user
                   SET password_hash = :password,
                       first_name = :first_name, last_name = :last_name, email = :email,
-                      activated = :activated, activation_key = :activation_key
+                      activated = :activated, activation_key = :activation_key,
+                      reset_key = :reset_key, reset_date = :reset_date
                   WHERE login = :login";
 
         $user['activated'] = $user['activated'] ? 1 : 0;
@@ -124,8 +121,19 @@ class UserRepository {
         return reset($users);
     }
 
-    private function verifyUser($user) {
-        foreach ($this->userParams as $param) {
+    private function verifyUserForSave($user) {
+        $userParams = array('login', 'password', 'first_name', 'last_name', 'email', 'activated', 'activation_key');
+        return $this->verifyUser($user, $userParams);
+    }
+
+    private function verifyUserForUpdate($user) {
+        $userParams = array('login', 'password', 'first_name', 'last_name', 'email',
+            'activated', 'activation_key', 'reset_key', 'reset_date');
+        return $this->verifyUser($user, $userParams);
+    }
+
+    private function verifyUser($user, $userParams) {
+        foreach ($userParams as $param) {
             if (!array_key_exists($param, $user)) {
                 return false;
             }

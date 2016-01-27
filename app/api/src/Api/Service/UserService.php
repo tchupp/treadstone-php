@@ -5,6 +5,7 @@ namespace Api\Service;
 use Api\Database\UserRepository;
 use Api\Security\BCryptPasswordEncoder;
 use Api\Service\Util\RandomUtil;
+use Exception;
 
 class UserService {
 
@@ -45,13 +46,23 @@ class UserService {
         if (!empty($user)) {
             $user['activated'] = true;
             $user['activation_key'] = null;
-
-            unset($user['reset_key']);
-            unset($user['reset_date']);
             unset($user['role']);
 
             $this->userRepository->update($user);
         }
         return $user;
+    }
+
+    public function changePassword($login, $password) {
+        $user = $this->userRepository->findOneByLogin($login);
+        if (empty($user)) {
+            throw new Exception('User not found', 500);
+        }
+        $passwordHash = $this->passwordEncoder->encode($password);
+
+        $user['password'] = $passwordHash;
+        unset($user['role']);
+
+        $this->userRepository->update($user);
     }
 }

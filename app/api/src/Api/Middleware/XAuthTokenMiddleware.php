@@ -4,7 +4,6 @@ namespace Api\Middleware;
 
 use Api\Security\TokenProvider;
 use Api\Service\UserDetailsService;
-use Exception;
 use Slim\Http\Request;
 use Slim\Middleware;
 
@@ -34,13 +33,11 @@ class XAuthTokenMiddleware extends Middleware {
                 return;
             }
 
-            try {
-                $login = $this->tokenProvider->getLoginFromToken($xAuthHeader);
-                $user = $this->userDetailService->loadUserByLogin($login);
-                if (!$this->tokenProvider->validateToken($xAuthHeader, $user['login'], $user['password'])) {
-                    throw new Exception("Authentication Failed", 401);
-                }
-            } catch (Exception $ex) {
+            $login = $this->tokenProvider->getLoginFromToken($xAuthHeader);
+            $req->headers->set('User', $login);
+
+            $user = $this->userDetailService->loadUserByLogin($login);
+            if (!$this->tokenProvider->validateToken($xAuthHeader, $user['login'], $user['password'])) {
                 $res->status(401);
                 $res->body("Authentication Failed");
                 return;
@@ -50,7 +47,7 @@ class XAuthTokenMiddleware extends Middleware {
     }
 
     private function needsAuthentication(Request $req) {
-        foreach($this->protectedRoots as $root) {
+        foreach ($this->protectedRoots as $root) {
             if (strpos($req->getResourceUri(), $root) === 0) {
                 return true;
             }
