@@ -50,9 +50,14 @@ class AccountResource {
             $mailService = new MailService();
 
             $user = $userService->createUserInformation($login, $password, $firstName, $lastName, $email);
-            $mailService->sendActivationEmail($user, $request->getHostWithPort());
+            $success = $mailService->sendActivationEmail($user, $request->getHostWithPort());
 
-            $response->status(201);
+            if ($success) {
+                $response->status(201);
+                $response->body("Activation Successful");
+            } else {
+                throw new Exception("Failed to send activation email", 500);
+            }
         };
     }
 

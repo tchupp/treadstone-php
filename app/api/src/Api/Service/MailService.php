@@ -7,7 +7,7 @@ class MailService {
     public function sendEmail($to, $from, $subject, $message) {
         $headers = "From: $from\n";
         $headers .= "Content-Type: text/html; charset=UTF-8";
-        mail($to, $subject, $message, $headers);
+        return mail($to, $subject, $message, $headers);
     }
 
     public function sendActivationEmail($user, $baseUrl) {
@@ -18,6 +18,6 @@ class MailService {
         $activationUrl = "http://$baseUrl/api/activate?key=$activationKey";
         $message = "<html><a href='$activationUrl'>Activate Account</a></html>";
 
-        $this->sendEmail($to, $from, $subject, $message);
+        return $this->sendEmail($to, $from, $subject, $message);
     }
 }
