@@ -66,7 +66,8 @@ class UserServiceTest extends TreadstoneTestCase {
 
         $userService = new UserService($userRepository, $passwordEncoder, $randomUtil);
 
-        $userService->createUserInformation($login, $password, $firstName, $lastName, $email);
+        $actualUser = $userService->createUserInformation($login, $password, $firstName, $lastName, $email);
+        $this->assertEquals($user, $actualUser);
 
         Phake::verify($userRepository)->save($user);
     }

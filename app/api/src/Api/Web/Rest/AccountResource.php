@@ -3,11 +3,9 @@
 namespace Api\Web\Rest;
 
 use Api\Application;
-use Api\Database\DatabaseConnection;
 use Api\Database\UserRepository;
-use Api\Security\BCryptPasswordEncoder;
+use Api\Service\MailService;
 use Api\Service\UserService;
-use Api\Service\Util\RandomUtil;
 use Exception;
 
 class AccountResource {
@@ -33,29 +31,26 @@ class AccountResource {
 
             if (empty($email) || empty($firstName) || empty($lastName)
                 || empty($login) || empty($password)) {
-                $response->status(406);
-                return;
+                throw new Exception("Malformed body", 400);
             }
 
-            $databaseConnection = new DatabaseConnection();
-            $userRepository = new UserRepository($databaseConnection);
+            $userRepository = UserRepository::autowire();
 
             $oneByLogin = $userRepository->findOneByLogin($login);
             if (!empty($oneByLogin)) {
-                $response->status(400);
-                $response->body("login already in use");
-                return;
+                throw new Exception("Login already in use", 400);
             }
 
             $oneByEmail = $userRepository->findOneByEmail($email);
             if (!empty($oneByEmail)) {
-                $response->status(400);
-                $response->body("e-mail address already in use");
-                return;
+                throw new Exception("E-mail address already in use", 400);
             }
 
-            $userService = new UserService($userRepository, new BCryptPasswordEncoder(), new RandomUtil());
-            $userService->createUserInformation($login, $password, $firstName, $lastName, $email);
+            $userService = UserService::autowire();
+            $mailService = new MailService();
+
+            $user = $userService->createUserInformation($login, $password, $firstName, $lastName, $email);
+            $mailService->sendActivationEmail($user, $request->getHostWithPort());
 
             $response->status(201);
         };
