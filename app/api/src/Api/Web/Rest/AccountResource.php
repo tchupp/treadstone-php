@@ -15,6 +15,10 @@ class AccountResource {
 
         $app->get('/activate', self::activateAccount($app));
 
+        $app->get('/account', self::getAccount($app));
+
+        $app->post('/account', self::updateAccount($app));
+
         $app->post('/account/change_password', self::changePassword($app));
     }
 
@@ -81,6 +85,32 @@ class AccountResource {
             } else {
                 throw new Exception("User could not be found by activation key", 500);
             }
+        };
+    }
+
+    private static function getAccount(Application $app) {
+        return function () use ($app) {
+            $request = $app->request;
+            $response = $app->response;
+
+            $login = $request->headers('User');
+
+            $userRepository = UserRepository::autowire();
+            $user = $userRepository->findOneByLogin($login);
+            if (!empty($user)) {
+                unset($user['password']);
+
+                $response->status(200);
+                $response->body(json_encode($user, JSON_PRETTY_PRINT));
+            } else {
+                throw new Exception('User not found', 500);
+            }
+        };
+    }
+
+    private static function updateAccount(Application $app) {
+        return function () use ($app) {
+            throw new Exception("Coming soon!", 501);
         };
     }
 
