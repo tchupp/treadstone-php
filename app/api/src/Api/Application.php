@@ -3,6 +3,7 @@
 namespace Api;
 
 use Api\Web\Rest\AccountResource;
+use Api\Web\Rest\DocumentationResource;
 use Api\Web\Rest\FeaturesResource;
 use Api\Web\Rest\UserResource;
 use Api\Web\Rest\UserXAuthTokenController;
@@ -43,6 +44,8 @@ class Application extends Slim {
         UserResource::registerApi($this);
         AccountResource::registerApi($this);
         UserXAuthTokenController::registerApi($this);
+
+        DocumentationResource::registerApi($this);
     }
 
     public function handleNotFound() {

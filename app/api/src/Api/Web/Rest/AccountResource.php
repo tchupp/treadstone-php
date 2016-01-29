@@ -22,6 +22,60 @@ class AccountResource {
         $app->post('/account/change_password', self::changePassword($app));
     }
 
+    public static function documentation() {
+        $registerSchema = array('login' => 'string', 'password' => 'string', 'email' => 'string',
+            'first_name' => 'string', 'last_name' => 'string');
+        $userSchema = array('login' => 'string', 'first_name' => 'string', 'last_name' => 'string', 'email' => 'string',
+            'activated' => 'int', 'activation_key' => 'string', 'reset_key' => 'string', 'reset_date' => 'string',
+            'role' => array('string'));
+        $errorSchema = array('status' => 'int', 'statusText' => 'string', 'description' => 'string');
+        $passwordSchema = array('password' => 'string');
+
+        $docs[] = array('uri' => '/register', 'method' => 'POST',
+            'request' => array('body' => $registerSchema),
+            'responses' => array(
+                array('status' => 201),
+                array('status' => 500,
+                    'body' => $errorSchema)
+            ));
+        $docs[] = array('uri' => '/activate', 'method' => 'GET',
+            'request' => array('key' => 'string'),
+            'responses' => array(
+                array('status' => 200),
+                array('status' => 400,
+                    'body' => $errorSchema),
+                array('status' => 500,
+                    'body' => $errorSchema)
+            ));
+        $docs[] = array('uri' => '/account', 'method' => 'GET',
+            'responses' => array(
+                array('status' => 200,
+                    'body' => $userSchema),
+                array('status' => 401,
+                    'body' => $errorSchema),
+                array('status' => 500,
+                    'body' => $errorSchema)
+            ));
+        $docs[] = array('uri' => '/account', 'method' => 'POST',
+            'responses' => array(
+                array('status' => 401,
+                    'body' => $errorSchema),
+                array('status' => 501,
+                    'body' => $errorSchema)
+            ));
+        $docs[] = array('uri' => '/account/change_password', 'method' => 'POST',
+            'request' => array('body' => $passwordSchema),
+            'responses' => array(
+                array('status' => 200,
+                    'body' => $userSchema),
+                array('status' => 401,
+                    'body' => $errorSchema),
+                array('status' => 500,
+                    'body' => $errorSchema)
+            ));
+        return $docs;
+    }
+
     private static function registerAccount(Application $app) {
         return function () use ($app) {
             $request = $app->request;
@@ -30,8 +84,8 @@ class AccountResource {
             $body = json_decode($request->getBody());
 
             $email = $body->email;
-            $firstName = $body->firstName;
-            $lastName = $body->lastName;
+            $firstName = $body->first_name;
+            $lastName = $body->last_name;
             $login = $body->login;
             $password = $body->password;
 
@@ -59,7 +113,6 @@ class AccountResource {
 
             if ($success) {
                 $response->status(201);
-                $response->body("Activation Successful");
             } else {
                 throw new Exception("Failed to send activation email", 500);
             }

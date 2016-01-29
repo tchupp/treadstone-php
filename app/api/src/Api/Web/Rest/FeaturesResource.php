@@ -13,6 +13,25 @@ class FeaturesResource {
         $app->get('/features/:id', self::getOne($app, $app->config['features']));
     }
 
+    public static function documentation() {
+        $featureSchema = array('id' => 'string', 'name' => 'string', 'description' => 'string', 'href' => 'string');
+        $errorSchema = array('status' => 'int', 'statusText' => 'string', 'description' => 'string');
+
+        $docs[] = array('uri' => '/features', 'method' => 'GET',
+            'responses' => array(
+                array('status' => 200,
+                    'body' => array($featureSchema))
+            ));
+        $docs[] = array('uri' => '/features/:id', 'method' => 'GET',
+            'responses' => array(
+                array('status' => 200,
+                    'body' => $featureSchema),
+                array('status' => 404,
+                    'body' => $errorSchema)
+            ));
+        return $docs;
+    }
+
     private static function getAll(Application $app, $config) {
         return function () use ($app, $config) {
             $features = new Features($config);

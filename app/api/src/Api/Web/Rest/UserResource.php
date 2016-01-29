@@ -14,6 +14,33 @@ class UserResource {
         $app->get('/users/:login', self::getOne($app));
     }
 
+    public static function documentation() {
+        $userSchema = array('login' => 'string', 'first_name' => 'string', 'last_name' => 'string', 'email' => 'string',
+            'activated' => 'int', 'activation_key' => 'string', 'reset_key' => 'string', 'reset_date' => 'string',
+            'role' => array('string'));
+        $errorSchema = array('status' => 'int', 'statusText' => 'string', 'description' => 'string');
+
+        $docs[] = array('uri' => '/users', 'method' => 'GET',
+            'responses' => array(
+                array('status' => 200,
+                    'body' => array('string' => $userSchema)),
+                array('status' => 401,
+                    'body' => $errorSchema),
+                array('status' => 404,
+                    'body' => $errorSchema)
+            ));
+        $docs[] = array('uri' => '/users/:id', 'method' => 'GET',
+            'responses' => array(
+                array('status' => 200,
+                    'body' => $userSchema),
+                array('status' => 401,
+                    'body' => $errorSchema),
+                array('status' => 404,
+                    'body' => $errorSchema)
+            ));
+        return $docs;
+    }
+
     private static function getAll(Application $app) {
         return function () use ($app) {
             $response = $app->response;
