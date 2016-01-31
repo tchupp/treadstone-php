@@ -15,9 +15,8 @@ class UserResource {
     }
 
     public static function documentation() {
-        $userSchema = array('login' => 'string', 'first_name' => 'string', 'last_name' => 'string', 'email' => 'string',
-            'activated' => 'int', 'activation_key' => 'string', 'reset_key' => 'string', 'reset_date' => 'string',
-            'role' => array('string'));
+        $userSchema = array('login' => 'string', 'firstName' => 'string', 'lastName' => 'string', 'email' => 'string',
+            'activated' => 'int', 'activationKey' => 'string', 'role' => array('string'));
         $errorSchema = array('status' => 'int', 'statusText' => 'string', 'description' => 'string');
 
         $docs[] = array('uri' => '/users', 'method' => 'GET',
@@ -48,10 +47,6 @@ class UserResource {
             $userRepository = UserRepository::autowire();
             $users = $userRepository->findAll();
             if (!empty($users)) {
-                foreach ($users as &$user) {
-                    unset($user['password']);
-                }
-
                 $response->status(200);
                 $response->body(json_encode($users, JSON_PRETTY_PRINT));
             } else {
@@ -67,8 +62,6 @@ class UserResource {
             $userRepository = UserRepository::autowire();
             $user = $userRepository->findOneByLogin($login);
             if (!empty($user)) {
-                unset($user['password']);
-
                 $response->status(200);
                 $response->body(json_encode($user, JSON_PRETTY_PRINT));
             } else {

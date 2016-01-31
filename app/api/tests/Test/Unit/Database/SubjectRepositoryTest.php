@@ -5,16 +5,14 @@ namespace Test\Unit;
 use Api\Database\DatabaseConnection;
 use Api\Database\SubjectRepository;
 use Phake;
-use Test\TreadstoneTestCase;
+use PHPUnit_Framework_TestCase;
 
-class SubjectRepositoryTest extends TreadstoneTestCase {
+class SubjectRepositoryTest extends PHPUnit_Framework_TestCase {
 
     public function testAutowire() {
         $subjectRepository = SubjectRepository::autowire();
 
-        $databaseConnection = $this->getPrivateProperty($subjectRepository, 'databaseConnection');
-
-        $this->assertEquals(DatabaseConnection::class, get_class($databaseConnection));
+        $this->assertAttributeInstanceOf(DatabaseConnection::class, 'databaseConnection', $subjectRepository);
     }
 
     public function testSaveCallsQueryOnDatabaseConnectionWithCorrectQuery() {

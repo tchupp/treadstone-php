@@ -3,39 +3,22 @@
 namespace Test\Unit;
 
 use Api\Database\UserRepository;
+use Api\Model\User;
 use Api\Security\BCryptPasswordEncoder;
 use Api\Service\UserService;
 use Api\Service\Util\RandomUtil;
 use Exception;
 use Phake;
-use Test\TreadstoneTestCase;
+use PHPUnit_Framework_TestCase;
 
-class UserServiceTest extends TreadstoneTestCase {
+class UserServiceTest extends PHPUnit_Framework_TestCase {
 
     public function testAutowire() {
         $userService = UserService::autowire();
 
-        $userRepository = $this->getPrivateProperty($userService, 'userRepository');
-        $passwordEncoder = $this->getPrivateProperty($userService, 'passwordEncoder');
-        $randomUtil = $this->getPrivateProperty($userService, 'randomUtil');
-
-        $this->assertEquals(UserRepository::class, get_class($userRepository));
-        $this->assertEquals(BCryptPasswordEncoder::class, get_class($passwordEncoder));
-        $this->assertEquals(RandomUtil::class, get_class($randomUtil));
-    }
-
-    public function testCreateUserInformationCallsEncodeOnPasswordEncoder() {
-        $password = 'awesomePassword';
-
-        $userRepository = Phake::mock('Api\Database\UserRepository');
-        $passwordEncoder = Phake::mock('Api\Security\BCryptPasswordEncoder');
-        $randomUtil = Phake::mock('Api\Service\Util\RandomUtil');
-
-        $userService = new UserService($userRepository, $passwordEncoder, $randomUtil);
-
-        $userService->createUserInformation('', $password, '', '', '');
-
-        Phake::verify($passwordEncoder)->encode($password);
+        $this->assertAttributeInstanceOf(UserRepository::class, 'userRepository', $userService);
+        $this->assertAttributeInstanceOf(BCryptPasswordEncoder::class, 'passwordEncoder', $userService);
+        $this->assertAttributeInstanceOf(RandomUtil::class, 'randomUtil', $userService);
     }
 
     public function testCreateUserInformationPassesCorrectUserArrayToUserRepository() {
@@ -47,11 +30,8 @@ class UserServiceTest extends TreadstoneTestCase {
         $email = 'theo@thisiscool.com';
         $activationKey = 'jibechansmoob123love';
 
-        $user = array('login' => $login, 'password' => $hash,
-            'first_name' => $firstName, 'last_name' => $lastName,
-            'email' => $email,
-            'activated' => false, 'activation_key' => $activationKey,
-            'role' => array('ROLE_USER'));
+        $user = new User($login, $hash, $email, $firstName, $lastName,
+            false, $activationKey, array('ROLE_USER'));
 
         $passwordEncoder = Phake::mock('Api\Security\BCryptPasswordEncoder');
         $userRepository = Phake::mock('Api\Database\UserRepository');
@@ -75,7 +55,7 @@ class UserServiceTest extends TreadstoneTestCase {
 
     public function testActivateRegistrationCallsFindOneByActivationKeyAndSaveOnUserRepository() {
         $user = UserRepositoryTest::buildFindOneUser();
-        $activationKey = $user['activation_key'];
+        $activationKey = $user->getActivationKey();
 
         $passwordEncoder = Phake::mock('Api\Security\BCryptPasswordEncoder');
         $userRepository = Phake::mock('Api\Database\UserRepository');
@@ -87,18 +67,17 @@ class UserServiceTest extends TreadstoneTestCase {
 
         $userService = new UserService($userRepository, $passwordEncoder, $randomUtil);
 
-        $user['activated'] = true;
-        $user['activation_key'] = null;
-        unset($user['role']);
+        $user->setActivated(true);
+        $user->setActivationKey(null);
 
-        $this->assertSame($this->buildSavedUser(), $userService->activateRegistration($activationKey));
+        $this->assertSame($user, $userService->activateRegistration($activationKey));
 
         Phake::verify($userRepository)->update($user);
     }
 
     public function testActivateRegistrationDoesNotCallSaveOnUserRepositoryIfNoUserIsFound() {
         $activationKey = 'jibechansmoob123love';
-        $user = array();
+        $user = null;
 
         $passwordEncoder = Phake::mock('Api\Security\BCryptPasswordEncoder');
         $userRepository = Phake::mock('Api\Database\UserRepository');
@@ -116,10 +95,10 @@ class UserServiceTest extends TreadstoneTestCase {
     }
 
     public function testChangePasswordCallsUpdateOnUserRepositoryWithCorrectUser() {
-        $login = 'awesomeLogin';
+        $user = UserRepositoryTest::buildFindOneUser();
+        $login = $user->getLogin();
         $password = 'awesomePassword';
         $passwordHash = 'awesomePassword$H4sH3D';
-        $user = UserRepositoryTest::buildFindOneUser();
 
         $userRepository = Phake::mock('Api\Database\UserRepository');
         $passwordEncoder = Phake::mock('Api\Security\BCryptPasswordEncoder');
@@ -137,8 +116,7 @@ class UserServiceTest extends TreadstoneTestCase {
 
         $userService->changePassword($login, $password);
 
-        $user['password'] = $passwordHash;
-        unset($user['role']);
+        $user->setPassword($passwordHash);
 
         Phake::verify($userRepository)->update($user);
     }
@@ -155,22 +133,16 @@ class UserServiceTest extends TreadstoneTestCase {
 
         Phake::when($userRepository)
             ->findOneByLogin($login)
-            ->thenReturn(array());
+            ->thenReturn(null);
 
         try {
             $userService->changePassword($login, $password);
-        } catch(Exception $ex) {
-            $this->assertEquals(500, $ex->getCode());
-            $this->assertEquals('User not found', $ex->getMessage());
-        }
-    }
+        } catch (Exception $ex) {
+            $expectedCode = 500;
+            $expectedMessage = 'User not found';
 
-    private function buildSavedUser() {
-        $user = array(
-            'login' => 'administrator', 'password' => '$2a$10$mE.qfsV0mji5NcKhb:0w.z4ueI/.bDWbj0T1BYyqP481kGGarKLG',
-            'first_name' => 'Admin', 'last_name' => 'Admin', 'email' => 'admin@localhost',
-            'activated' => true, 'activation_key' => null, 'reset_key' => null, 'reset_date' => null
-        );
-        return $user;
+            $this->assertEquals($expectedCode, $ex->getCode());
+            $this->assertEquals($expectedMessage, $ex->getMessage());
+        }
     }
 }

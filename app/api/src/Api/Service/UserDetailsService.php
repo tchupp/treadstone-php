@@ -24,11 +24,12 @@ class UserDetailsService {
         if (empty($userFromDatabase)) {
             throw new Exception("User " . $login . " was not found in the database", 404);
         }
-        if ($userFromDatabase['activated'] !== 1) {
+        if ($userFromDatabase->getActivated() !== true) {
             throw new Exception("User " . $login . " was not activated", 401);
         }
 
-        $user = array('login' => $userFromDatabase['login'], 'password' => $userFromDatabase['password']);
+        $user = array('login' => $userFromDatabase->getLogin(),
+            'password' => $userFromDatabase->getPassword());
 
         return $user;
     }

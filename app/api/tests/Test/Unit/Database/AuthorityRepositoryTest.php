@@ -5,16 +5,14 @@ namespace Test\Unit;
 use Api\Database\AuthorityRepository;
 use Api\Database\DatabaseConnection;
 use Phake;
-use Test\TreadstoneTestCase;
+use PHPUnit_Framework_TestCase;
 
-class AuthorityRepositoryTest extends TreadstoneTestCase {
+class AuthorityRepositoryTest extends PHPUnit_Framework_TestCase {
 
     public function testAutowire() {
         $authorityRepository = AuthorityRepository::autowire();
 
-        $databaseConnection = $this->getPrivateProperty($authorityRepository, 'databaseConnection');
-
-        $this->assertEquals(DatabaseConnection::class, get_class($databaseConnection));
+        $this->assertAttributeInstanceOf(DatabaseConnection::class, 'databaseConnection', $authorityRepository);
     }
 
     public function testFindOneCallsBindAndQueryOnDatabaseConnection() {

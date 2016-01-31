@@ -3,6 +3,7 @@
 namespace Api\Service;
 
 use Api\Database\UserRepository;
+use Api\Model\User;
 use Api\Security\BCryptPasswordEncoder;
 use Api\Service\Util\RandomUtil;
 use Exception;
@@ -29,11 +30,8 @@ class UserService {
         $encodedPassword = $this->passwordEncoder->encode($password);
         $activationKey = $this->randomUtil->generateActivationKey();
 
-        $user = array('login' => $login, 'password' => $encodedPassword,
-            'first_name' => $firstName, 'last_name' => $lastName,
-            'email' => $email, 'activated' => false,
-            'activation_key' => $activationKey,
-            'role' => array('ROLE_USER'));
+        $user = new User($login, $encodedPassword, $email, $firstName, $lastName,
+            false, $activationKey, array('ROLE_USER'));
 
         $this->userRepository->save($user);
 
@@ -44,9 +42,8 @@ class UserService {
         $user = $this->userRepository->findOneByActivationKey($key);
 
         if (!empty($user)) {
-            $user['activated'] = true;
-            $user['activation_key'] = null;
-            unset($user['role']);
+            $user->setActivated(true);
+            $user->setActivationKey(null);
 
             $this->userRepository->update($user);
         }
@@ -58,10 +55,9 @@ class UserService {
         if (empty($user)) {
             throw new Exception('User not found', 500);
         }
-        $passwordHash = $this->passwordEncoder->encode($password);
 
-        $user['password'] = $passwordHash;
-        unset($user['role']);
+        $passwordHash = $this->passwordEncoder->encode($password);
+        $user->setPassword($passwordHash);
 
         $this->userRepository->update($user);
     }

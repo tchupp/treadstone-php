@@ -23,11 +23,13 @@ class AccountResource {
     }
 
     public static function documentation() {
-        $registerSchema = array('login' => 'string', 'password' => 'string', 'email' => 'string',
-            'first_name' => 'string', 'last_name' => 'string');
-        $userSchema = array('login' => 'string', 'first_name' => 'string', 'last_name' => 'string', 'email' => 'string',
-            'activated' => 'int', 'activation_key' => 'string', 'reset_key' => 'string', 'reset_date' => 'string',
-            'role' => array('string'));
+        $registerSchema = array('login' => 'string', 'password' => 'string',
+            'firstName' => 'string', 'lastName' => 'string', 'email' => 'string');
+        $accountSchema = array('login' => 'string', 'password' => null,
+            'firstName' => 'string', 'lastName' => 'string', 'email' => 'string',
+            'activated' => 'int', 'role' => array('string'));
+        $updateAccountSchema = array('login' => 'string',
+            'firstName' => 'string', 'lastName' => 'string', 'email' => 'string');
         $errorSchema = array('status' => 'int', 'statusText' => 'string', 'description' => 'string');
         $passwordSchema = array('password' => 'string');
 
@@ -35,6 +37,8 @@ class AccountResource {
             'request' => array('body' => $registerSchema),
             'responses' => array(
                 array('status' => 201),
+                array('status' => 400,
+                    'body' => $errorSchema),
                 array('status' => 500,
                     'body' => $errorSchema)
             ));
@@ -50,13 +54,14 @@ class AccountResource {
         $docs[] = array('uri' => '/account', 'method' => 'GET',
             'responses' => array(
                 array('status' => 200,
-                    'body' => $userSchema),
+                    'body' => $accountSchema),
                 array('status' => 401,
                     'body' => $errorSchema),
                 array('status' => 500,
                     'body' => $errorSchema)
             ));
         $docs[] = array('uri' => '/account', 'method' => 'POST',
+            'request' => array('body' => $updateAccountSchema),
             'responses' => array(
                 array('status' => 401,
                     'body' => $errorSchema),
@@ -67,7 +72,7 @@ class AccountResource {
             'request' => array('body' => $passwordSchema),
             'responses' => array(
                 array('status' => 200,
-                    'body' => $userSchema),
+                    'body' => $accountSchema),
                 array('status' => 401,
                     'body' => $errorSchema),
                 array('status' => 500,
@@ -84,8 +89,8 @@ class AccountResource {
             $body = json_decode($request->getBody());
 
             $email = $body->email;
-            $firstName = $body->first_name;
-            $lastName = $body->last_name;
+            $firstName = $body->firstName;
+            $lastName = $body->lastName;
             $login = $body->login;
             $password = $body->password;
 
@@ -151,8 +156,6 @@ class AccountResource {
             $userRepository = UserRepository::autowire();
             $user = $userRepository->findOneByLogin($login);
             if (!empty($user)) {
-                unset($user['password']);
-
                 $response->status(200);
                 $response->body(json_encode($user, JSON_PRETTY_PRINT));
             } else {

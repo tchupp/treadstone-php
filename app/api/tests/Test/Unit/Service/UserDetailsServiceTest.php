@@ -6,30 +6,26 @@ use Api\Database\UserRepository;
 use Api\Service\UserDetailsService;
 use Exception;
 use Phake;
-use Test\TreadstoneTestCase;
+use PHPUnit_Framework_TestCase;
 
-class UserDetailsServiceTest extends TreadstoneTestCase {
+class UserDetailsServiceTest extends PHPUnit_Framework_TestCase {
 
     public function testAutowire() {
         $userDetailsService = UserDetailsService::autowire();
 
-        $userRepository = $this->getPrivateProperty($userDetailsService, 'userRepository');
-
-        $this->assertEquals(UserRepository::class, get_class($userRepository));
+        $this->assertAttributeInstanceOf(UserRepository::class, 'userRepository', $userDetailsService);
     }
 
     public function testLoadUserByLoginReturnsArrayWithOneUsernameAndPassword() {
-        $login = "chuppthe";
-        $password = "$2a$10hergblargimmapassword";
-
-        $user = array(
-            "id" => 1, "login" => $login, "password" => $password,
-            "first_name" => "System", "last_name" => "System", "email" => "system@localhost",
-            "activated" => 1, "activation_key" => null,
-            "reset_key" => null, "reset_date" => null);
+        $user = UserRepositoryTest::buildFindOneUser();
+        $login = $user->getLogin();
+        $password = $user->getPassword();
+        $user->setActivated(true);
 
         $userRepository = Phake::mock('Api\Database\UserRepository');
-        Phake::when($userRepository)->findOneByLogin($login)->thenReturn($user);
+        Phake::when($userRepository)
+            ->findOneByLogin($login)
+            ->thenReturn($user);
 
         $userDetailsService = new UserDetailsService($userRepository);
 
@@ -43,10 +39,10 @@ class UserDetailsServiceTest extends TreadstoneTestCase {
     public function testLoadUserByLoginThrowsErrorIfUserDoesNotExist() {
         $login = "subadooo";
 
-        $user = array();
-
         $userRepository = Phake::mock('Api\Database\UserRepository');
-        Phake::when($userRepository)->findOneByLogin($login)->thenReturn($user);
+        Phake::when($userRepository)
+            ->findOneByLogin($login)
+            ->thenReturn(null);
 
         $userDetailsService = new UserDetailsService($userRepository);
 
@@ -64,14 +60,14 @@ class UserDetailsServiceTest extends TreadstoneTestCase {
     }
 
     public function testLoadUserByLoginThrowsExceptionIfUserIsNotActivated() {
-        $login = "chuppthe";
-        $password = "$2a$10hergblargimmapassword";
-
-        $user = array("login" => $login, "password" => $password,
-            "activated" => 0);
+        $user = UserRepositoryTest::buildFindOneUser();
+        $login = $user->getLogin();
+        $user->setActivated(false);
 
         $userRepository = Phake::mock('Api\Database\UserRepository');
-        Phake::when($userRepository)->findOneByLogin($login)->thenReturn($user);
+        Phake::when($userRepository)
+            ->findOneByLogin($login)
+            ->thenReturn($user);
 
         $userDetailsService = new UserDetailsService($userRepository);
 
