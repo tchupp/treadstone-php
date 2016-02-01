@@ -21,7 +21,7 @@ class UserServiceTest extends PHPUnit_Framework_TestCase {
         $this->assertAttributeInstanceOf(RandomUtil::class, 'randomUtil', $userService);
     }
 
-    public function testCreateUserInformationPassesCorrectUserArrayToUserRepository() {
+    public function testCreateUserInformationPassesCorrectUserToUserRepository() {
         $login = 'chuppthe';
         $password = 'awesomePassword';
         $hash = 'hashedPassword';
@@ -30,8 +30,7 @@ class UserServiceTest extends PHPUnit_Framework_TestCase {
         $email = 'theo@thisiscool.com';
         $activationKey = 'jibechansmoob123love';
 
-        $user = new User($login, $hash, $email, $firstName, $lastName,
-            false, $activationKey, array('ROLE_USER'));
+        $user = new User($login, $hash, $email, $firstName, $lastName, false, $activationKey, null, array('ROLE_USER'));
 
         $passwordEncoder = Phake::mock('Api\Security\BCryptPasswordEncoder');
         $userRepository = Phake::mock('Api\Database\UserRepository');
@@ -75,12 +74,12 @@ class UserServiceTest extends PHPUnit_Framework_TestCase {
         Phake::verify($userRepository)->update($user);
     }
 
-    public function testActivateRegistrationDoesNotCallSaveOnUserRepositoryIfNoUserIsFound() {
+    public function testActivateRegistrationThrowsExceptionIfNoUserIsFound() {
         $activationKey = 'jibechansmoob123love';
         $user = null;
 
-        $passwordEncoder = Phake::mock('Api\Security\BCryptPasswordEncoder');
         $userRepository = Phake::mock('Api\Database\UserRepository');
+        $passwordEncoder = Phake::mock('Api\Security\BCryptPasswordEncoder');
         $randomUtil = Phake::mock('Api\Service\Util\RandomUtil');
 
         Phake::when($userRepository)
@@ -89,9 +88,16 @@ class UserServiceTest extends PHPUnit_Framework_TestCase {
 
         $userService = new UserService($userRepository, $passwordEncoder, $randomUtil);
 
-        $this->assertSame($user, $userService->activateRegistration($activationKey));
+        try {
+            $userService->activateRegistration($activationKey);
 
-        Phake::verify($userRepository, Phake::never())->update(Phake::anyParameters());
+            $this->fail('Should of thrown exception');
+        } catch (Exception $ex) {
+            $this->assertEquals(400, $ex->getCode());
+            $this->assertEquals('User not found', $ex->getMessage());
+        }
+
+        Phake::verifyNoFurtherInteraction($userRepository);
     }
 
     public function testChangePasswordCallsUpdateOnUserRepositoryWithCorrectUser() {
@@ -104,8 +110,6 @@ class UserServiceTest extends PHPUnit_Framework_TestCase {
         $passwordEncoder = Phake::mock('Api\Security\BCryptPasswordEncoder');
         $randomUtil = Phake::mock('Api\Service\Util\RandomUtil');
 
-        $userService = new UserService($userRepository, $passwordEncoder, $randomUtil);
-
         Phake::when($userRepository)
             ->findOneByLogin($login)
             ->thenReturn($user);
@@ -114,11 +118,13 @@ class UserServiceTest extends PHPUnit_Framework_TestCase {
             ->encode($password)
             ->thenReturn($passwordHash);
 
+        $userService = new UserService($userRepository, $passwordEncoder, $randomUtil);
+
         $userService->changePassword($login, $password);
 
-        $user->setPassword($passwordHash);
+        Phake::verify($userRepository)->update(Phake::capture($user));
 
-        Phake::verify($userRepository)->update($user);
+        $this->assertEquals($passwordHash, $user->getPassword());
     }
 
     public function testChangePasswordThrowsExceptionIfUserIsNotFound() {
@@ -143,6 +149,189 @@ class UserServiceTest extends PHPUnit_Framework_TestCase {
 
             $this->assertEquals($expectedCode, $ex->getCode());
             $this->assertEquals($expectedMessage, $ex->getMessage());
+        }
+    }
+
+    public function testUpdateUserInformationCallsFindOneByLoginThenUpdates() {
+        $login = 'chuppthe';
+        $email = 'chuppthe@msu.edu';
+        $firstName = 'Theo';
+        $lastName = 'Chupp';
+        $user = UserRepositoryTest::buildFindOneUser();
+
+        $userRepository = Phake::mock('Api\Database\UserRepository');
+        $passwordEncoder = Phake::mock('Api\Security\BCryptPasswordEncoder');
+        $randomUtil = Phake::mock('Api\Service\Util\RandomUtil');
+
+        Phake::when($userRepository)
+            ->findOneByLogin($login)
+            ->thenReturn($user);
+
+        $userService = new UserService($userRepository, $passwordEncoder, $randomUtil);
+
+        $userService->updateUserInformation($login, $email, $firstName, $lastName);
+
+        Phake::verify($userRepository)->update(Phake::capture($user));
+
+        $this->assertEquals($email, $user->getEmail());
+        $this->assertEquals($firstName, $user->getFirstName());
+        $this->assertEquals($lastName, $user->getLastName());
+    }
+
+    public function testUpdateUserInformationThrowsExceptionIfUserDoesNotExist() {
+        $login = 'chuppthe';
+        $email = 'chuppthe@msu.edu';
+        $firstName = 'Theo';
+        $lastName = 'Chupp';
+        $user = null;
+
+        $userRepository = Phake::mock('Api\Database\UserRepository');
+        $passwordEncoder = Phake::mock('Api\Security\BCryptPasswordEncoder');
+        $randomUtil = Phake::mock('Api\Service\Util\RandomUtil');
+
+        Phake::when($userRepository)
+            ->findOneByLogin($login)
+            ->thenReturn($user);
+
+        $userService = new UserService($userRepository, $passwordEncoder, $randomUtil);
+
+        try {
+            $userService->updateUserInformation($login, $email, $firstName, $lastName);
+
+            $this->fail("Should of thrown exception");
+        } catch (Exception $ex) {
+            $this->assertEquals(404, $ex->getCode());
+            $this->assertEquals("User not found", $ex->getMessage());
+        }
+        Phake::verifyNoFurtherInteraction($userRepository);
+    }
+
+    public function testRequestPasswordResetCallsFindOneByEmailGeneratesResetKeyThenUpdatesUser() {
+        $user = UserRepositoryTest::buildFindOneUser();
+        $user->setActivated(true);
+        $email = $user->getEmail();
+        $resetKey = '7589n4nb43892bnmr32i';
+
+        $userRepository = Phake::mock('Api\Database\UserRepository');
+        $passwordEncoder = Phake::mock('Api\Security\BCryptPasswordEncoder');
+        $randomUtil = Phake::mock('Api\Service\Util\RandomUtil');
+
+        Phake::when($userRepository)
+            ->findOneByEmail($email)
+            ->thenReturn($user);
+
+        Phake::when($randomUtil)
+            ->generateResetKey()
+            ->thenReturn($resetKey);
+
+        $userService = new UserService($userRepository, $passwordEncoder, $randomUtil);
+
+        $updatedUser = $userService->requestPasswordReset($email);
+        $this->assertEquals($resetKey, $updatedUser->getResetKey());
+
+        Phake::verify($userRepository)->update($updatedUser);
+    }
+
+    public function testRequestPasswordResetThrowsExceptionIfUserDoesNotExist() {
+        $user = null;
+        $email = 'chuppthe@msu.edu';
+
+        $userRepository = Phake::mock('Api\Database\UserRepository');
+        $passwordEncoder = Phake::mock('Api\Security\BCryptPasswordEncoder');
+        $randomUtil = Phake::mock('Api\Service\Util\RandomUtil');
+
+        Phake::when($userRepository)
+            ->findOneByEmail($email)
+            ->thenReturn($user);
+
+        $userService = new UserService($userRepository, $passwordEncoder, $randomUtil);
+
+        try {
+            $userService->requestPasswordReset($email);
+
+            $this->fail('Should of thrown Exception');
+        } catch (Exception $ex) {
+            $this->assertEquals(404, $ex->getCode());
+            $this->assertEquals('User not found', $ex->getMessage());
+        }
+    }
+
+    public function testRequestPasswordResetThrowsExceptionIfUserIsNotActivated() {
+        $user = UserRepositoryTest::buildFindOneUser();
+        $user->setActivated(false);
+        $email = $user->getEmail();
+
+        $userRepository = Phake::mock('Api\Database\UserRepository');
+        $passwordEncoder = Phake::mock('Api\Security\BCryptPasswordEncoder');
+        $randomUtil = Phake::mock('Api\Service\Util\RandomUtil');
+
+        Phake::when($userRepository)
+            ->findOneByEmail($email)
+            ->thenReturn($user);
+
+        $userService = new UserService($userRepository, $passwordEncoder, $randomUtil);
+
+        try {
+            $userService->requestPasswordReset($email);
+
+            $this->fail('Should of thrown Exception');
+        } catch (Exception $ex) {
+            $this->assertEquals(400, $ex->getCode());
+            $this->assertEquals('User not activated', $ex->getMessage());
+        }
+    }
+
+    public function testCompletePasswordReset() {
+        $user = UserRepositoryTest::buildFindOneUser();
+        $resetKey = '671982t4h782hj7';
+        $user->setResetKey($resetKey);
+
+        $password = 'awesomePassword';
+        $passwordHash = 'awesomePassword$H4sH3D';
+
+        $userRepository = Phake::mock('Api\Database\UserRepository');
+        $passwordEncoder = Phake::mock('Api\Security\BCryptPasswordEncoder');
+        $randomUtil = Phake::mock('Api\Service\Util\RandomUtil');
+
+        Phake::when($userRepository)
+            ->findOneByResetKey($resetKey)
+            ->thenReturn($user);
+
+        Phake::when($passwordEncoder)
+            ->encode($password)
+            ->thenReturn($passwordHash);
+
+        $userService = new UserService($userRepository, $passwordEncoder, $randomUtil);
+
+        $updatedUser = $userService->completePasswordReset($password, $resetKey);
+        $this->assertEquals(null, $updatedUser->getResetKey());
+        $this->assertEquals($passwordHash, $updatedUser->getPassword());
+
+        Phake::verify($userRepository)->update($updatedUser);
+    }
+
+    public function testCompletePasswordResetThrowsExceptionIfUserDoesNotExist() {
+        $user = null;
+        $resetKey = '671982t4h782hj7';
+        $password = 'awesomePassword';
+
+        $userRepository = Phake::mock('Api\Database\UserRepository');
+        $passwordEncoder = Phake::mock('Api\Security\BCryptPasswordEncoder');
+        $randomUtil = Phake::mock('Api\Service\Util\RandomUtil');
+
+        Phake::when($userRepository)
+            ->findOneByResetKey($resetKey)
+            ->thenReturn($user);
+
+        $userService = new UserService($userRepository, $passwordEncoder, $randomUtil);
+
+        try {
+            $userService->completePasswordReset($password, $resetKey);
+
+            $this->fail("Should of thrown Exception");
+        } catch (Exception $ex) {
+            $this->assertEquals(400, $ex->getCode());
+            $this->assertEquals('User not found', $ex->getMessage());
         }
     }
 }

@@ -49,7 +49,7 @@ class UserXAuthTokenController {
             $authenticatedUser = $authenticationProvider->authenticate($login, $password);
             $token = $tokenProvider->createToken($authenticatedUser['login'], $authenticatedUser['password']);
 
-            $response->status(200);
+            $response->setStatus(200);
             $response->body(json_encode($token, JSON_PRETTY_PRINT));
         };
     }

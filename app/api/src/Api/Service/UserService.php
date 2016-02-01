@@ -30,23 +30,26 @@ class UserService {
         $encodedPassword = $this->passwordEncoder->encode($password);
         $activationKey = $this->randomUtil->generateActivationKey();
 
+        $activated = false;
+        $resetKey = null;
+        $roles = array('ROLE_USER');
+
         $user = new User($login, $encodedPassword, $email, $firstName, $lastName,
-            false, $activationKey, array('ROLE_USER'));
+            $activated, $activationKey, $resetKey, $roles);
 
         $this->userRepository->save($user);
-
         return $user;
     }
 
     public function activateRegistration($key) {
         $user = $this->userRepository->findOneByActivationKey($key);
-
-        if (!empty($user)) {
-            $user->setActivated(true);
-            $user->setActivationKey(null);
-
-            $this->userRepository->update($user);
+        if (empty($user)) {
+            throw new Exception('User not found', 400);
         }
+        $user->setActivated(true);
+        $user->setActivationKey(null);
+
+        $this->userRepository->update($user);
         return $user;
     }
 
@@ -55,10 +58,50 @@ class UserService {
         if (empty($user)) {
             throw new Exception('User not found', 500);
         }
-
         $passwordHash = $this->passwordEncoder->encode($password);
         $user->setPassword($passwordHash);
 
         $this->userRepository->update($user);
+    }
+
+    public function updateUserInformation($login, $email, $firstName, $lastName) {
+        $user = $this->userRepository->findOneByLogin($login);
+        if (empty($user)) {
+            throw new Exception('User not found', 404);
+        }
+        $user->setEmail($email);
+        $user->setFirstName($firstName);
+        $user->setLastName($lastName);
+
+        $this->userRepository->update($user);
+    }
+
+    public function requestPasswordReset($email) {
+        $user = $this->userRepository->findOneByEmail($email);
+        if (empty($user)) {
+            throw new Exception('User not found', 404);
+        }
+        if (!$user->getActivated()) {
+            throw new Exception('User not activated', 400);
+        }
+        $resetKey = $this->randomUtil->generateResetKey();
+
+        $user->setResetKey($resetKey);
+        $this->userRepository->update($user);
+
+        return $user;
+    }
+
+    public function completePasswordReset($password, $resetKey) {
+        $user = $this->userRepository->findOneByResetKey($resetKey);
+        if (empty($user)) {
+            throw new Exception('User not found', 400);
+        }
+        $passwordHash = $this->passwordEncoder->encode($password);
+        $user->setResetKey(null);
+        $user->setPassword($passwordHash);
+
+        $this->userRepository->update($user);
+        return $user;
     }
 }

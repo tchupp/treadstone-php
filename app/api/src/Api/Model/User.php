@@ -13,23 +13,26 @@ class User implements JsonSerializable {
     private $lastName;
     private $activated;
     private $activationKey;
+    private $resetKey;
     private $roles;
 
-    public function __construct($login, $password, $email, $firstName, $lastName, $activated, $activationKey, array $roles) {
+    public function __construct($login, $password, $email, $firstName, $lastName, $activated, $activationKey, $resetKey, array $roles) {
         $this->login = $login;
         $this->password = $password;
         $this->email = $email;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
-        $this->activated = ($activated === 1) ? true : false;
+        $this->activated = ($activated == 1) ? true : false;
         $this->activationKey = $activationKey;
+        $this->resetKey = $resetKey;
         $this->roles = $roles;
+        $this->resetKey = $resetKey;
     }
 
     public function toDatabaseArray() {
         return array('login' => $this->login, 'password' => $this->password, 'email' => $this->email,
             'firstName' => $this->firstName, 'lastName' => $this->lastName,
-            'activated' => $this->activated, 'activationKey' => $this->activationKey);
+            'activated' => $this->activated, 'activationKey' => $this->activationKey, 'resetKey' =>$this->resetKey);
     }
 
     function jsonSerialize() {
@@ -40,6 +43,10 @@ class User implements JsonSerializable {
 
     public function setPassword($password) {
         $this->password = $password;
+    }
+
+    public function setEmail($email) {
+        $this->email = $email;
     }
 
     public function setFirstName($firstName) {
@@ -58,12 +65,12 @@ class User implements JsonSerializable {
         $this->activationKey = $activationKey;
     }
 
-    public function addRole($role) {
-        $this->roles[] = $role;
+    public function setResetKey($resetKey) {
+        $this->resetKey = $resetKey;
     }
 
-    public function setEmail($email) {
-        $this->email = $email;
+    public function addRole($role) {
+        $this->roles[] = $role;
     }
 
     public function getLogin() {
@@ -92,6 +99,10 @@ class User implements JsonSerializable {
 
     public function getActivationKey() {
         return $this->activationKey;
+    }
+
+    public function getResetKey() {
+        return $this->resetKey;
     }
 
     public function getRoles() {

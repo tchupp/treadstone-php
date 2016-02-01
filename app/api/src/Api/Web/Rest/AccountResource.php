@@ -20,6 +20,10 @@ class AccountResource {
         $app->post('/account', self::updateAccount($app));
 
         $app->post('/account/change_password', self::changePassword($app));
+
+        $app->post('/account/reset_password/init', self::requestPasswordReset($app));
+
+        $app->post('/account/reset_password/finish', self::finishPasswordReset($app));
     }
 
     public static function documentation() {
@@ -63,6 +67,9 @@ class AccountResource {
         $docs[] = array('uri' => '/account', 'method' => 'POST',
             'request' => array('body' => $updateAccountSchema),
             'responses' => array(
+                array('status' => 200),
+                array('status' => 400,
+                    'body' => $errorSchema),
                 array('status' => 401,
                     'body' => $errorSchema),
                 array('status' => 501,
@@ -117,7 +124,7 @@ class AccountResource {
             $success = $mailService->sendActivationEmail($user, $request->getHostWithPort());
 
             if ($success) {
-                $response->status(201);
+                $response->setStatus(201);
             } else {
                 throw new Exception("Failed to send activation email", 500);
             }
@@ -136,13 +143,9 @@ class AccountResource {
             }
 
             $userService = UserService::autowire();
-            $user = $userService->activateRegistration($key);
+            $userService->activateRegistration($key);
 
-            if (!empty($user)) {
-                $response->status(200);
-            } else {
-                throw new Exception("User could not be found by activation key", 500);
-            }
+            $response->setStatus(200);
         };
     }
 
@@ -156,7 +159,7 @@ class AccountResource {
             $userRepository = UserRepository::autowire();
             $user = $userRepository->findOneByLogin($login);
             if (!empty($user)) {
-                $response->status(200);
+                $response->setStatus(200);
                 $response->body(json_encode($user, JSON_PRETTY_PRINT));
             } else {
                 throw new Exception('User not found', 500);
@@ -166,7 +169,23 @@ class AccountResource {
 
     private static function updateAccount(Application $app) {
         return function () use ($app) {
-            throw new Exception("Coming soon!", 501);
+            $request = $app->request;
+            $response = $app->response;
+
+            $body = json_decode($request->getBody());
+
+            $login = $body->login;
+            $email = $body->email;
+            $firstName = $body->firstName;
+            $lastName = $body->lastName;
+
+            if (empty($email) || empty($firstName) || empty($lastName) || empty($login)) {
+                throw new Exception("Malformed body", 400);
+            }
+
+            $userService = UserService::autowire();
+            $userService->updateUserInformation($login, $email, $firstName, $lastName);
+            $response->setStatus(200);
         };
     }
 
@@ -187,7 +206,55 @@ class AccountResource {
             $userService = UserService::autowire();
             $userService->changePassword($login, $password);
 
-            $response->status(200);
+            $response->setStatus(200);
+        };
+    }
+
+    private static function requestPasswordReset(Application $app) {
+        return function () use ($app) {
+            $request = $app->request;
+            $response = $app->response;
+
+            $body = json_decode($request->getBody());
+
+            $email = $body->email;
+
+            if (empty($email)) {
+                throw new Exception('Malformed body', 400);
+            }
+
+            $userService = UserService::autowire();
+            $mailService = new MailService();
+
+            $user = $userService->requestPasswordReset($email);
+            $success = $mailService->sendPasswordResetEmail($user, $request->getHostWithPort());
+
+            if ($success) {
+                $response->setStatus(200);
+            } else {
+                throw new Exception("Failed to send password reset email", 500);
+            }
+        };
+    }
+
+    private static function finishPasswordReset(Application $app) {
+        return function () use ($app) {
+            $request = $app->request;
+            $response = $app->response;
+
+            $body = json_decode($request->getBody());
+
+            $password = $body->password;
+            $resetKey = $body->resetKey;
+
+            if (empty($password) || empty($resetKey)) {
+                throw new Exception('Malformed body', 400);
+            }
+
+            $userService = UserService::autowire();
+            $userService->completePasswordReset($password, $resetKey);
+
+            $response->setStatus(200);
         };
     }
 }

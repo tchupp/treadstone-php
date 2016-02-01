@@ -18,8 +18,8 @@ class UserRepository {
 
     public function save(User $user) {
         $userQuery = "INSERT
-                  INTO treadstone_user(login, password_hash, first_name, last_name, email, activated, activation_key)
-                  VALUES(:login, :password, :first_name, :last_name, :email, :activated, :activation_key)";
+                  INTO treadstone_user(login, password_hash, first_name, last_name, email, activated, activation_key, reset_key)
+                  VALUES(:login, :password, :firstName, :lastName, :email, :activated, :activationKey, :resetKey)";
         $roleQuery = "INSERT
                   INTO treadstone_user_authority(user_id, authority_name)
                   VALUES(:id, :role)";
@@ -40,9 +40,9 @@ class UserRepository {
     public function update(User $user) {
         $query = "UPDATE treadstone_user
                   SET password_hash = :password,
-                      first_name = :first_name, last_name = :last_name, email = :email,
-                      activated = :activated, activation_key = :activation_key,
-                      reset_key = :reset_key, reset_date = :reset_date
+                      first_name = :firstName, last_name = :lastName, email = :email,
+                      activated = :activated, activation_key = :activationKey,
+                      reset_key = :resetKey
                   WHERE login = :login";
 
         $this->databaseConnection->bindMore($user->toDatabaseArray());
@@ -54,7 +54,8 @@ class UserRepository {
     public function findAll() {
         $query = "SELECT User.login, User.password_hash AS password,
                     User.first_name, User.last_name, User.email,
-                    User.activated, User.activation_key, Auth.authority_name AS role
+                    User.activated, User.activation_key,
+                    User.reset_key, Auth.authority_name AS role
                   FROM treadstone_user User, treadstone_user_authority Auth
                   WHERE User.id = Auth.user_id";
         $rows = $this->databaseConnection->query($query);
@@ -66,7 +67,8 @@ class UserRepository {
     public function findOneByLogin($login) {
         $query = "SELECT User.login, User.password_hash AS password,
                     User.first_name, User.last_name, User.email,
-                    User.activated, User.activation_key, Auth.authority_name AS role
+                    User.activated, User.activation_key,
+                    User.reset_key, Auth.authority_name AS role
                   FROM treadstone_user User, treadstone_user_authority Auth
                   WHERE login = :login
                   AND User.id = Auth.user_id";
@@ -80,7 +82,8 @@ class UserRepository {
     public function findOneByEmail($email) {
         $query = "SELECT User.login, User.password_hash AS password,
                     User.first_name, User.last_name, User.email,
-                    User.activated, User.activation_key, Auth.authority_name AS role
+                    User.activated, User.activation_key,
+                    User.reset_key, Auth.authority_name AS role
                   FROM treadstone_user User, treadstone_user_authority Auth
                   WHERE email = :email
                   AND User.id = Auth.user_id";
@@ -94,7 +97,8 @@ class UserRepository {
     public function findOneByActivationKey($key) {
         $query = "SELECT User.login, User.password_hash AS password,
                     User.first_name, User.last_name, User.email,
-                    User.activated, User.activation_key, Auth.authority_name AS role
+                    User.activated, User.activation_key,
+                    User.reset_key, Auth.authority_name AS role
                   FROM treadstone_user User, treadstone_user_authority Auth
                   WHERE activation_key = :activation_key
                   AND User.id = Auth.user_id";
@@ -105,21 +109,44 @@ class UserRepository {
         return reset($users);
     }
 
+    public function findOneByResetKey($key) {
+        $query = "SELECT User.login, User.password_hash AS password,
+                    User.first_name, User.last_name, User.email,
+                    User.activated, User.activation_key,
+                    User.reset_key, Auth.authority_name AS role
+                  FROM treadstone_user User, treadstone_user_authority Auth
+                  WHERE reset_key = :reset_key
+                  AND User.id = Auth.user_id";
+        $this->databaseConnection->bind('reset_key', $key);
+        $rows = $this->databaseConnection->query($query);
+
+        $users = $this->convertRowsToUsers($rows);
+        return reset($users);
+    }
+
     private function convertRowsToUsers($rows) {
+        /** @var User[] $usersDTO */
         $usersDTO = array();
         foreach ($rows as $row) {
             if (empty($usersDTO[$row['login']])) {
-                $usersDTO[$row['login']] = $row;
-                $usersDTO[$row['login']]['role'] = array($row['role']);
+                $login = $row['login'];
+                $password = $row['password'];
+                $email = $row['email'];
+                $firstName = $row['first_name'];
+                $lastName = $row['last_name'];
+                $activated = $row['activated'];
+                $activationKey = $row['activation_key'];
+                $resetKey = $row['reset_key'];
+                $roles = array($row['role']);
+
+                $user = new User($login, $password, $email, $firstName, $lastName,
+                    $activated, $activationKey, $resetKey, $roles);
+
+                $usersDTO[$row['login']] = $user;
             } else {
-                $usersDTO[$row['login']]['role'][] = $row['role'];
+                $usersDTO[$row['login']]->addRole($row['role']);
             }
         }
-        $users = array();
-        foreach ($usersDTO as $user) {
-            $users[] = new User($user['login'], $user['password'], $user['email'],
-                $user['first_name'], $user['last_name'], $user['activated'], $user['activation_key'], $user['role']);
-        }
-        return $users;
+        return $usersDTO;
     }
 }

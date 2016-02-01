@@ -47,7 +47,7 @@ class UserResource {
             $userRepository = UserRepository::autowire();
             $users = $userRepository->findAll();
             if (!empty($users)) {
-                $response->status(200);
+                $response->setStatus(200);
                 $response->body(json_encode($users, JSON_PRETTY_PRINT));
             } else {
                 throw new Exception('Users not found', 404);
@@ -62,7 +62,7 @@ class UserResource {
             $userRepository = UserRepository::autowire();
             $user = $userRepository->findOneByLogin($login);
             if (!empty($user)) {
-                $response->status(200);
+                $response->setStatus(200);
                 $response->body(json_encode($user, JSON_PRETTY_PRINT));
             } else {
                 throw new Exception('User not found', 404);

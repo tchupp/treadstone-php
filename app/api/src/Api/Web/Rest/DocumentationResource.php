@@ -19,7 +19,7 @@ class DocumentationResource {
             $docs['UserResource'] = UserResource::documentation();
             $docs['UserXAuthTokenController'] = UserXAuthTokenController::documentation();
 
-            $response->status(200);
+            $response->setStatus(200);
             $response->body(json_encode($docs, JSON_PRETTY_PRINT));
         };
     }

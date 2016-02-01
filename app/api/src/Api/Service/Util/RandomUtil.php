@@ -9,4 +9,8 @@ class RandomUtil {
     public function generateActivationKey() {
         return substr(bin2hex(openssl_random_pseudo_bytes($this->KEY_LENGTH)), 0, $this->KEY_LENGTH);
     }
+
+    public function generateResetKey() {
+        return substr(bin2hex(openssl_random_pseudo_bytes($this->KEY_LENGTH)), 0, $this->KEY_LENGTH);
+    }
 }

@@ -18,8 +18,8 @@ class UserRepositoryTest extends PHPUnit_Framework_TestCase {
 
     public function testSaveCallsQueryOnDatabaseConnectionWithCorrectQueryCorrectInput() {
         $query = "INSERT
-                  INTO treadstone_user(login, password_hash, first_name, last_name, email, activated, activation_key)
-                  VALUES(:login, :password, :first_name, :last_name, :email, :activated, :activation_key)";
+                  INTO treadstone_user(login, password_hash, first_name, last_name, email, activated, activation_key, reset_key)
+                  VALUES(:login, :password, :firstName, :lastName, :email, :activated, :activationKey, :resetKey)";
 
         $user = $this->buildNewUser();
 
@@ -42,8 +42,8 @@ class UserRepositoryTest extends PHPUnit_Framework_TestCase {
 
     public function testSaveInsertsIntoAuthorityTableOncePerRole() {
         $userQuery = "INSERT
-                  INTO treadstone_user(login, password_hash, first_name, last_name, email, activated, activation_key)
-                  VALUES(:login, :password, :first_name, :last_name, :email, :activated, :activation_key)";
+                  INTO treadstone_user(login, password_hash, first_name, last_name, email, activated, activation_key, reset_key)
+                  VALUES(:login, :password, :firstName, :lastName, :email, :activated, :activationKey, :resetKey)";
         $roleQuery = "INSERT
                   INTO treadstone_user_authority(user_id, authority_name)
                   VALUES(:id, :role)";
@@ -84,9 +84,9 @@ class UserRepositoryTest extends PHPUnit_Framework_TestCase {
     public function testUpdateCallsQueryOnDatabaseWithCorrectQueryCorrectInput() {
         $query = "UPDATE treadstone_user
                   SET password_hash = :password,
-                      first_name = :first_name, last_name = :last_name, email = :email,
-                      activated = :activated, activation_key = :activation_key,
-                      reset_key = :reset_key, reset_date = :reset_date
+                      first_name = :firstName, last_name = :lastName, email = :email,
+                      activated = :activated, activation_key = :activationKey,
+                      reset_key = :resetKey
                   WHERE login = :login";
 
         $user = $this->buildNewUser();
@@ -111,7 +111,8 @@ class UserRepositoryTest extends PHPUnit_Framework_TestCase {
     public function testFindAllCallsQueryOnDatabaseConnectionWithCorrectQuery() {
         $query = "SELECT User.login, User.password_hash AS password,
                     User.first_name, User.last_name, User.email,
-                    User.activated, User.activation_key, Auth.authority_name AS role
+                    User.activated, User.activation_key,
+                    User.reset_key, Auth.authority_name AS role
                   FROM treadstone_user User, treadstone_user_authority Auth
                   WHERE User.id = Auth.user_id";
 
@@ -128,7 +129,8 @@ class UserRepositoryTest extends PHPUnit_Framework_TestCase {
     public function testFindOneByLoginCallsQueryOnDatabaseConnectionWithCorrectQuery() {
         $query = "SELECT User.login, User.password_hash AS password,
                     User.first_name, User.last_name, User.email,
-                    User.activated, User.activation_key, Auth.authority_name AS role
+                    User.activated, User.activation_key,
+                    User.reset_key, Auth.authority_name AS role
                   FROM treadstone_user User, treadstone_user_authority Auth
                   WHERE login = :login
                   AND User.id = Auth.user_id";
@@ -154,7 +156,8 @@ class UserRepositoryTest extends PHPUnit_Framework_TestCase {
     public function testFindOneByEmailCallsQueryOnDatabaseConnectionWithCorrectQuery() {
         $query = "SELECT User.login, User.password_hash AS password,
                     User.first_name, User.last_name, User.email,
-                    User.activated, User.activation_key, Auth.authority_name AS role
+                    User.activated, User.activation_key,
+                    User.reset_key, Auth.authority_name AS role
                   FROM treadstone_user User, treadstone_user_authority Auth
                   WHERE email = :email
                   AND User.id = Auth.user_id";
@@ -180,7 +183,8 @@ class UserRepositoryTest extends PHPUnit_Framework_TestCase {
     public function testFindOneByActivationKeyCallsQueryOnDatabaseConnectionWithCorrectQuery() {
         $query = "SELECT User.login, User.password_hash AS password,
                     User.first_name, User.last_name, User.email,
-                    User.activated, User.activation_key, Auth.authority_name AS role
+                    User.activated, User.activation_key,
+                    User.reset_key, Auth.authority_name AS role
                   FROM treadstone_user User, treadstone_user_authority Auth
                   WHERE activation_key = :activation_key
                   AND User.id = Auth.user_id";
@@ -203,17 +207,44 @@ class UserRepositoryTest extends PHPUnit_Framework_TestCase {
         );
     }
 
+    public function testFindOneByResetKey() {
+        $query = "SELECT User.login, User.password_hash AS password,
+                    User.first_name, User.last_name, User.email,
+                    User.activated, User.activation_key,
+                    User.reset_key, Auth.authority_name AS role
+                  FROM treadstone_user User, treadstone_user_authority Auth
+                  WHERE reset_key = :reset_key
+                  AND User.id = Auth.user_id";
+
+        $databaseConnection = Phake::mock('Api\Database\DatabaseConnection');
+        Phake::when($databaseConnection)
+            ->query($query)
+            ->thenReturn($this->buildFindOneData());
+
+        $userRepository = new UserRepository($databaseConnection);
+
+        $resetKey = 'reset_key';
+        $resetKeyValue = 'uuoikbnm321yionm342198';
+        $this->assertEquals($this->buildFindOneUser(),
+            $userRepository->findOneByResetKey($resetKeyValue));
+
+        Phake::inOrder(
+            Phake::verify($databaseConnection)->bind($resetKey, $resetKeyValue),
+            Phake::verify($databaseConnection)->query($query)
+        );
+    }
+
     private function buildFindOneData() {
         $data[] = array(
             'login' => 'administrator',
             'password' => '$2a$10$mE.qfsV0mji5NcKhb',
             'first_name' => 'Admin', 'last_name' => 'Admin', 'email' => 'admin@localhost',
-            'activated' => 0, 'activation_key' => null, 'role' => 'ROLE_ADMIN');
+            'activated' => 0, 'activation_key' => null, 'reset_key' => null, 'role' => 'ROLE_ADMIN');
         $data[] = array(
             'login' => 'administrator',
             'password' => '$2a$10$mE.qfsV0mji5NcKhb',
             'first_name' => 'Admin', 'last_name' => 'Admin', 'email' => 'admin@localhost',
-            'activated' => 0, 'activation_key' => null, 'role' => 'ROLE_USER');
+            'activated' => 0, 'activation_key' => null, 'reset_key' => null, 'role' => 'ROLE_USER');
         return $data;
     }
 
@@ -223,25 +254,27 @@ class UserRepositoryTest extends PHPUnit_Framework_TestCase {
             'login' => 'chullupabatman',
             'password' => '$2a$10$fd27ad9546b355d167jb1',
             'first_name' => 'batman', 'last_name' => 'chullupa', 'email' => 'chullupabatman@msu.edu',
-            'activated' => 1, 'activation_key' => null, 'role' => 'ROLE_USER');
+            'activated' => 1, 'activation_key' => null, 'reset_key' => null, 'role' => 'ROLE_USER');
         return $data;
     }
 
     public static function buildFindOneUser() {
         return new User('administrator', '$2a$10$mE.qfsV0mji5NcKhb', 'admin@localhost',
-            'Admin', 'Admin', 0, null, array('ROLE_ADMIN', 'ROLE_USER'));
+            'Admin', 'Admin', 0, null, null, array('ROLE_ADMIN', 'ROLE_USER'));
     }
 
     private function buildFindAllUsers() {
-        $users[] = $this->buildFindOneUser();
-        $users[] = new User('chullupabatman', '$2a$10$fd27ad9546b355d167jb1', 'chullupabatman@msu.edu',
-            'batman', 'chullupa', 1, null, array('ROLE_USER'));
+        $userOne = $this->buildFindOneUser();
+        $users[$userOne->getLogin()] = $userOne;
+        $userTwo = new User('chullupabatman', '$2a$10$fd27ad9546b355d167jb1', 'chullupabatman@msu.edu',
+            'batman', 'chullupa', 1, null, null, array('ROLE_USER'));
+        $users[$userTwo->getLogin()] = $userTwo;
         return $users;
     }
 
     private function buildNewUser() {
-        $user = new User('chuppthe', 'super', 'theo@thisiscool.com', 'theo', 'chupp',
-            false, 'blahHA473810ji903h1', array('ROLE_USER'));
+        $user = new User('chuppthe', 'super', 'theo@thisiscool.com',
+            'theo', 'chupp', false, 'blahHA473810ji903h1', null, array('ROLE_USER'));
         return $user;
     }
 }
