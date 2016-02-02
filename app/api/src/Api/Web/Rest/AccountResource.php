@@ -21,9 +21,9 @@ class AccountResource {
 
         $app->post('/account/change_password', self::changePassword($app));
 
-        $app->post('/account/reset_password/init', self::requestPasswordReset($app));
+//        $app->post('/account/reset_password/init', self::requestPasswordReset($app));
 
-        $app->post('/account/reset_password/finish', self::finishPasswordReset($app));
+//        $app->post('/account/reset_password/finish', self::finishPasswordReset($app));
     }
 
     public static function documentation() {
@@ -36,6 +36,8 @@ class AccountResource {
             'firstName' => 'string', 'lastName' => 'string', 'email' => 'string');
         $errorSchema = array('status' => 'int', 'statusText' => 'string', 'description' => 'string');
         $passwordSchema = array('password' => 'string');
+//        $resetRequestSchema = array('email' => 'string');
+//        $resetFinalizeSchema = array('resetKey' => 'string', 'password' => 'string');
 
         $docs[] = array('uri' => '/register', 'method' => 'POST',
             'request' => array('body' => $registerSchema),
@@ -85,6 +87,28 @@ class AccountResource {
                 array('status' => 500,
                     'body' => $errorSchema)
             ));
+        /*$docs[] = array('uri' => '/account/reset_password/init', 'method' => 'POST',
+            'request' => array('body' => $resetRequestSchema),
+            'responses' => array(
+                array('status' => 200),
+                array('status' => 400,
+                    'body' => $errorSchema),
+                array('status' => 401,
+                    'body' => $errorSchema),
+                array('status' => 404,
+                    'body' => $errorSchema),
+                array('status' => 500,
+                    'body' => $errorSchema)
+            ));
+        $docs[] = array('uri' => '/account/reset_password/init', 'method' => 'POST',
+            'request' => array('body' => $resetFinalizeSchema),
+            'responses' => array(
+                array('status' => 200),
+                array('status' => 400,
+                    'body' => $errorSchema),
+                array('status' => 401,
+                    'body' => $errorSchema)
+            ));*/
         return $docs;
     }
 

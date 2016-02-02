@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('treadstoneApp')
-  .factory('Auth', function Auth($q, Account, Register, Activate, AuthServerProvider, Password) {
+  .factory('Auth', function Auth($q, Account, Register, Activate, AuthServerProvider, Password, PasswordResetInit, PasswordResetFinish) {
     return {
       login: function (credentials, callback) {
         var cb = callback || angular.noop;
@@ -63,8 +63,24 @@ angular.module('treadstoneApp')
         }, function (err) {
           return cb(err);
         }).$promise;
+      },
+      resetPasswordInit: function (email, callback) {
+        var cb = callback || angular.noop;
+
+        return PasswordResetInit.save(email, function () {
+          return cb();
+        }, function (err) {
+          return cb(err)
+        }).$promise;
+      },
+      resetPasswordFinish: function (keyAndPassword, callback) {
+        var cb = callback || angular.noop;
+
+        return PasswordResetFinish.save(keyAndPassword, function () {
+          return cb();
+        }, function (err) {
+          return cb(err)
+        }).$promise;
       }
-      // Password Reset Init
-      // Password Reset Finish
     };
   });
