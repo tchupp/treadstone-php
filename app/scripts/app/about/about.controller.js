@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('treadstoneApp')
-    .controller('AboutCtrl', function ($scope, Features) {
+    .controller('AboutController', function ($scope, Features) {
 
         function createUnknownError(status) {
             return {

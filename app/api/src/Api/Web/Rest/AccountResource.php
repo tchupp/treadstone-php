@@ -27,66 +27,64 @@ class AccountResource {
     }
 
     public static function documentation() {
-        $registerSchema = array('login' => 'string', 'password' => 'string',
-            'firstName' => 'string', 'lastName' => 'string', 'email' => 'string');
-        $accountSchema = array('login' => 'string', 'password' => null,
-            'firstName' => 'string', 'lastName' => 'string', 'email' => 'string',
-            'activated' => 'int', 'role' => array('string'));
-        $updateAccountSchema = array('login' => 'string',
-            'firstName' => 'string', 'lastName' => 'string', 'email' => 'string');
-        $errorSchema = array('status' => 'int', 'statusText' => 'string', 'description' => 'string');
-        $passwordSchema = array('password' => 'string');
+        $registerSchema = ['login'     => 'string', 'password' => 'string',
+                           'firstName' => 'string', 'lastName' => 'string', 'email' => 'string'];
+        $accountSchema = ['login'     => 'string', 'password' => null,
+                          'firstName' => 'string', 'lastName' => 'string', 'email' => 'string',
+                          'activated' => 'int', 'role' => ['string']];
+        $updateAccountSchema = ['login'     => 'string',
+                                'firstName' => 'string', 'lastName' => 'string', 'email' => 'string'];
+        $errorSchema = ['status' => 'int', 'statusText' => 'string', 'description' => 'string'];
+        $passwordSchema = ['password' => 'string'];
 //        $resetRequestSchema = array('email' => 'string');
 //        $resetFinalizeSchema = array('resetKey' => 'string', 'password' => 'string');
 
-        $docs[] = array('uri' => '/register', 'method' => 'POST',
-            'request' => array('body' => $registerSchema),
-            'responses' => array(
-                array('status' => 201),
-                array('status' => 400,
-                    'body' => $errorSchema),
-                array('status' => 500,
-                    'body' => $errorSchema)
-            ));
-        $docs[] = array('uri' => '/activate', 'method' => 'GET',
-            'request' => array('key' => 'string'),
-            'responses' => array(
-                array('status' => 200),
-                array('status' => 400,
-                    'body' => $errorSchema),
-                array('status' => 500,
-                    'body' => $errorSchema)
-            ));
-        $docs[] = array('uri' => '/account', 'method' => 'GET',
-            'responses' => array(
-                array('status' => 200,
-                    'body' => $accountSchema),
-                array('status' => 401,
-                    'body' => $errorSchema),
-                array('status' => 500,
-                    'body' => $errorSchema)
-            ));
-        $docs[] = array('uri' => '/account', 'method' => 'POST',
-            'request' => array('body' => $updateAccountSchema),
-            'responses' => array(
-                array('status' => 200),
-                array('status' => 400,
-                    'body' => $errorSchema),
-                array('status' => 401,
-                    'body' => $errorSchema),
-                array('status' => 501,
-                    'body' => $errorSchema)
-            ));
-        $docs[] = array('uri' => '/account/change_password', 'method' => 'POST',
-            'request' => array('body' => $passwordSchema),
-            'responses' => array(
-                array('status' => 200,
-                    'body' => $accountSchema),
-                array('status' => 401,
-                    'body' => $errorSchema),
-                array('status' => 500,
-                    'body' => $errorSchema)
-            ));
+        $docs[] = ['uri'       => '/register', 'method' => 'POST',
+                   'request'   => ['body' => $registerSchema],
+                   'responses' => [
+                       ['status' => 201],
+                       ['status' => 400,
+                        'body'   => $errorSchema],
+                       ['status' => 500,
+                        'body'   => $errorSchema]
+                   ]];
+        $docs[] = ['uri'       => '/activate', 'method' => 'GET',
+                   'request'   => ['key' => 'string'],
+                   'responses' => [
+                       ['status' => 200],
+                       ['status' => 400,
+                        'body'   => $errorSchema],
+                       ['status' => 500,
+                        'body'   => $errorSchema]
+                   ]];
+        $docs[] = ['uri'       => '/account', 'method' => 'GET',
+                   'responses' => [
+                       ['status' => 200,
+                        'body'   => $accountSchema],
+                       ['status' => 401,
+                        'body'   => $errorSchema],
+                       ['status' => 500,
+                        'body'   => $errorSchema]
+                   ]];
+        $docs[] = ['uri'       => '/account', 'method' => 'POST',
+                   'request'   => ['body' => $updateAccountSchema],
+                   'responses' => [
+                       ['status' => 200],
+                       ['status' => 400,
+                        'body'   => $errorSchema],
+                       ['status' => 401,
+                        'body'   => $errorSchema],
+                   ]];
+        $docs[] = ['uri'       => '/account/change_password', 'method' => 'POST',
+                   'request'   => ['body' => $passwordSchema],
+                   'responses' => [
+                       ['status' => 200,
+                        'body'   => $accountSchema],
+                       ['status' => 401,
+                        'body'   => $errorSchema],
+                       ['status' => 500,
+                        'body'   => $errorSchema]
+                   ]];
         /*$docs[] = array('uri' => '/account/reset_password/init', 'method' => 'POST',
             'request' => array('body' => $resetRequestSchema),
             'responses' => array(

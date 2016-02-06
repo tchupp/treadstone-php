@@ -1,0 +1,56 @@
+<div class="row marketing">
+
+    <p ng-if="loading">Loading...</p>
+
+    <div class="panel-group">
+        <div ng-repeat="(resource, endpoints) in docs" class="panel panel-default">
+
+            <div class="panel-heading" data-toggle="collapse" data-target="#{{resource}}"
+                 ng-click="endpointsClick(endpoints)">
+                <h4 class="panel-title">
+                    <a>{{resource}}</a>
+                    <a class="glyphicon pull-right" ng-class="endpointsClass(endpoints)"></a>
+                </h4>
+            </div>
+
+            <div id="{{resource}}" class="panel-collapse panel-body collapse">
+
+                <div ng-repeat="endpoint in endpoints" class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title" data-toggle="collapse"
+                            data-target="#{{endpointId(endpoint)}}">
+                            <span class="btn" ng-class="endpointMethodClass(endpoint)">{{endpoint.method}}</span>
+                            <span class="pull-right">{{endpoint.uri}}</span>
+                        </h4>
+                    </div>
+
+                    <!--in-->
+                    <div id="{{endpointId(endpoint)}}" class="panel-collapse panel-body collapse">
+
+                        <div ng-if="endpoint.request" class="panel panel-default">
+                            <div class="panel-heading panel-title">Request Parameters:</div>
+                            <div class="panel-body alert-info">
+                                <pre>{{endpoint.request | json}}</pre>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading panel-title">Possible Responses:</div>
+                            <ul class="list-group">
+                                <li class="list-group-item" ng-repeat="response in endpoint.responses"
+                                    ng-class="responseClass(response)">
+                                    <p>Status: {{response.status}}
+                                    <p ng-if="response.body">Body:
+                                    <pre ng-if="response.body">{{response.body | json}}</pre>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
