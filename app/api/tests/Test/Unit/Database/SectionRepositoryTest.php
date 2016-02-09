@@ -103,7 +103,7 @@ class SectionRepositoryTest extends PHPUnit_Framework_TestCase {
         );
     }
 
-    public function testFindOneBySemesterAndSubjectCallsQueryOnDatabaseConnectionWithCorrectQuery() {
+    public function testFindAllBySemesterAndSubjectCallsQueryOnDatabaseConnectionWithCorrectQuery() {
         $query = "SELECT Subject.code AS subject_code, Subject.name AS subject_name,
 	                Semester.code AS semester_code, Semester.name AS semester_name,
 	                Section.section_number,
@@ -122,14 +122,14 @@ class SectionRepositoryTest extends PHPUnit_Framework_TestCase {
         $databaseConnection = Phake::mock('Api\Database\DatabaseConnection');
         Phake::when($databaseConnection)
             ->query($query)
-            ->thenReturn($this->buildFindOneData());
+            ->thenReturn($this->buildFindAllData());
 
         $sectionRepository = new SectionRepository($databaseConnection);
 
         $semester = 'FS';
         $subject = '410';
-        $this->assertSame($this->buildFindOneSection(),
-            $sectionRepository->findOneBySemesterAndSubject($semester, $subject));
+        $this->assertSame($this->buildFindAllSection(),
+            $sectionRepository->findAllBySemesterAndSubject($semester, $subject));
 
         Phake::inOrder(
             Phake::verify($databaseConnection)->bind('semester', "%$semester%"),
@@ -139,50 +139,50 @@ class SectionRepositoryTest extends PHPUnit_Framework_TestCase {
     }
 
     private function buildFindOneData() {
-        $data[] = array('subject_code' => 'CSE 410', 'subject_name' => 'Operating Systems',
-            'semester_code' => 'FS15', 'semester_name' => 'Fall Semester 2015', 'section_number' => 2,
-            'day_name' => 'Monday', 'start_time' => '15:00:00', 'end_time' => '16:20:00');
-        $data[] = array('subject_code' => 'CSE 410', 'subject_name' => 'Operating Systems',
-            'semester_code' => 'FS15', 'semester_name' => 'Fall Semester 2015', 'section_number' => 2,
-            'day_name' => 'Wednesday', 'start_time' => '15:00:00', 'end_time' => '16:20:00');
+        $data[] = ['subject_code'  => 'CSE 410', 'subject_name' => 'Operating Systems',
+                   'semester_code' => 'FS15', 'semester_name' => 'Fall Semester 2015', 'section_number' => 2,
+                   'day_name'      => 'Monday', 'start_time' => '15:00:00', 'end_time' => '16:20:00'];
+        $data[] = ['subject_code'  => 'CSE 410', 'subject_name' => 'Operating Systems',
+                   'semester_code' => 'FS15', 'semester_name' => 'Fall Semester 2015', 'section_number' => 2,
+                   'day_name'      => 'Wednesday', 'start_time' => '15:00:00', 'end_time' => '16:20:00'];
         return $data;
     }
 
     private function buildFindAllData() {
         $data = $this->buildFindOneData();
-        $data[] = array('subject_code' => 'IAH 241A', 'subject_name' => 'Music and Society in the Modern World',
-            'semester_code' => 'SS16', 'semester_name' => 'Spring Semester 2016', 'section_number' => 2,
-            'day_name' => 'Tuesday', 'start_time' => '12:40:00', 'end_time' => '14:30:00');
-        $data[] = array('subject_code' => 'IAH 241A', 'subject_name' => 'Music and Society in the Modern World',
-            'semester_code' => 'SS16', 'semester_name' => 'Spring Semester 2016', 'section_number' => 2,
-            'day_name' => 'Thursday', 'start_time' => '12:40:00', 'end_time' => '14:30:00');
+        $data[] = ['subject_code'  => 'IAH 241A', 'subject_name' => 'Music and Society in the Modern World',
+                   'semester_code' => 'SS16', 'semester_name' => 'Spring Semester 2016', 'section_number' => 2,
+                   'day_name'      => 'Tuesday', 'start_time' => '12:40:00', 'end_time' => '14:30:00'];
+        $data[] = ['subject_code'  => 'IAH 241A', 'subject_name' => 'Music and Society in the Modern World',
+                   'semester_code' => 'SS16', 'semester_name' => 'Spring Semester 2016', 'section_number' => 2,
+                   'day_name'      => 'Thursday', 'start_time' => '12:40:00', 'end_time' => '14:30:00'];
         return $data;
     }
 
     private function buildFindOneSection() {
-        $section = array(
-            'semester' => array('code' => 'FS15', 'name' => 'Fall Semester 2015'),
-            'subject' => array('code' => 'CSE 410', 'name' => 'Operating Systems'),
-            'section_number' => 2,
-            'times' => array(
-                array('day' => 'Monday', 'start_time' => '15:00:00', 'end_time' => '16:20:00'),
-                array('day' => 'Wednesday', 'start_time' => '15:00:00', 'end_time' => '16:20:00')
-            )
-        );
+        $section = [
+            'semester'       => ['code' => 'FS15', 'name' => 'Fall Semester 2015'],
+            'subject'        => ['code' => 'CSE 410', 'name' => 'Operating Systems'],
+            'sectionNumber' => 2,
+            'times'          => [
+                ['day' => 'Monday', 'startTime' => '15:00:00', 'endTime' => '16:20:00'],
+                ['day' => 'Wednesday', 'startTime' => '15:00:00', 'endTime' => '16:20:00']
+            ]
+        ];
         return $section;
     }
 
     private function buildFindAllSection() {
         $sections[] = $this->buildFindOneSection();
-        $sections[] = array(
-            'semester' => array('code' => 'SS16', 'name' => 'Spring Semester 2016'),
-            'subject' => array('code' => 'IAH 241A', 'name' => 'Music and Society in the Modern World'),
-            'section_number' => 2,
-            'times' => array(
-                array('day' => 'Tuesday', 'start_time' => '12:40:00', 'end_time' => '14:30:00'),
-                array('day' => 'Thursday', 'start_time' => '12:40:00', 'end_time' => '14:30:00')
-            )
-        );
+        $sections[] = [
+            'semester'       => ['code' => 'SS16', 'name' => 'Spring Semester 2016'],
+            'subject'        => ['code' => 'IAH 241A', 'name' => 'Music and Society in the Modern World'],
+            'sectionNumber' => 2,
+            'times'          => [
+                ['day' => 'Tuesday', 'startTime' => '12:40:00', 'endTime' => '14:30:00'],
+                ['day' => 'Thursday', 'startTime' => '12:40:00', 'endTime' => '14:30:00']
+            ]
+        ];
         return $sections;
     }
 }

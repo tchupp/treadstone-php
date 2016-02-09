@@ -383,9 +383,9 @@ module.exports = function (grunt) {
         htmlmin: {
             dist: {
                 options: {
+                    collapseBooleanAttributes: true,
                     collapseWhitespace: true,
                     conservativeCollapse: true,
-                    collapseBooleanAttributes: true,
                     removeCommentsFromCDATA: true,
                     removeOptionalTags: true
                 },
@@ -432,6 +432,7 @@ module.exports = function (grunt) {
                         '*.{ico,png,txt}',
                         '.htaccess',
                         '*.html',
+                        'scripts/**/*.html',
                         'views/{,*/}*.html',
                         'images/{,*/}*.{webp}',
                         'fonts/*'

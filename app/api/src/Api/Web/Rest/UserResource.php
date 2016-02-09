@@ -9,9 +9,9 @@ use Exception;
 class UserResource {
 
     public static function registerApi(Application $app) {
-        $app->get('/users', self::getAll($app));
+        $app->get('/users', self::getAllUsers($app));
 
-        $app->get('/users/:login', self::getOne($app));
+        $app->get('/users/:login', self::getOneUsers($app));
     }
 
     public static function documentation() {
@@ -28,7 +28,7 @@ class UserResource {
                 array('status' => 404,
                     'body' => $errorSchema)
             ));
-        $docs[] = array('uri' => '/users/:id', 'method' => 'GET',
+        $docs[] = array('uri' => '/users/:login', 'method' => 'GET',
             'responses' => array(
                 array('status' => 200,
                     'body' => $userSchema),
@@ -40,7 +40,7 @@ class UserResource {
         return $docs;
     }
 
-    private static function getAll(Application $app) {
+    private static function getAllUsers(Application $app) {
         return function () use ($app) {
             $response = $app->response;
 
@@ -55,7 +55,7 @@ class UserResource {
         };
     }
 
-    private static function getOne(Application $app) {
+    private static function getOneUsers(Application $app) {
         return function ($login) use ($app) {
             $response = $app->response;
 

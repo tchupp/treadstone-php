@@ -15,6 +15,7 @@ class DocumentationResource {
             $response = $app->response;
 
             $docs['AccountResource'] = AccountResource::documentation();
+            $docs['CourseResource'] = CourseResource::documentation();
             $docs['FeaturesResource'] = FeaturesResource::documentation();
             $docs['UserResource'] = UserResource::documentation();
             $docs['UserXAuthTokenController'] = UserXAuthTokenController::documentation();

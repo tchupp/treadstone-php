@@ -75,7 +75,7 @@ class SectionRepository {
         return $sections;
     }
 
-    public function findOneBySemesterAndSubject($semester, $subject) {
+    public function findAllBySemesterAndSubject($semester, $subject) {
         $query = "SELECT Subject.code AS subject_code, Subject.name AS subject_name,
 	                Semester.code AS semester_code, Semester.name AS semester_name,
 	                Section.section_number,
@@ -95,26 +95,26 @@ class SectionRepository {
         $rows = $this->databaseConnection->query($query);
 
         $sections = $this->convertRowsToSections($rows);
-        return reset($sections);
+        return $sections;
     }
 
     private function convertRowsToSections($rows) {
-        $sections = array();
+        $sections = [];
         foreach ($rows as $row) {
-            $sectionTime = array(
-                'day' => $row['day_name'], 'start_time' => $row['start_time'], 'end_time' => $row['end_time']);
+            $sectionTime = [
+                'day' => $row['day_name'], 'startTime' => $row['start_time'], 'endTime' => $row['end_time']];
 
             if (count($sections) > 0
                 && $sections[count($sections) - 1]['semester']['code'] == $row['semester_code']
                 && $sections[count($sections) - 1]['subject']['code'] == $row['subject_code']) {
                 $sections[count($sections) - 1]['times'][] = $sectionTime;
             } else {
-                $sections[] = array(
-                    'semester' => array('code' => $row['semester_code'], 'name' => $row['semester_name']),
-                    'subject' => array('code' => $row['subject_code'], 'name' => $row['subject_name']),
-                    'section_number' => $row['section_number'],
-                    'times' => array($sectionTime)
-                );
+                $sections[] = [
+                    'semester'      => ['code' => $row['semester_code'], 'name' => $row['semester_name']],
+                    'subject'       => ['code' => $row['subject_code'], 'name' => $row['subject_name']],
+                    'sectionNumber' => $row['section_number'],
+                    'times'         => [$sectionTime]
+                ];
             }
         }
         return $sections;
