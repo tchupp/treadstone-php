@@ -1,7 +1,16 @@
 $icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/";
+
+//@import "bootswatch-scss/yeti/_variables.scss";
+//@import "bootswatch-scss/flatly/_variables.scss";
+@import "bootswatch-scss/superhero/_variables.scss";
+
 // bower:scss
 @import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss";
 // endbower
+
+//@import "bootswatch-scss/yeti/_bootswatch.scss";
+//@import "bootswatch-scss/flatly/_bootswatch.scss";
+@import "bootswatch-scss/superhero/_bootswatch.scss";
 
 .browsehappy {
   margin: 0.2em 0;
