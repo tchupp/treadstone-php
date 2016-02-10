@@ -11,9 +11,8 @@ angular.module('treadstoneApp')
                 endpoints: '='
             },
             controller: ['$scope', function ($scope) {
-                $scope.arrow = {
-                    'glyphicon-chevron-down': $scope.endpoints.open,
-                    'glyphicon-chevron-left': !$scope.endpoints.open
+                $scope.arrow = function () {
+                    return $scope.endpoints.open ? 'glyphicon-chevron-down' : 'glyphicon-chevron-left';
                 };
             }]
         };
@@ -24,15 +23,16 @@ angular.module('treadstoneApp')
             restrict: 'E',
             templateUrl: 'scripts/components/docs/endpoint.html',
             scope: {
+                resource: '=',
                 endpoint: '='
             },
             controller: ['$scope', function ($scope) {
-                var methods = {'GET': 'btn-primary', 'POST': 'btn-success'};
+                var methods = {'GET': 'btn-primary', 'POST': 'btn-success', 'DELETE': 'btn-danger'};
 
                 $scope.id = ($scope.endpoint.method + $scope.endpoint.uri).replace(/\/|:/g, '');
                 $scope.method = methods[$scope.endpoint.method];
 
-                $scope.responseStatus = function (response) {
+                $scope.responseClass = function (response) {
                     var statusType = Math.floor(response.status / 100);
                     if (statusType === 2) {
                         return 'list-group-item-success';

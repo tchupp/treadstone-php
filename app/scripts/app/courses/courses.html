@@ -1,0 +1,11 @@
+<div class="row marketing">
+
+    <p ng-if="loading">Loading...</p>
+
+    <div class="panel-group">
+        <div class="panel panel-default" ng-repeat="course in courses">
+            <pre>{{course | json}}</pre>
+        </div>
+    </div>
+
+</div>
