@@ -22,7 +22,7 @@ class User implements JsonSerializable {
         $this->email = $email;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
-        $this->activated = ($activated == 1) ? true : false;
+        $this->activated = ($activated == true) ? 1 : 0;
         $this->activationKey = $activationKey;
         $this->resetKey = $resetKey;
         $this->roles = $roles;

@@ -26,7 +26,7 @@ class UserTest extends PHPUnit_Framework_TestCase {
 
         $expectedUser = array('login' => $login, 'password' => null, 'email' => $email,
             'firstName' => $firstName, 'lastName' => $lastName,
-            'activated' => true, 'role' => $role);
+            'activated' => $activated, 'role' => $role);
 
         $user = new User($login, $password, $email, $firstName, $lastName, $activated, $activatedKey, $resetKey, $role);
 

@@ -24,7 +24,7 @@ class UserDetailsService {
         if (empty($userFromDatabase)) {
             throw new Exception("User " . $login . " was not found in the database", 404);
         }
-        if ($userFromDatabase->getActivated() !== true) {
+        if ($userFromDatabase->getActivated() != true) {
             throw new Exception("User " . $login . " was not activated", 401);
         }
 
