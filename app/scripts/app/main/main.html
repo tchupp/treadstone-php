@@ -1,8 +1,47 @@
-<div class="jumbotron">
-    <h1>'Allo, 'Allo!</h1>
-    <p class="lead">
-        <img src="/images/yeoman.png" alt="I'm Yeoman"><br>
-        Always a pleasure scaffolding your apps.
-    </p>
-    <p><a class="btn btn-lg btn-success" ng-href="#">Splendid!<span class="glyphicon glyphicon-ok"></span></a></p>
+<div class="row" ng-show="isAuthenticated()">
+    <p>Logged In!</p>
+</div>
+
+<div class="row" ng-hide="isAuthenticated()">
+    <div class="col-md-8">
+        <div class="jumbotron">
+            <h1>Welcome to <strong>Tread</strong>Course!</h1>
+            <p class="lead">
+                <img alt="TreadCourse Logo" src=""><br>
+                The last organization tool you will need as a student.
+            </p>
+            <p>
+                <a class="btn btn-lg btn-success" ng-href="#/register">Register!
+                    <span class="glyphicon glyphicon-ok"></span>
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <h2>Sign In</h2>
+
+        <div class="alert alert-danger" ng-show="authenticationError">
+            <strong>Failed to sign in!</strong> Please check your credentials and try again.
+        </div>
+
+        <form class="well " ng-submit="submitLogin()">
+
+            <div class="form-group">
+                <label for="login">Login</label>
+                <input type="text" class="form-control" id="login" placeholder="Username" ng-model="login">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" placeholder="Password"
+                       ng-model="password">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Sign in</button>
+
+        </form>
+
+    </div>
+
 </div>

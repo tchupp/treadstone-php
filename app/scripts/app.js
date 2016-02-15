@@ -14,10 +14,13 @@ angular.module('treadstoneApp', [
         'ngResource',
         'ngRoute',
         'ngSanitize',
-        'ngTouch'
+        'ngTouch',
+        'LocalStorageModule'
     ])
-    .config(function ($routeProvider) {
+    .config(function ($routeProvider, $httpProvider) {
         $routeProvider.otherwise({
             redirectTo: '/'
         });
+
+        $httpProvider.interceptors.push('AuthInterceptor');
     });

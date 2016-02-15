@@ -1,14 +1,18 @@
 'use strict';
 
 angular.module('treadstoneApp')
-    .directive('tsNavbar', function() {
+    .directive('tsNavbar', function () {
         return {
             restrict: 'E',
             replace: true,
             templateUrl: 'scripts/components/navbar/navbar.html',
             scope: {},
-            controller: ['$scope', '$location', function($scope, $location) {
-                $scope.location = $location;
+            controller: ['$scope', 'Auth', 'Principal', function ($scope, Auth, Principal) {
+                $scope.isAuthenticated = Principal.isAuthenticated;
+
+                $scope.logout = function () {
+                    Auth.logout();
+                };
             }]
         };
     });
