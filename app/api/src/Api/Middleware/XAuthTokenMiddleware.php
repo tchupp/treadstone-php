@@ -29,7 +29,11 @@ class XAuthTokenMiddleware extends Middleware {
             $xAuthHeader = $req->headers(self::$XAUTH_TOKEN_HEADER);
             if (empty($xAuthHeader)) {
                 $res->status(401);
-                $res->body("Authentication Missing");
+                $res->body(json_encode(array(
+                    'status' => 401,
+                    'statusText' => 'Unauthorized',
+                    'description' => 'Authentication Missing'
+                )));
                 return;
             }
 
@@ -39,7 +43,11 @@ class XAuthTokenMiddleware extends Middleware {
             $user = $this->userDetailService->loadUserByLogin($login);
             if (!$this->tokenProvider->validateToken($xAuthHeader, $user['login'], $user['password'])) {
                 $res->status(401);
-                $res->body("Authentication Failed");
+                $res->body(json_encode(array(
+                    'status' => 401,
+                    'statusText' => 'Unauthorized',
+                    'description' => 'Authentication Failed'
+                )));
                 return;
             }
         }

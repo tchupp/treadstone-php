@@ -8,7 +8,9 @@ angular.module('treadstoneApp')
             templateUrl: 'scripts/components/navbar/navbar.html',
             scope: {},
             controller: ['$scope', 'Auth', 'Principal', function ($scope, Auth, Principal) {
-                $scope.isAuthenticated = Principal.isAuthenticated;
+                Principal.identity().then(function () {
+                    $scope.isAuthenticated = Principal.isAuthenticated;
+                });
 
                 $scope.logout = function () {
                     Auth.logout();

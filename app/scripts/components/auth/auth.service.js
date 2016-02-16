@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('treadstoneApp')
-    .factory('Auth', function Auth($q, Principal, Account, Register, Activate, AuthServerProvider, Password, PasswordResetInit, PasswordResetFinish) {
+    .factory('Auth', function Auth($rootScope, $location, $q, Principal, Account, Register, Activate, AuthServerProvider, Password, PasswordResetInit, PasswordResetFinish) {
         return {
             login: function (credentials, callback) {
                 var cb = callback || angular.noop;
@@ -25,6 +25,26 @@ angular.module('treadstoneApp')
             logout: function () {
                 AuthServerProvider.logout();
                 Principal.authenticate(null);
+            },
+            authorize: function (force) {
+                return Principal.identity(force).then(function () {
+                    var isAuthenticated = Principal.isAuthenticated();
+
+                    var toRegister = $rootScope.nextRoute.originalPath === '/register';
+                    if (isAuthenticated && toRegister) {
+                        $location.path('/');
+                    }
+
+                    var nextRouteData = $rootScope.nextRoute.data;
+                    if (nextRouteData && nextRouteData.roles &&
+                        nextRouteData.roles.length > 0 && !Principal.hasAnyAuthority(nextRouteData.roles)) {
+                        if (isAuthenticated) {
+                            // 403
+                        } else {
+                            $location.path('/');
+                        }
+                    }
+                });
             },
             createAccount: function (account, callback) {
                 var cb = callback || angular.noop;

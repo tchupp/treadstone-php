@@ -14,4 +14,21 @@ angular.module('treadstoneApp')
                 return config;
             }
         };
+    })
+    .factory('AuthExpiredInterceptor', function ($injector, $q) {
+        return {
+            responseError: function (response) {
+                if (response.status === 401 && response.data.description === 'Authentication Failed') {
+                    var AuthServerProvider = $injector.get('AuthServerProvider');
+                    AuthServerProvider.removeToken();
+
+                    var Principal = $injector.get('Principal');
+                    if (Principal.isAuthenticated()) {
+                        var Auth = $injector.get('Auth');
+                        Auth.authorize(true);
+                    }
+                }
+                return $q.reject(response);
+            }
+        };
     });

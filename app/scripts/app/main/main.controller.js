@@ -2,10 +2,7 @@
 
 angular.module('treadstoneApp')
     .controller('MainCtrl', function ($scope, Auth, Principal) {
-        Principal.identity().then(function (account) {
-            $scope.account = account;
-            $scope.isAuthenticated = Principal.isAuthenticated;
-        });
+        $scope.isAuthenticated = Principal.isAuthenticated;
 
         $scope.submitLogin = function () {
             Auth.login({

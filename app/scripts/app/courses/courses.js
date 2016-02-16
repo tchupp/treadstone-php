@@ -4,6 +4,10 @@ angular.module('treadstoneApp')
     .config(function ($routeProvider) {
         $routeProvider.when('/courses', {
             templateUrl: 'scripts/app/courses/courses.html',
-            controller: 'CoursesController'
+            controller: 'CoursesController',
+            data: {
+                roles: ['ROLE_USER'],
+                pageTitle: 'Courses'
+            }
         });
     });

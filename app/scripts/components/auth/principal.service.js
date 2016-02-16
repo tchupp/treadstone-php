@@ -6,8 +6,24 @@ angular.module('treadstoneApp')
             _authenticated = false;
 
         return {
+            isIdentityResolved: function () {
+                return angular.isDefined(_identity);
+            },
             isAuthenticated: function () {
                 return _authenticated;
+            },
+            hasAnyAuthority: function (roles) {
+                if (!_authenticated || !_identity || !_identity.role) {
+                    return false;
+                }
+
+                for (var i = 0; i < roles.length; i++) {
+                    if (_identity.role.indexOf(roles[i]) !== -1) {
+                        return true;
+                    }
+                }
+
+                return false;
             },
             authenticate: function (identity) {
                 _identity = identity;
