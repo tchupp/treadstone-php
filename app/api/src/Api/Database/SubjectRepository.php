@@ -36,18 +36,39 @@ class SubjectRepository {
                   FROM treadstone_subject";
         $rows = $this->databaseConnection->query($query);
 
-        $subject = array();
+        $subject = [];
         foreach ($rows as $row) {
             $subject[$row['code']] = $row;
         }
         return $subject;
     }
 
-    public function findOneByCode($code) {
-        $query = "SELECT *
-                  FROM treadstone_subject
-                  WHERE code = :code";
-        $this->databaseConnection->bind('code', $code);
+    public function findAllBySemester($semester) {
+        $query = "SELECT Subject.code AS subjectCode, Subject.name AS subjectName,
+                    Semester.code AS semesterCode, Semester.name AS semesterName
+                  FROM treadstone_subject Subject, treadstone_semester Semester, treadstone_section Section
+                  WHERE Section.subject_id = Subject.id
+                  AND Section.semester_id = Semester.id
+                  AND Semester.code = :semester
+                  ORDER BY Subject.code";
+
+        $this->databaseConnection->bind('semester', $semester);
+        $subjects = $this->databaseConnection->query($query);
+
+        return $subjects;
+    }
+
+    public function findOneBySemesterAndSubject($semester, $subject) {
+        $query = "SELECT Subject.code AS subjectCode, Subject.name AS subjectName,
+                    Semester.code AS semesterCode, Semester.name AS semesterName
+                  FROM treadstone_subject Subject, treadstone_semester Semester, treadstone_section Section
+                  WHERE Section.subject_id = Subject.id
+                  AND Section.semester_id = Semester.id
+                  AND Semester.code = :semester
+                  AND Subject.code = :subject
+                  ORDER BY Subject.code";
+        $this->databaseConnection->bind('semester', $semester);
+        $this->databaseConnection->bind('subject', $subject);
         $subject = $this->databaseConnection->query($query);
 
         return reset($subject);

@@ -58,7 +58,7 @@ class SemesterRepositoryTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testFindAllCallsQueryOnDatabaseConnectionWithCorrectQuery() {
-        $query = "SELECT *
+        $query = "SELECT code, name
                   FROM treadstone_semester";
 
         $databaseConnection = Phake::mock('Api\Database\DatabaseConnection');
@@ -72,7 +72,7 @@ class SemesterRepositoryTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testFindOneByCodeCallsQueryOnDatabaseConnectionWithCorrectQuery() {
-        $query = "SELECT *
+        $query = "SELECT code, name
                   FROM treadstone_semester
                   WHERE code = :code";
 

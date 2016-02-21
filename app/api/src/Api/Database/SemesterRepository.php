@@ -32,7 +32,7 @@ class SemesterRepository {
     }
 
     public function findAll() {
-        $query = "SELECT *
+        $query = "SELECT code, name
                   FROM treadstone_semester";
         $rows = $this->databaseConnection->query($query);
 
@@ -44,7 +44,7 @@ class SemesterRepository {
     }
 
     public function findOneByCode($code) {
-        $query = "SELECT *
+        $query = "SELECT code, name
                   FROM treadstone_semester
                   WHERE code = :code";
         $this->databaseConnection->bind('code', $code);

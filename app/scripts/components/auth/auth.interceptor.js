@@ -18,7 +18,8 @@ angular.module('treadstoneApp')
     .factory('AuthExpiredInterceptor', function ($injector, $q) {
         return {
             responseError: function (response) {
-                if (response.status === 401 && response.data.description === 'Authentication Failed') {
+                if (response.status === 401 &&
+                    (response.data.description === 'Authentication Failed' || response.data.description === 'Authentication Missing')) {
                     var AuthServerProvider = $injector.get('AuthServerProvider');
                     AuthServerProvider.removeToken();
 

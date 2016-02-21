@@ -98,6 +98,31 @@ class SectionRepository {
         return $sections;
     }
 
+    public function findOneBySectionNumberAndSemesterAndSubject($semester, $subject, $number) {
+        $query = "SELECT Subject.code AS subject_code, Subject.name AS subject_name,
+	                Semester.code AS semester_code, Semester.name AS semester_name,
+	                Section.section_number,
+	                SectionTime.day_name, SectionTime.start_time, SectionTime.end_time
+                  FROM treadstone_section Section, treadstone_subject Subject,
+	                treadstone_semester Semester, treadstone_section_time SectionTime,
+	                treadstone_day Day
+                  WHERE Section.subject_id = Subject.id
+                  AND Section.semester_id = Semester.id
+                  AND SectionTime.section_id = Section.id
+                  AND Semester.code = :semester
+                  AND Subject.code = :subject
+                  AND Section.section_number = :number
+                  AND Day.name = SectionTime.day_name
+                  ORDER BY Subject.code, Day.number";
+        $this->databaseConnection->bind('semester', $semester);
+        $this->databaseConnection->bind('subject', $subject);
+        $this->databaseConnection->bind('number', $number);
+        $rows = $this->databaseConnection->query($query);
+
+        $sections = $this->convertRowsToSections($rows);
+        return reset($sections);
+    }
+
     private function convertRowsToSections($rows) {
         $sections = [];
         foreach ($rows as $row) {

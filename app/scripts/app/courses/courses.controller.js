@@ -1,17 +1,78 @@
 'use strict';
 
 angular.module('treadstoneApp')
-    .controller('CoursesController', function ($scope, Courses) {
-        $scope.courses = [];
+    .controller('CoursesController', function ($scope, Semester, Subject, Section) {
+        $scope.selectedSchool = 'Michigan State University';
+        $scope.selectedSemester = null;
+        $scope.selectedSubject = null;
+        $scope.selectedSection = null;
+
+        $scope.semesters = [];
+        $scope.subjects = [];
+        $scope.sections = [];
         $scope.loading = true;
 
-        function loadAll() {
-            Courses.query(function (data) {
+        function loadAllSemesters() {
+            Semester.query(function (data) {
                 $scope.loading = false;
-                $scope.courses = data;
+                $scope.semesters = data;
             }, function () {
                 $scope.loading = false;
             });
         }
-        loadAll();
+
+        loadAllSemesters();
+
+        $scope.clearSemester = function () {
+            $scope.selectedSemester = null;
+            $scope.selectedSubject = null;
+            $scope.selectedSection = null;
+
+            $scope.subjects = [];
+            $scope.sections = [];
+        };
+
+        $scope.clearSubject = function () {
+            $scope.selectedSubject = null;
+            $scope.selectedSection = null;
+
+            $scope.sections = [];
+        };
+
+        $scope.clearSection = function () {
+            $scope.selectedSection = null;
+        };
+
+        $scope.selectSemester = function (semester) {
+            $scope.clearSemester();
+
+            $scope.selectedSemester = semester.code;
+
+            Subject.query({semester: $scope.selectedSemester}, function (data) {
+                $scope.loading = false;
+                $scope.subjects = data;
+            }, function () {
+                $scope.loading = false;
+            });
+        };
+
+        $scope.selectSubject = function (subject) {
+            $scope.selectedSubject = null;
+            $scope.selectedSection = null;
+
+            $scope.selectedSubject = subject.subjectCode;
+
+            Section.query({semester: $scope.selectedSemester, subject: $scope.selectedSubject}, function (data) {
+                $scope.loading = false;
+                $scope.sections = data;
+            }, function () {
+                $scope.loading = false;
+            });
+        };
+
+        $scope.selectSection = function (section) {
+            $scope.selectedSection = null;
+
+            $scope.selectedSection = section;
+        };
     });
