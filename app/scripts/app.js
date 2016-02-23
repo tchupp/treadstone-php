@@ -22,7 +22,7 @@ angular.module('treadstoneApp', [
             // don't do this if we are NOT authenticated OR this is the first page we are visiting
 
             if (current.$$route.data && current.$$route.data.pageTitle) {
-                pageTitle += ' | ' + current.$$route.data.pageTitle;
+                pageTitle = current.$$route.data.pageTitle + ' | ' + pageTitle;
             }
             $window.document.title = pageTitle;
         });
