@@ -14,21 +14,21 @@ class FeaturesResource {
     }
 
     public static function documentation() {
-        $featureSchema = array('id' => 'string', 'name' => 'string', 'description' => 'string', 'href' => 'string');
-        $errorSchema = array('status' => 'int', 'statusText' => 'string', 'description' => 'string');
+        $featureSchema = ['id' => 'string', 'name' => 'string', 'description' => 'string', 'href' => 'string'];
+        $errorSchema = ['status' => 'int', 'statusText' => 'string', 'description' => 'string', 'path' => 'string'];
 
-        $docs[] = array('uri' => '/features', 'method' => 'GET',
-            'responses' => array(
-                array('status' => 200,
-                    'body' => array($featureSchema))
-            ));
-        $docs[] = array('uri' => '/features/:id', 'method' => 'GET',
-            'responses' => array(
-                array('status' => 200,
-                    'body' => $featureSchema),
-                array('status' => 404,
-                    'body' => $errorSchema)
-            ));
+        $docs[] = ['uri'       => '/features', 'method' => 'GET',
+                   'responses' => [
+                       ['status' => 200,
+                        'body'   => [$featureSchema]]
+                   ]];
+        $docs[] = ['uri'       => '/features/:id', 'method' => 'GET',
+                   'responses' => [
+                       ['status' => 200,
+                        'body'   => $featureSchema],
+                       ['status' => 404,
+                        'body'   => $errorSchema]
+                   ]];
         return $docs;
     }
 

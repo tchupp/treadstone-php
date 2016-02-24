@@ -15,7 +15,7 @@ class XAuthTokenMiddleware extends Middleware {
     private $tokenProvider;
     private $protectedRoots;
 
-    public function __construct(UserDetailsService $userDetailService, TokenProvider $tokenProvider, $protectedRoots = array()) {
+    public function __construct(UserDetailsService $userDetailService, TokenProvider $tokenProvider, $protectedRoots = []) {
         $this->userDetailService = $userDetailService;
         $this->tokenProvider = $tokenProvider;
         $this->protectedRoots = $protectedRoots;
@@ -29,11 +29,12 @@ class XAuthTokenMiddleware extends Middleware {
             $xAuthHeader = $req->headers(self::$XAUTH_TOKEN_HEADER);
             if (empty($xAuthHeader)) {
                 $res->status(401);
-                $res->body(json_encode(array(
-                    'status' => 401,
-                    'statusText' => 'Unauthorized',
-                    'description' => 'Authentication Missing'
-                )));
+                $res->body(json_encode([
+                    'status'      => 401,
+                    'statusText'  => 'Unauthorized',
+                    'description' => 'Authentication Missing',
+                    'path'        => $req->getResourceUri()
+                ]));
                 return;
             }
 
@@ -43,11 +44,12 @@ class XAuthTokenMiddleware extends Middleware {
             $user = $this->userDetailService->loadUserByLogin($login);
             if (!$this->tokenProvider->validateToken($xAuthHeader, $user['login'], $user['password'])) {
                 $res->status(401);
-                $res->body(json_encode(array(
-                    'status' => 401,
-                    'statusText' => 'Unauthorized',
-                    'description' => 'Authentication Failed'
-                )));
+                $res->body(json_encode([
+                    'status'      => 401,
+                    'statusText'  => 'Unauthorized',
+                    'description' => 'Authentication Failed',
+                    'path'        => $req->getResourceUri()
+                ]));
                 return;
             }
         }

@@ -3,34 +3,43 @@
 angular.module('treadstoneApp', [
         'ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngSanitize', 'ngTouch', 'LocalStorageModule'
     ])
-    .run(function ($rootScope, $window, Principal, Auth) {
+    .run(function ($rootScope, $location, $window, Principal, Auth) {
 
-        $rootScope.$on('$routeChangeStart', function (event, next, current) {
+        $rootScope.$on('$routeChangeStart', function (event, next) {
             $rootScope.nextRoute = next.$$route;
-            $rootScope.currentRoute = current;
+            $rootScope.nextRouteParams = next.params;
 
-            //if (Principal.isIdentityResolved()) {
             Auth.authorize();
-            //}
         });
 
         $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
             var pageTitle = 'TreadCourse';
 
-            // if not going to login AND previousRoute is defined
-            // if we are already Authenticated AND this is not the first page we are visiting
-            // don't do this if we are NOT authenticated OR this is the first page we are visiting
+            if (Principal.isAuthenticated() && $rootScope.previousRoute) {
+                $rootScope.previousRoute = previous.$$route;
+                $rootScope.previousRouteParams = previous.params;
+            }
 
             if (current.$$route.data && current.$$route.data.pageTitle) {
                 pageTitle = current.$$route.data.pageTitle + ' | ' + pageTitle;
             }
             $window.document.title = pageTitle;
         });
+
+        $rootScope.back = function () {
+            if ($rootScope.previousRoute.originalPath === '/activate' || $rootScope.previousRoute.originalPath === null) {
+                $location.path('/');
+            } else {
+                $location.path($rootScope.previousRoute.originalPath);
+            }
+        };
     })
     .config(function ($routeProvider, $httpProvider) {
 
         $routeProvider.otherwise({redirectTo: '/'});
 
+
+        $httpProvider.interceptors.push('ErrorInterceptor');
         $httpProvider.interceptors.push('AuthExpiredInterceptor');
         $httpProvider.interceptors.push('AuthInterceptor');
     });

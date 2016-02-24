@@ -6,7 +6,6 @@ use Api\Web\Rest\AccountResource;
 use Api\Web\Rest\CourseResource;
 use Api\Web\Rest\DocumentationResource;
 use Api\Web\Rest\FeaturesResource;
-use Api\Web\Rest\UserResource;
 use Api\Web\Rest\UserXAuthTokenController;
 use Exception;
 use Slim\Http\Response;
@@ -18,7 +17,7 @@ class Application extends Slim {
     public $config;
 
     protected function initConfig() {
-        $config = array();
+        $config = [];
         if (!file_exists($this->configDirectory) || !is_dir($this->configDirectory)) {
             throw new Exception('Config directory is missing: ' . $this->configDirectory, 500);
         }
@@ -28,7 +27,7 @@ class Application extends Slim {
         return $config;
     }
 
-    public function __construct(array $userSettings = array(), $configDirectory = 'config') {
+    public function __construct(array $userSettings = [], $configDirectory = 'config') {
         parent::__construct($userSettings);
         $this->config('debug', false);
         $this->notFound(function () {
@@ -44,7 +43,6 @@ class Application extends Slim {
         AccountResource::registerApi($this);
         CourseResource::registerApi($this);
         FeaturesResource::registerApi($this);
-        UserResource::registerApi($this);
         UserXAuthTokenController::registerApi($this);
 
         DocumentationResource::registerApi($this);
@@ -67,11 +65,12 @@ class Application extends Slim {
         }
 
         $this->response->setStatus($status);
-        $this->response->setBody(json_encode(array(
-            'status' => $status,
-            'statusText' => preg_replace('/^[0-9]+ (.*)$/', '$1', $statusText),
-            'description' => $e->getMessage()
-        )));
+        $this->response->setBody(json_encode([
+            'status'      => $status,
+            'statusText'  => preg_replace('/^[0-9]+ (.*)$/', '$1', $statusText),
+            'description' => $e->getMessage(),
+            'path'        => $this->request->getResourceUri()
+        ]));
     }
 
     public function invoke() {

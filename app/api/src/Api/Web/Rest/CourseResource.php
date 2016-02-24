@@ -31,7 +31,7 @@ class CourseResource {
                                'startTime' => 'time',
                                'endTime'   => 'time']
                           ]];
-        $errorSchema = ['status' => 'int', 'statusText' => 'string', 'description' => 'string'];
+        $errorSchema = ['status' => 'int', 'statusText' => 'string', 'description' => 'string', 'path' => 'string'];
 
         $docs[] = ['uri'       => '/semesters', 'method' => 'GET',
                    'responses' => [

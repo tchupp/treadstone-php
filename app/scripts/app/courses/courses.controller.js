@@ -25,17 +25,18 @@ angular.module('treadstoneApp')
 
         $scope.clearSemester = function () {
             $scope.selectedSemester = null;
-            $scope.selectedSubject = null;
+            $scope.subjects = [];
+
             $scope.selectedSection = null;
 
-            $scope.subjects = [];
+            $scope.selectedSubject = null;
             $scope.sections = [];
         };
 
         $scope.clearSubject = function () {
-            $scope.selectedSubject = null;
             $scope.selectedSection = null;
 
+            $scope.selectedSubject = null;
             $scope.sections = [];
         };
 

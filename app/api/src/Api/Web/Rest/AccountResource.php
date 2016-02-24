@@ -34,7 +34,7 @@ class AccountResource {
                           'activated' => 'int', 'role' => ['string']];
         $updateAccountSchema = ['login'     => 'string',
                                 'firstName' => 'string', 'lastName' => 'string', 'email' => 'string'];
-        $errorSchema = ['status' => 'int', 'statusText' => 'string', 'description' => 'string'];
+        $errorSchema = ['status' => 'int', 'statusText' => 'string', 'description' => 'string', 'path' => 'string'];
         $passwordSchema = ['password' => 'string'];
 //        $resetRequestSchema = array('email' => 'string');
 //        $resetFinalizeSchema = array('resetKey' => 'string', 'password' => 'string');

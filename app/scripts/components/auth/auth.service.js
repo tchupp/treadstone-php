@@ -31,7 +31,8 @@ angular.module('treadstoneApp')
                     var isAuthenticated = Principal.isAuthenticated();
 
                     var toRegister = $rootScope.nextRoute.originalPath === '/register';
-                    if (isAuthenticated && toRegister) {
+                    var toActivate = $rootScope.nextRoute.originalPath === '/activate';
+                    if (isAuthenticated && (toRegister || toActivate)) {
                         $location.path('/');
                     }
 
@@ -41,6 +42,9 @@ angular.module('treadstoneApp')
                         if (isAuthenticated) {
                             // 403
                         } else {
+                            $rootScope.previousRoute = $rootScope.nextRoute;
+                            $rootScope.previousRouteParams = $rootScope.nextRouteParams;
+
                             $location.path('/');
                         }
                     }

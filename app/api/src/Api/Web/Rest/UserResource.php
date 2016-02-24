@@ -15,28 +15,28 @@ class UserResource {
     }
 
     public static function documentation() {
-        $userSchema = array('login' => 'string', 'firstName' => 'string', 'lastName' => 'string', 'email' => 'string',
-            'activated' => 'int', 'activationKey' => 'string', 'role' => array('string'));
-        $errorSchema = array('status' => 'int', 'statusText' => 'string', 'description' => 'string');
+        $userSchema = ['login'     => 'string', 'firstName' => 'string', 'lastName' => 'string', 'email' => 'string',
+                       'activated' => 'int', 'activationKey' => 'string', 'role' => ['string']];
+        $errorSchema = ['status' => 'int', 'statusText' => 'string', 'description' => 'string', 'path' => 'string'];
 
-        $docs[] = array('uri' => '/users', 'method' => 'GET',
-            'responses' => array(
-                array('status' => 200,
-                    'body' => array('string' => $userSchema)),
-                array('status' => 401,
-                    'body' => $errorSchema),
-                array('status' => 404,
-                    'body' => $errorSchema)
-            ));
-        $docs[] = array('uri' => '/users/:login', 'method' => 'GET',
-            'responses' => array(
-                array('status' => 200,
-                    'body' => $userSchema),
-                array('status' => 401,
-                    'body' => $errorSchema),
-                array('status' => 404,
-                    'body' => $errorSchema)
-            ));
+        $docs[] = ['uri'       => '/users', 'method' => 'GET',
+                   'responses' => [
+                       ['status' => 200,
+                        'body'   => ['string' => $userSchema]],
+                       ['status' => 401,
+                        'body'   => $errorSchema],
+                       ['status' => 404,
+                        'body'   => $errorSchema]
+                   ]];
+        $docs[] = ['uri'       => '/users/:login', 'method' => 'GET',
+                   'responses' => [
+                       ['status' => 200,
+                        'body'   => $userSchema],
+                       ['status' => 401,
+                        'body'   => $errorSchema],
+                       ['status' => 404,
+                        'body'   => $errorSchema]
+                   ]];
         return $docs;
     }
 
