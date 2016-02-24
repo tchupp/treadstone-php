@@ -27,7 +27,8 @@ angular.module('treadstoneApp', [
         });
 
         $rootScope.back = function () {
-            if ($rootScope.previousRoute.originalPath === '/activate' || $rootScope.previousRoute.originalPath === null) {
+            if (!$rootScope.previousRoute ||
+                $rootScope.previousRoute.originalPath === '/activate' || $rootScope.previousRoute.originalPath === null) {
                 $location.path('/');
             } else {
                 $location.path($rootScope.previousRoute.originalPath);
@@ -35,9 +36,7 @@ angular.module('treadstoneApp', [
         };
     })
     .config(function ($routeProvider, $httpProvider) {
-
         $routeProvider.otherwise({redirectTo: '/'});
-
 
         $httpProvider.interceptors.push('ErrorInterceptor');
         $httpProvider.interceptors.push('AuthExpiredInterceptor');

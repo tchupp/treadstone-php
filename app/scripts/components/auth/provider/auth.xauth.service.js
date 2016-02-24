@@ -21,9 +21,6 @@ angular.module('treadstoneApp')
             getToken: function () {
                 return localStorageService.get(xAuthToken);
             },
-            removeToken: function () {
-                localStorageService.remove(xAuthToken);
-            },
             hasValidToken: function () {
                 var token = this.getToken();
                 var time = new Date().getTime() / 1000;
