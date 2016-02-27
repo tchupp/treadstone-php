@@ -20,11 +20,12 @@ angular.module('treadstoneApp')
             responseError: function (response) {
                 if (response.status === 401 &&
                     (response.data.description === 'Authentication Failed' || response.data.description === 'Authentication Missing')) {
-                    var Auth = $injector.get('Auth');
-                    Auth.logout();
+                    var AuthServerProvider = $injector.get('AuthServerProvider');
+                    AuthServerProvider.logout();
 
                     var Principal = $injector.get('Principal');
                     if (Principal.isAuthenticated()) {
+                        var Auth = $injector.get('Auth');
                         Auth.authorize(true);
                     }
                 }

@@ -25,7 +25,6 @@ angular.module('treadstoneApp')
             logout: function () {
                 AuthServerProvider.logout();
                 Principal.authenticate(null);
-                $location.path('/');
             },
             authorize: function (force) {
                 return Principal.identity(force).then(function () {
