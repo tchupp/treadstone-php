@@ -1,0 +1,296 @@
+@import "variables";
+
+* {
+    outline: none;
+}
+
+.row {
+    & > [class*="col-"] {
+        margin-bottom: 25px;
+    }
+}
+
+.row.no-margin-bottom {
+    & > [class*="col-"] {
+        margin-bottom: 10px;
+    }
+}
+
+.row.no-gap {
+    margin-left: 0;
+    margin-right: 0;
+    & > [class*="col-"] {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+.no-padding {
+    padding: 0 !important;
+}
+
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
+.clear-both {
+    clear: both;
+}
+
+.no-margin-bottom {
+    margin-bottom: 0;
+}
+
+.no-margin {
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+/* Button */
+.btn {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-radius: 1px;
+    border-width: 1px;
+    font-family: $font-family-roboto;
+}
+
+.btn.btn-default {
+    background-color: $color-lighter-grey;
+    border-color: $color-grey;
+}
+
+.btn.btn-default:hover {
+    background-color: $color-grey;
+}
+
+.btn.btn-primary {
+    background-color: $color-dark-blue;
+    color: $color-white;
+    border-color: $color-dark-blue;
+}
+
+.btn.btn-success {
+    background-color: $color-green-sea;
+    color: $color-white;
+    border-color: $color-green-sea;
+}
+
+.btn.btn-warning {
+    background-color: $color-yellow;
+    color: $color-white;
+    border-color: $color-yellow;
+}
+
+.btn.btn-info {
+    background-color: $color-blue;
+    color: $color-white;
+    border-color: $color-blue;
+}
+
+.btn.btn-danger {
+    background-color: $color-red;
+    color: $color-white;
+    border-color: $color-red;
+}
+
+.btn.btn-link {
+    color: $color-dark-blue;
+}
+
+.btn-group-lg {
+    & > .btn, & > .btn-lg {
+        border-radius: 1px;
+    }
+}
+
+.progress {
+    border-radius: 1px;
+    box-shadow: none;
+
+    .progress-bar {
+        box-shadow: none;
+    }
+}
+
+.form-control {
+    border-radius: 1px;
+    box-shadow: none;
+}
+
+/* Panel */
+.panel {
+    border-radius: 1px;
+
+    .panel-heading {
+        border-top-left-radius: 2px;
+        border-top-right-radius: 2px;
+    }
+}
+
+.panel.panel-default {
+    border: 1px solid $color-grey;
+    .panel-heading {
+        border-bottom: 1px solid $color-grey;
+        background-color: $color-lighter-grey;
+    }
+}
+
+.panel.panel-primary {
+    border: 1px solid $color-dark-blue;
+    .panel-heading {
+        border-bottom: 1px solid $color-dark-blue;
+        background-color: $color-clear-dark-blue;
+        color: $color-white;
+    }
+}
+
+.panel.panel-success {
+    border: 1px solid $color-green-sea;
+    .panel-heading {
+        border-bottom: 1px solid $color-green-sea;
+        background-color: $color-clear-green-sea;
+        color: $color-darkest-green-sea;
+    }
+}
+
+.panel.panel-info {
+    border: 1px solid $color-blue;
+    .panel-heading {
+        border-bottom: 1px solid $color-blue;
+        background-color: $color-clear-blue;
+        color: $color-darkest-blue;
+    }
+}
+
+.panel.panel-warning {
+    border: 1px solid $color-yellow;
+    .panel-heading {
+        border-bottom: 1px solid $color-yellow;
+        background-color: $color-clear-yellow;
+        color: $color-darkest-yellow;
+    }
+}
+
+.panel.panel-danger {
+    border: 1px solid $color-lightest-red;
+    .panel-heading {
+        border-bottom: 1px solid $color-lightest-red;
+        background-color: $color-clear-red;
+        color: $color-darkest-red
+    }
+}
+
+/* Panel with Fresh color */
+.panel.fresh-color.panel-primary {
+    border: 1px solid $color-dark-blue;
+    .panel-heading {
+        border-bottom: 1px solid $color-dark-blue;
+        background-color: $color-dark-blue;
+        color: $color-white;
+    }
+}
+
+.panel.fresh-color.panel-success {
+    border: 1px solid $color-green-sea;
+    .panel-heading {
+        border-bottom: 1px solid $color-green-sea;
+        background-color: $color-green-sea;
+        color: $color-white;
+    }
+}
+
+.panel.fresh-color.panel-info {
+    border: 1px solid $color-blue;
+    .panel-heading {
+        border-bottom: 1px solid $color-blue;
+        background-color: $color-blue;
+        color: $color-white;
+    }
+}
+
+.panel.fresh-color.panel-warning {
+    border: 1px solid $color-yellow;
+    .panel-heading {
+        border-bottom: 1px solid $color-yellow;
+        background-color: $color-yellow;
+        color: $color-white;
+    }
+}
+
+.panel.fresh-color.panel-danger {
+    border: 1px solid $color-red;
+    .panel-heading {
+        border-bottom: 1px solid $color-red;
+        background-color: $color-red;
+        color: $color-white;
+    }
+}
+
+/* List Group */
+.list-group {
+    .list-group-item.active {
+        background-color: $color-dark-blue;
+        color: $color-white;
+        border-color: $color-dark-blue;
+
+        .badge {
+            color: $color-dark-blue;
+        }
+    }
+
+    .list-group-item.list-group-item-success {
+        background-color: $color-clear-green-sea;
+        color: $color-darkest-green-sea;
+        border-color: $color-clear-green-sea;
+
+        .badge {
+            background-color: $color-white;
+            color: $color-green-sea;
+        }
+    }
+
+    .list-group-item.list-group-item-info {
+        background-color: $color-clear-blue;
+        color: $color-darkest-blue;
+        border-color: $color-clear-blue;
+
+        .badge {
+            background-color: $color-white;
+            color: $color-blue;
+        }
+    }
+
+    .list-group-item.list-group-item-warning {
+        background-color: $color-clear-yellow;
+        color: $color-darkest-yellow;
+        border-color: $color-clear-yellow;
+
+        .badge {
+            background-color: $color-white;
+            color: $color-yellow;
+        }
+    }
+
+    .list-group-item.list-group-item-danger {
+        background-color: $color-clear-red;
+        color: $color-darkest-red;
+        border-color: $color-clear-red;
+
+        .badge {
+            background-color: $color-white;
+            color: $color-red;
+        }
+    }
+}

@@ -20,8 +20,9 @@ angular.module('treadstoneApp', [
                 $rootScope.previousRouteParams = previous.params;
             }
 
-            if (current.$$route.data && current.$$route.data.pageTitle) {
-                pageTitle = current.$$route.data.pageTitle + ' | ' + pageTitle;
+            var currentRoute = current.$$route;
+            if (currentRoute.data && currentRoute.data.pageTitle) {
+                pageTitle = currentRoute.data.pageTitle + ' | ' + pageTitle;
             }
             $window.document.title = pageTitle;
         });

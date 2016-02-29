@@ -3,7 +3,7 @@ $fa-font-path: "../bower_components/components-font-awesome/fonts/";
 
 //@import "bootswatch-scss/yeti/_variables.scss";
 //@import "bootswatch-scss/flatly/_variables.scss";
-@import "bootswatch-scss/superhero/_variables.scss";
+//@import "bootswatch-scss/superhero/_variables.scss";
 
 // bower:scss
 @import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss";
@@ -12,10 +12,16 @@ $fa-font-path: "../bower_components/components-font-awesome/fonts/";
 
 //@import "bootswatch-scss/yeti/_bootswatch.scss";
 //@import "bootswatch-scss/flatly/_bootswatch.scss";
-@import "bootswatch-scss/superhero/_bootswatch.scss";
+//@import "bootswatch-scss/superhero/_bootswatch.scss";
+
+@import "globals";
+@import "bootstrap-wrap";
+@import "navbar";
+@import "sidemenu";
+@import "sidebody";
+@import "footer";
 
 /* Specials */
-
 .browsehappy {
     margin: 0.2em 0;
     background: #ccc;
@@ -34,65 +40,10 @@ $fa-font-path: "../bower_components/components-font-awesome/fonts/";
     background: url("../images/development_ribbon.png") no-repeat center center;
 }
 
-/* Space out content a bit */
-body {
-    padding-top: 20px;
-    padding-bottom: 20px;
-}
-
-/* Everything but the jumbotron gets side spacing for mobile first views */
-.header,
-.marketing,
-.footer {
-    padding-left: 15px;
-    padding-right: 15px;
-}
-
-@media screen and (min-width: 768px) {
-    /* Remove the padding we set earlier */
-    .header,
-    .marketing,
-    .footer {
-        padding-left: 0;
-        padding-right: 0;
-    }
-}
-
-/* Custom page header */
-.header {
-    border-bottom: 1px solid #e5e5e5;
-
-    /* Make the masthead heading the same height as the navigation */
-    h3 {
-        margin-top: 0;
-        margin-bottom: 0;
-        line-height: 40px;
-        padding-bottom: 19px;
-    }
-}
-
-@media screen and (min-width: 768px) {
-    /* Space out the masthead */
-    .header {
-        margin-bottom: 30px;
-    }
-}
-
-/* Custom page footer */
-.footer {
-    padding-top: 19px;
-    color: #777;
-    border-top: 1px solid #e5e5e5;
-}
-
-.container-narrow > hr {
-    margin: 30px 0;
-}
-
 /* Main marketing message and register button */
 .jumbotron {
     text-align: center;
-    border-bottom: 1px solid #e5e5e5;
+    border-bottom: 0;
 
     .btn {
         font-size: 21px;
@@ -100,57 +51,12 @@ body {
     }
 }
 
-@media screen and (min-width: 768px) {
-    /* Remove the bottom border on the jumbotron for visual effect */
-    .jumbotron {
-        border-bottom: 0;
-    }
-}
-
-/* Supporting marketing content */
-.marketing {
-    margin: 40px 0;
-
-    p + h4 {
-        margin-top: 28px;
-    }
-}
-
-.container {
-    padding-right: 15px;
-    padding-left: 15px;
-    margin-right: auto;
-    margin-left: auto;
-}
-
-@media (min-width: 768px) {
-    .container {
-        width: 750px;
-    }
-}
-
-@media (min-width: 992px) {
-    .container {
-        width: 970px;
-    }
-}
-
-@media (min-width: 1200px) {
-    .container {
-        width: 1170px;
-    }
-}
-
-.margin-ver-sm {
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
-
+/* Alerts */
 .alerts {
     position: fixed;
     top: 50px;
     width: 80%;
-    z-index: 1100;
+    z-index: 10000;
     right: 0;
     min-width: 200px;
     padding: 5px;

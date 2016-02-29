@@ -1,0 +1,40 @@
+@import "variables";
+@import url($web-font-roboto);
+
+html {
+    height: 100%
+}
+
+body {
+    padding-top: 0;
+    height: 100%;
+    position: relative;
+    font-size: 13px;
+
+    background-color: $color-light-grey;
+}
+
+a {
+    color: $color-dark-blue-hover;
+}
+
+a:hover {
+    color: $color-darkest-blue;
+}
+
+.font-weight-300 {
+    font-weight: 300;
+}
+
+.text-indent {
+    text-indent: 1em;
+}
+
+.breadcrumb {
+    margin-bottom: 0;
+    & > li + li:before {
+        font-family: FontAwesome, sans-serif;
+        content: '\f105';
+        margin-right: 3px;
+    }
+}

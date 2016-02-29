@@ -1,0 +1,36 @@
+.app-container {
+    .side-body {
+        padding-top: 70px;
+    }
+
+    .side-body.padding-top {
+        padding-top: 84px;
+    }
+}
+
+.app-container .side-body {
+    margin-left: 75px;
+    margin-right: 15px;
+
+    -webkit-transition: all 0.25s;
+    transition: all 0.25s;
+}
+
+.app-container.expanded .side-body {
+    margin-left: 260px;
+}
+
+@media (max-width: 768px) {
+
+    .app-container {
+        .side-body {
+            margin-left: 10px;
+        }
+    }
+
+    .app-container.expanded {
+        .side-body {
+            margin-left: 10px;
+        }
+    }
+}

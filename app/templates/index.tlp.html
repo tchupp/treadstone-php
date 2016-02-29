@@ -15,24 +15,18 @@
         <!-- endbuild -->
     </head>
     <body ng-app="treadstoneApp">
-        <!--[if lt IE 7]>
-        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a
-            href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
+        <div class="app-container">
 
-        <div class="development"></div>
-
-        <div class="container">
-            <ts-navbar></ts-navbar>
+            <ts-header></ts-header>
+            <ts-sidebar></ts-sidebar>
             <ts-alert-toast></ts-alert-toast>
 
-            <div ng-view=""></div>
-
-            <div class="footer">
-                <p><span class="glyphicon glyphicon-copyright-mark"></span> TreadCourse 2016</p>
+            <div class="container">
+                <div class="side-body padding-top" ng-view=""></div>
             </div>
-        </div>
 
+            <ts-footer></ts-footer>
+        </div>
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
         <script>

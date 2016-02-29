@@ -1,0 +1,49 @@
+@import "variables";
+
+/* Structure */
+.app-container {
+    .app-footer {
+        display: block;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        left: 65px;
+        -webkit-transition: all 0.25s;
+        transition: all 0.25s;
+        font-size: 12px;
+        font-family: $font-family-roboto;
+
+        .wrapper {
+            padding: 10px 35px 10px 25px;
+            height: 50px;
+            line-height: 50px;
+            vertical-align: middle;
+        }
+    }
+}
+
+.app-container.expanded {
+    .app-footer {
+        left: 250px;
+        .wrapper {
+            padding-left: 25px;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+
+    .app-container, .app-container.expanded {
+        .app-footer {
+            .wrapper {
+                padding-left: 25px;
+            }
+        }
+    }
+}
+
+/* Theme */
+.app-footer {
+    opacity: 0.7;
+    color: $color-dark-blue;
+}

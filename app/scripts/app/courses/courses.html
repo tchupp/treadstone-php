@@ -1,4 +1,4 @@
-<div class="row marketing">
+<div class="row">
 
     <p ng-if="loading">Loading...</p>
 
@@ -21,7 +21,7 @@
     </ol>
 
     <div class="list-group" ng-class="{'col-md-4': !selectedSemester, 'col-md-1': selectedSemester}">
-        <a class="list-group-item margin-ver-sm" ng-repeat="semester in semesters"
+        <a class="list-group-item" ng-repeat="semester in semesters"
            ng-class="{active: semester.code == selectedSemester}" ng-click="selectSemester(semester)">
             <span ng-if="!selectedSemester">{{semester.name}}</span>
             <span ng-if="selectedSemester">{{semester.code}}</span>
@@ -29,7 +29,7 @@
     </div>
 
     <div class="list-group" ng-class="{'col-md-4': !selectedSubject, 'col-md-2': selectedSubject}">
-        <a class="list-group-item margin-ver-sm" ng-repeat="subject in subjects"
+        <a class="list-group-item" ng-repeat="subject in subjects"
            ng-class="{active: subject.subjectCode == selectedSubject}" ng-click="selectSubject(subject)">
             <span ng-if="!selectedSubject">{{subject.subjectCode}} - {{subject.subjectName}}</span>
             <span ng-if="selectedSubject">{{subject.subjectCode}}</span>
@@ -37,7 +37,7 @@
     </div>
 
     <div class="list-group col-md-1">
-        <a class="list-group-item margin-ver-sm" ng-repeat="section in sections"
+        <a class="list-group-item" ng-repeat="section in sections"
            ng-class="{active: section.sectionNumber == selectedSection.sectionNumber}"
            ng-click="selectSection(section)">
             <span ng-if="!selectedSection">{{section.sectionNumber}}</span>
@@ -45,7 +45,7 @@
         </a>
     </div>
 
-    <div class="well col-md-8 margin-ver-sm" ng-if="selectedSection">
+    <div class="well col-md-8" ng-if="selectedSection">
         <pre>{{selectedSection.times | json}}</pre>
     </div>
 
