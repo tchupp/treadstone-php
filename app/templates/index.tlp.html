@@ -15,18 +15,14 @@
         <!-- endbuild -->
     </head>
     <body ng-app="treadstoneApp">
-        <div class="app-container">
 
-            <ts-header></ts-header>
-            <ts-sidebar></ts-sidebar>
+        <ts-content>
             <ts-alert-toast></ts-alert-toast>
 
             <div class="container">
                 <div class="side-body padding-top" ng-view=""></div>
             </div>
-
-            <ts-footer></ts-footer>
-        </div>
+        </ts-content>
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
         <script>
