@@ -6,8 +6,12 @@ angular.module('treadstoneApp')
             restrict: 'E',
             replace: true,
             templateUrl: 'scripts/components/header/header.html',
-            scope: {},
+            scope: {
+                sideMenuExpanded: '=expanded'
+            },
             controller: ['$scope', 'Auth', 'Principal', function ($scope, Auth, Principal) {
+                $scope.headerExpanded = false;
+
                 $scope.$on('$routeChangeSuccess', function (event, current) {
                     $scope.title = current.$$route.data.pageTitle;
                 });
@@ -16,6 +20,10 @@ angular.module('treadstoneApp')
 
                 $scope.logout = function () {
                     Auth.logout();
+                };
+
+                $scope.toggleHeader = function () {
+                    $scope.headerExpanded = !$scope.headerExpanded;
                 };
             }]
         };

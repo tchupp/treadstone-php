@@ -6,7 +6,9 @@ angular.module('treadstoneApp')
             restrict: 'E',
             replace: true,
             templateUrl: 'scripts/components/sidebar/sidebar.html',
-            scope: {},
+            scope: {
+                expanded: '='
+            },
             controller: ['$scope', 'Principal', function ($scope, Principal) {
                 $scope.isAuthenticated = Principal.isAuthenticated;
             }]

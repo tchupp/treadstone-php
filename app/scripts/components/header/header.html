@@ -3,7 +3,8 @@
 
         <div class="navbar-header">
 
-            <button type="button" class="navbar-expand-toggle">
+            <button type="button" class="navbar-expand-toggle"
+                    ng-class="{'fa-rotate-90': sideMenuExpanded}" ng-click="sideMenuExpanded = !sideMenuExpanded">
                 <i class="fa fa-bars icon"></i>
             </button>
 
@@ -11,14 +12,16 @@
                 <li>{{ title }}</li>
             </ol>
 
-            <button type="button" class="navbar-right-expand-toggle pull-right visible-xs">
+            <button type="button" class="navbar-right-expand-toggle pull-right visible-xs"
+                    ng-class="{'fa-rotate-90': headerExpanded}" ng-click="toggleHeader()">
                 <i class="fa fa-th icon"></i>
             </button>
 
         </div>
 
-        <ul class="nav navbar-nav navbar-right">
-            <button type="button" class="navbar-right-expand-toggle pull-right visible-xs">
+        <ul class="nav navbar-nav navbar-right" ng-class="{expanded: headerExpanded}">
+            <button type="button" class="navbar-right-expand-toggle pull-right visible-xs"
+                    ng-class="{'fa-rotate-90': headerExpanded}" ng-click="toggleHeader()" ng-show="isAuthenticated()">
                 <i class="fa fa-times icon"></i>
             </button>
 

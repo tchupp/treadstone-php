@@ -9,7 +9,7 @@ angular.module('treadstoneApp')
             templateUrl: 'scripts/components/content/content.html',
             scope: {},
             controller: ['$scope', function ($scope) {
-                $scope.expandedSideMenu = false;
+                $scope.expanded = false;
             }]
         };
     });
