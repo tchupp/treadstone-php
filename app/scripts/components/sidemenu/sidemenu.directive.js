@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('treadstoneApp')
-    .directive('tsSidebar', function () {
+    .directive('tsSidemenu', function () {
         return {
             restrict: 'E',
             replace: true,
-            templateUrl: 'scripts/components/sidebar/sidebar.html',
+            templateUrl: 'scripts/components/sidemenu/sidemenu.html',
             scope: {
                 expanded: '='
             },
