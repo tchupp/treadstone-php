@@ -22,9 +22,15 @@ class JsonMiddleware extends Middleware {
             $method = strtolower($req->getMethod());
             $mediaType = $req->getMediaType();
 
-            if (in_array($method, array('post', 'put', 'patch')) && '' !== $this->app->request()->getBody()) {
+            if (in_array($method, ['post', 'put', 'patch']) && '' !== $this->app->request()->getBody()) {
                 if (empty($mediaType) || $mediaType !== 'application/json') {
                     $res->status(415);
+                    $res->body(json_encode([
+                        'status'      => 415,
+                        'statusText'  => 'Unsupported Media Type',
+                        'description' => "application/json required for $method",
+                        'path'        => $req->getResourceUri()
+                    ]));
                     return;
                 }
             }

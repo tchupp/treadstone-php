@@ -16,10 +16,11 @@ class UserDetailsServiceTest extends PHPUnit_Framework_TestCase {
         $this->assertAttributeInstanceOf(UserRepository::class, 'userRepository', $userDetailsService);
     }
 
-    public function testLoadUserByLoginReturnsArrayWithOneUsernameAndPassword() {
+    public function testLoadUserByLoginReturnsArrayWithOneUsernameAndPasswordAndRolesArray() {
         $user = UserRepositoryTest::buildFindOneUser();
         $login = $user->getLogin();
         $password = $user->getPassword();
+        $roles = $user->getRoles();
         $user->setActivated(true);
 
         $userRepository = Phake::mock('Api\Database\UserRepository');
@@ -31,9 +32,10 @@ class UserDetailsServiceTest extends PHPUnit_Framework_TestCase {
 
         $userDetails = $userDetailsService->loadUserByLogin($login);
 
-        $this->assertEquals(2, sizeof($userDetails));
+        $this->assertEquals(3, sizeof($userDetails));
         $this->assertEquals($login, $userDetails['login']);
         $this->assertEquals($password, $userDetails['password']);
+        $this->assertEquals($roles, $userDetails['roles']);
     }
 
     public function testLoadUserByLoginThrowsErrorIfUserDoesNotExist() {

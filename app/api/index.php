@@ -1,8 +1,7 @@
 <?php
 use Api\Application;
-use Api\Database\DatabaseConnection;
-use Api\Database\UserRepository;
 use Api\Middleware\JsonMiddleware;
+use Api\Middleware\UserAuthorityMiddleware;
 use Api\Middleware\XAuthTokenMiddleware;
 use Api\Security\TokenProvider;
 use Api\Service\UserDetailsService;
@@ -16,38 +15,41 @@ try {
     // Initialize Composer autoloader
     $autoload = __DIR__ . '/vendor/autoload.php';
     if (!file_exists($autoload)) {
-        throw new \Exception('Composer dependencies not installed. Run `make install --directory app/api`');
+        throw new Exception('Composer dependencies not installed. Run `make install --directory app/api`');
     }
     require_once "$autoload";
 
     // Initialize Slim Framework
     if (!class_exists('\\Slim\\Slim')) {
-        throw new \Exception(
+        throw new Exception(
             'Missing Slim from Composer dependencies.'
             . ' Ensure slim/slim is in composer.json and run `make update --directory app/api`'
         );
     }
     $app = new Application();
 
-    $userDetailService = new UserDetailsService(new UserRepository(new DatabaseConnection()));
-    $protectedRoots = array('/users', '/account', '/semesters');
+    $userDetailService = UserDetailsService::autowire();
+    $authorityProtectedResources = ['/features' => ['method' => 'get', 'role' => 'ROLE_DEV'],
+                                    '/docs'     => ['method' => 'get', 'role' => 'ROLE_DEV']];
+    $authenticationProtectedResources = ['/features', '/account', '/semesters', '/docs'];
 
-    // (middleware) first one added -> last one run
+    // (Middleware) first one added -> last one run
+    $app->add(new UserAuthorityMiddleware($userDetailService, $authorityProtectedResources));
+    $app->add(new XAuthTokenMiddleware($userDetailService, new TokenProvider(), $authenticationProtectedResources));
     $app->add(new JsonMiddleware('/'));
-    $app->add(new XAuthTokenMiddleware($userDetailService, new TokenProvider(), $protectedRoots));
 
     $app->run();
 
-} catch (\Exception $e) {
+} catch (Exception $e) {
     if (isset($app)) {
         $app->handleException($e);
     } else {
         http_response_code(500);
         header('Content-Type: application/json');
-        echo json_encode(array(
-            'status' => 500,
-            'statusText' => 'Internal Server Error',
+        echo json_encode([
+            'status'      => 500,
+            'statusText'  => 'Internal Server Error',
             'description' => $e->getMessage(),
-        ));
+        ]);
     }
 }

@@ -30,15 +30,15 @@ class User implements JsonSerializable {
     }
 
     public function toDatabaseArray() {
-        return array('login' => $this->login, 'password' => $this->password, 'email' => $this->email,
-            'firstName' => $this->firstName, 'lastName' => $this->lastName,
-            'activated' => $this->activated, 'activationKey' => $this->activationKey, 'resetKey' =>$this->resetKey);
+        return ['login'     => $this->login, 'password' => $this->password, 'email' => $this->email,
+                'firstName' => $this->firstName, 'lastName' => $this->lastName,
+                'activated' => $this->activated, 'activationKey' => $this->activationKey, 'resetKey' => $this->resetKey];
     }
 
     function jsonSerialize() {
-        return array('login' => $this->login, 'password' => null, 'email' => $this->email,
-            'firstName' => $this->firstName, 'lastName' => $this->lastName,
-            'activated' => $this->activated, 'role' => $this->roles);
+        return ['login'     => $this->login, 'password' => null, 'email' => $this->email,
+                'firstName' => $this->firstName, 'lastName' => $this->lastName,
+                'activated' => $this->activated, 'role' => $this->roles];
     }
 
     public function setPassword($password) {

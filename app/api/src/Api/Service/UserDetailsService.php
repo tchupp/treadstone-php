@@ -28,8 +28,9 @@ class UserDetailsService {
             throw new Exception("User " . $login . " was not activated", 401);
         }
 
-        $user = array('login' => $userFromDatabase->getLogin(),
-            'password' => $userFromDatabase->getPassword());
+        $user = ['login'    => $userFromDatabase->getLogin(),
+                 'password' => $userFromDatabase->getPassword(),
+                 'roles'    => $userFromDatabase->getRoles()];
 
         return $user;
     }

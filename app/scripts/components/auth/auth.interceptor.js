@@ -24,7 +24,7 @@ angular.module('treadstoneApp')
                     AuthServerProvider.logout();
 
                     var Principal = $injector.get('Principal');
-                    if (Principal.isAuthenticated()) {
+                    if (Principal.isIdentityResolved()) {
                         var Auth = $injector.get('Auth');
                         Auth.authorize(true);
                     }

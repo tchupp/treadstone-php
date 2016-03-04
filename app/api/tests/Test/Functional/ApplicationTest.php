@@ -8,12 +8,12 @@ use Slim\Environment;
 
 class ApplicationTest extends \PHPUnit_Framework_TestCase {
     public function setUp() {
-        $_SESSION = array();
+        $_SESSION = [];
     }
 
     public function testMissingConfigurationDirectoryGeneratesException() {
         try {
-            new Application(array(), 'missingConfigDirectory');
+            new Application([], 'missingConfigDirectory');
 
             $this->fail("Expected Exception");
         } catch (Exception $ex) {
@@ -28,15 +28,16 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase {
             throw new Exception('HTTP exception', 406);
         });
 
-        Environment::mock(array(
+        Environment::mock([
             'PATH_INFO' => '/api/test/http-exception',
-        ));
+        ]);
         $response = $app->invoke();
-        $this->assertEquals(json_encode(array(
-            'status' => 406,
-            'statusText' => 'Not Acceptable',
+        $this->assertEquals(json_encode([
+            'status'      => 406,
+            'statusText'  => 'Not Acceptable',
             'description' => 'HTTP exception',
-        )), $response->getBody());
+            'path'        => '/api/test/http-exception'
+        ]), $response->getBody());
         $this->assertEquals(406, $response->getStatus());
     }
 
@@ -46,15 +47,16 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase {
             throw new Exception('Undefined exception');
         });
 
-        Environment::mock(array(
+        Environment::mock([
             'PATH_INFO' => '/api/test/undefined-exception',
-        ));
+        ]);
         $response = $app->invoke();
-        $this->assertEquals(json_encode(array(
-            'status' => 500,
-            'statusText' => 'Internal Server Error',
+        $this->assertEquals(json_encode([
+            'status'      => 500,
+            'statusText'  => 'Internal Server Error',
             'description' => 'Undefined exception',
-        )), $response->getBody());
+            'path'        => '/api/test/undefined-exception'
+        ]), $response->getBody());
         $this->assertEquals(500, $response->getStatus());
     }
 
@@ -64,15 +66,16 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase {
             throw new Exception('Exception with unknown HTTP status', 999);
         });
 
-        Environment::mock(array(
+        Environment::mock([
             'PATH_INFO' => '/api/test/undefined-exception',
-        ));
+        ]);
         $response = $app->invoke();
-        $this->assertEquals(json_encode(array(
-            'status' => 500,
-            'statusText' => 'Internal Server Error',
+        $this->assertEquals(json_encode([
+            'status'      => 500,
+            'statusText'  => 'Internal Server Error',
             'description' => 'Exception with unknown HTTP status',
-        )), $response->getBody());
+            'path'        => '/api/test/undefined-exception'
+        ]), $response->getBody());
         $this->assertEquals(500, $response->getStatus());
     }
 }

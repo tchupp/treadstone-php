@@ -13,12 +13,12 @@ class XAuthTokenMiddleware extends Middleware {
 
     private $userDetailService;
     private $tokenProvider;
-    private $protectedRoots;
+    private $protectedResource;
 
-    public function __construct(UserDetailsService $userDetailService, TokenProvider $tokenProvider, $protectedRoots = []) {
+    public function __construct(UserDetailsService $userDetailService, TokenProvider $tokenProvider, $protectedResources = []) {
         $this->userDetailService = $userDetailService;
         $this->tokenProvider = $tokenProvider;
-        $this->protectedRoots = $protectedRoots;
+        $this->protectedResource = $protectedResources;
     }
 
     public function call() {
@@ -57,8 +57,8 @@ class XAuthTokenMiddleware extends Middleware {
     }
 
     private function needsAuthentication(Request $req) {
-        foreach ($this->protectedRoots as $root) {
-            if (strpos($req->getResourceUri(), $root) === 0) {
+        foreach ($this->protectedResource as $resource) {
+            if (strpos($req->getResourceUri(), $resource) === 0) {
                 return true;
             }
         }
