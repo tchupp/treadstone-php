@@ -6,7 +6,7 @@ angular.module('treadstoneApp')
             templateUrl: 'scripts/app/about/about.html',
             controller: 'AboutController',
             data: {
-                roles: ['ROLE_USER'],
+                roles: ['ROLE_DEV'],
                 pageTitle: 'About'
             }
         });

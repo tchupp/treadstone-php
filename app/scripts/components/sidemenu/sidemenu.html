@@ -7,7 +7,8 @@
                     <div class="fa fa-ra icon"></div>
                     <div class="title"><strong>Tread</strong>Course</div>
                 </a>
-                <button type="button" class="navbar-expand-toggle pull-right visible-xs" ng-click="expanded = !expanded">
+                <button type="button" class="navbar-expand-toggle pull-right visible-xs"
+                        ng-click="expanded = !expanded">
                     <i class="fa fa-times icon"></i>
                 </button>
             </div>
@@ -20,22 +21,34 @@
                     </a>
                 </li>
                 <li ng-show="isAuthenticated()">
-                    <a ng-href="#/about">
-                        <span class="icon glyphicon glyphicon-th-list"></span>
-                        <span class="title">About</span>
-                    </a>
-                </li>
-                <li ng-show="isAuthenticated()">
                     <a ng-href="#/courses">
                         <span class="icon glyphicon glyphicon-list-alt"></span>
                         <span class="title">Courses</span>
                     </a>
                 </li>
-                <li ng-show="isAuthenticated()">
-                    <a ng-href="#/docs">
-                        <span class="icon glyphicon glyphicon-book"></span>
-                        <span class="title">Docs</span>
+                <li class="panel panel-default dropdown" ng-show="isAuthenticated()" has-authority="ROLE_DEV">
+                    <a data-toggle="collapse" data-target="#dropdown-dev">
+                        <span class="icon fa fa-pencil"></span><span class="title">Dev</span>
                     </a>
+
+                    <div id="dropdown-dev" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="nav navbar-nav">
+                                <li>
+                                    <a ng-href="#/about">
+                                        <span class="icon glyphicon glyphicon-th-list"></span>
+                                        <span class="title">About</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a ng-href="#/docs">
+                                        <span class="icon glyphicon glyphicon-book"></span>
+                                        <span class="title">Docs</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </li>
             </ul>
 

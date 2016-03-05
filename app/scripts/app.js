@@ -29,7 +29,8 @@ angular.module('treadstoneApp', [
 
         $rootScope.back = function () {
             if (!$rootScope.previousRoute ||
-                $rootScope.previousRoute.originalPath === '/activate' || $rootScope.previousRoute.originalPath === null) {
+                $rootScope.previousRoute.originalPath === '/activate' ||
+                $rootScope.previousRoute.originalPath === null) {
                 $location.path('/');
             } else {
                 $location.path($rootScope.previousRoute.originalPath);

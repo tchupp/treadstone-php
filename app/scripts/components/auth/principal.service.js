@@ -12,6 +12,13 @@ angular.module('treadstoneApp')
             isAuthenticated: function () {
                 return _authenticated;
             },
+            hasAuthority: function (role) {
+                if (!_authenticated || !_identity || !_identity.role) {
+                    return false;
+                }
+
+                return _identity.role && _identity.role.indexOf(role) !== -1;
+            },
             hasAnyAuthority: function (roles) {
                 if (!_authenticated || !_identity || !_identity.role) {
                     return false;

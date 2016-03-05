@@ -40,7 +40,7 @@ angular.module('treadstoneApp')
                     if (nextRouteData && nextRouteData.roles &&
                         nextRouteData.roles.length > 0 && !Principal.hasAnyAuthority(nextRouteData.roles)) {
                         if (isAuthenticated) {
-                            // 403
+                            $location.path('/accessdenied');
                         } else {
                             $rootScope.previousRoute = $rootScope.nextRoute;
                             $rootScope.previousRouteParams = $rootScope.nextRouteParams;
