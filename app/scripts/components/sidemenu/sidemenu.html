@@ -14,13 +14,13 @@
             </div>
 
             <ul class="nav navbar-nav">
-                <li>
+                <li ts-active-link="">
                     <a ng-href="#/">
                         <span class="icon fa fa-tachometer"></span>
                         <span class="title">Dashboard</span>
                     </a>
                 </li>
-                <li ng-show="isAuthenticated()">
+                <li ts-active-link="courses" ng-show="isAuthenticated()">
                     <a ng-href="#/courses">
                         <span class="icon glyphicon glyphicon-list-alt"></span>
                         <span class="title">Courses</span>
@@ -34,13 +34,13 @@
                     <div id="dropdown-dev" class="panel-collapse collapse">
                         <div class="panel-body">
                             <ul class="nav navbar-nav">
-                                <li>
+                                <li ts-active-link="about">
                                     <a ng-href="#/about">
                                         <span class="icon glyphicon glyphicon-th-list"></span>
                                         <span class="title">About</span>
                                     </a>
                                 </li>
-                                <li>
+                                <li ts-active-link="docs">
                                     <a ng-href="#/docs">
                                         <span class="icon glyphicon glyphicon-book"></span>
                                         <span class="title">Docs</span>

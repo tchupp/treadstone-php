@@ -13,4 +13,21 @@ angular.module('treadstoneApp')
                 $scope.isAuthenticated = Principal.isAuthenticated;
             }]
         };
+    })
+    .directive('tsActiveLink', function ($location) {
+        return {
+            restrict: 'A',
+            link: function (scope, element, attributes) {
+                var path = attributes.tsActiveLink;
+                scope.location = $location;
+                scope.$watch('location.path()', function(newPath) {
+                    newPath = newPath.substring(1);
+                    if (path === newPath) {
+                        element.addClass('active');
+                    } else {
+                        element.removeClass('active');
+                    }
+                });
+            }
+        };
     });
