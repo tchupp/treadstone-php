@@ -31,14 +31,14 @@ angular.module('treadstoneApp', [
             if (!$rootScope.previousRoute ||
                 $rootScope.previousRoute.originalPath === '/activate' ||
                 $rootScope.previousRoute.originalPath === null) {
-                $location.path('/');
+                $location.path('/dashboard');
             } else {
                 $location.path($rootScope.previousRoute.originalPath);
             }
         };
     })
     .config(function ($routeProvider, $httpProvider) {
-        $routeProvider.otherwise({redirectTo: '/'});
+        $routeProvider.otherwise({redirectTo: '/landing'});
 
         $httpProvider.interceptors.push('ErrorInterceptor');
         $httpProvider.interceptors.push('AuthExpiredInterceptor');

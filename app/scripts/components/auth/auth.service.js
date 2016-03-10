@@ -32,8 +32,9 @@ angular.module('treadstoneApp')
 
                     var toRegister = $rootScope.nextRoute.originalPath === '/register';
                     var toActivate = $rootScope.nextRoute.originalPath === '/activate';
-                    if (isAuthenticated && (toRegister || toActivate)) {
-                        $location.path('/');
+                    var toLanding = $rootScope.nextRoute.originalPath === '/landing';
+                    if (isAuthenticated && (toRegister || toActivate || toLanding)) {
+                        $location.path('/dashboard');
                     }
 
                     var nextRouteData = $rootScope.nextRoute.data;
@@ -45,7 +46,7 @@ angular.module('treadstoneApp')
                             $rootScope.previousRoute = $rootScope.nextRoute;
                             $rootScope.previousRouteParams = $rootScope.nextRouteParams;
 
-                            $location.path('/');
+                            $location.path('/landing');
                         }
                     }
                 });
