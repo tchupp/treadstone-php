@@ -1,15 +1,15 @@
 'use strict';
 
 angular.module('treadstoneApp')
-    .controller('LandingController', function ($rootScope, $scope, $location, Auth) {
+    .controller('LandingController', function ($rootScope, $scope, Auth, Router) {
         $scope.submitLogin = function () {
             Auth.login({
                 login: $scope.login,
                 password: $scope.password
             }).then(function () {
                 $scope.authenticationError = false;
-                if ($rootScope.previousRoute && $rootScope.previousRoute.originalPath === '/register') {
-                    $location.path('/dashboard');
+                if ($rootScope.previousRouteName === '/register') {
+                    Router.toDashboard();
                 } else {
                     $rootScope.back();
                 }

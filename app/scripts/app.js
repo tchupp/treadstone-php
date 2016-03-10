@@ -3,10 +3,11 @@
 angular.module('treadstoneApp', [
         'ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngSanitize', 'ngTouch', 'LocalStorageModule'
     ])
-    .run(function ($rootScope, $location, $window, Principal, Auth) {
+    .run(function ($rootScope, $window, Principal, Auth, Router) {
 
         $rootScope.$on('$routeChangeStart', function (event, next) {
-            $rootScope.nextRoute = next.$$route;
+            $rootScope.nextRouteName = next.$$route.originalPath;
+            $rootScope.nextRouteData = next.$$route.data;
             $rootScope.nextRouteParams = next.params;
 
             Auth.authorize();
@@ -15,8 +16,9 @@ angular.module('treadstoneApp', [
         $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
             var pageTitle = 'TreadCourse';
 
-            if (Principal.isAuthenticated() && $rootScope.previousRoute) {
-                $rootScope.previousRoute = previous.$$route;
+            if (Principal.isAuthenticated() && $rootScope.previousRouteName) {
+                $rootScope.previousRouteName = previous.$$route.originalPath;
+                $rootScope.previousRouteData = previous.$$route.data;
                 $rootScope.previousRouteParams = previous.params;
             }
 
@@ -28,12 +30,10 @@ angular.module('treadstoneApp', [
         });
 
         $rootScope.back = function () {
-            if (!$rootScope.previousRoute ||
-                $rootScope.previousRoute.originalPath === '/activate' ||
-                $rootScope.previousRoute.originalPath === null) {
-                $location.path('/dashboard');
+            if (!$rootScope.previousRouteName || $rootScope.previousRouteName === '/activate' || $rootScope.previousRouteName === null) {
+                Router.toDashboard();
             } else {
-                $location.path($rootScope.previousRoute.originalPath);
+                Router.toPrevious();
             }
         };
     })

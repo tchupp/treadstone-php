@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('treadstoneApp')
-    .factory('Auth', function Auth($rootScope, $location, $q, Principal, Account, Register, Activate, AuthServerProvider, Password, PasswordResetInit, PasswordResetFinish) {
+    .factory('Auth', function Auth($rootScope, $q, Principal, Account, Register, Activate, AuthServerProvider, Password, PasswordResetInit, PasswordResetFinish, Router) {
         return {
             login: function (credentials, callback) {
                 var cb = callback || angular.noop;
@@ -30,23 +30,24 @@ angular.module('treadstoneApp')
                 return Principal.identity(force).then(function () {
                     var isAuthenticated = Principal.isAuthenticated();
 
-                    var toRegister = $rootScope.nextRoute.originalPath === '/register';
-                    var toActivate = $rootScope.nextRoute.originalPath === '/activate';
-                    var toLanding = $rootScope.nextRoute.originalPath === '/landing';
+                    var toRegister = $rootScope.nextRouteName === '/register';
+                    var toActivate = $rootScope.nextRouteName === '/activate';
+                    var toLanding = $rootScope.nextRouteName === '/landing';
                     if (isAuthenticated && (toRegister || toActivate || toLanding)) {
-                        $location.path('/dashboard');
+                        Router.toDashboard();
                     }
 
-                    var nextRouteData = $rootScope.nextRoute.data;
+                    var nextRouteData = $rootScope.nextRouteData;
                     if (nextRouteData && nextRouteData.roles &&
                         nextRouteData.roles.length > 0 && !Principal.hasAnyAuthority(nextRouteData.roles)) {
                         if (isAuthenticated) {
-                            $location.path('/accessdenied');
+                            Router.toAccessDenied();
                         } else {
-                            $rootScope.previousRoute = $rootScope.nextRoute;
+                            $rootScope.previousRouteName = $rootScope.nextRouteName;
+                            $rootScope.previousRouteData = $rootScope.nextRouteData;
                             $rootScope.previousRouteParams = $rootScope.nextRouteParams;
 
-                            $location.path('/landing');
+                            Router.toLanding();
                         }
                     }
                 });
