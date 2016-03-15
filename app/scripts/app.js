@@ -14,7 +14,7 @@ angular.module('treadstoneApp', [
         });
 
         $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
-            var pageTitle = 'TreadCourse';
+            var pageTitle = 'TreadCourse-Dev';
 
             if (Principal.isAuthenticated() && $rootScope.previousRouteName) {
                 $rootScope.previousRouteName = previous.$$route.originalPath;
