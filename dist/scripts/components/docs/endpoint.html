@@ -1,0 +1,31 @@
+<div class="panel panel-default" ng-cloak>
+
+    <div class="panel-heading">
+        <h4 class="panel-title" data-toggle="collapse" data-target="#{{id}}" data-parent="#{{resource}}">
+            <span class="btn" ng-class="method">{{endpoint.method}}</span>
+            <span class="pull-right">{{endpoint.uri}}</span>
+        </h4>
+    </div>
+
+    <div id="{{id}}" class="panel-collapse panel-body collapse">
+
+        <div ng-if="endpoint.request" class="panel panel-default">
+            <div class="panel-heading panel-title">Request Parameters:</div>
+            <div class="panel-body list-group-item list-group-item-info">
+                <pre>{{endpoint.request | json}}</pre>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading panel-title">Possible Responses:</div>
+            <div class="list-group">
+                <div class="list-group-item" ng-repeat="response in endpoint.responses" ng-class="responseClass(response)">
+                    <p><strong>Status: </strong>{{response.status}}</p>
+                    <p><strong ng-if="response.body">Body:</strong></p>
+                    <pre ng-if="response.body">{{response.body | json}}</pre>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

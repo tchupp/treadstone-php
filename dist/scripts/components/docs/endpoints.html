@@ -1,0 +1,13 @@
+<div class="panel panel-default" ng-cloak>
+
+    <div class="panel-heading" data-toggle="collapse" data-target="#{{resource}}" data-parent="#endpointsGroup">
+        <h4 class="panel-title">
+            <a>{{resource}}</a>
+            <a class="glyphicon pull-right" ng-class="arrow()"></a>
+        </h4>
+    </div>
+
+    <div id="{{resource}}" class="panel-collapse panel-body collapse">
+        <ts-endpoint ng-repeat="endpoint in endpoints" resource="resource" endpoint="endpoint" ></ts-endpoint>
+    </div>
+</div>

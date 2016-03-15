@@ -1,6 +1,2 @@
 *.coffee
 templates/*
-api/vendor/phake/*
-api/vendor/phpunit/*
-api/vendor/sebastian/*
-api/vendor/squizlabs/*

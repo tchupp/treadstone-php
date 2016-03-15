@@ -1,0 +1,52 @@
+<div class="row">
+
+    <p ng-if="loading">Loading...</p>
+
+    <ol class="breadcrumb">
+        <li>
+            <span ng-if="!selectedSemester">{{selectedSchool}}</span>
+            <a ng-if="selectedSemester" ng-click="clearSemester()">{{selectedSchool}}</a>
+        </li>
+        <li ng-if="selectedSemester">
+            <span ng-if="!selectedSubject">{{selectedSemester}}</span>
+            <a ng-if="selectedSubject" ng-click="clearSubject()">{{selectedSemester}}</a>
+        </li>
+        <li ng-if="selectedSubject && selectedSemester">
+            <span ng-if="!selectedSection">{{selectedSubject}}</span>
+            <a ng-if="selectedSection" ng-click="clearSection()">{{selectedSubject}}</a>
+        </li>
+        <li ng-if="selectedSubject && selectedSemester && selectedSection">
+            <span>{{selectedSection.sectionNumber}}</span>
+        </li>
+    </ol>
+
+    <div class="list-group" ng-class="{'col-md-4': !selectedSemester, 'col-md-1': selectedSemester}">
+        <a class="list-group-item" ng-repeat="semester in semesters"
+           ng-class="{active: semester.code == selectedSemester}" ng-click="selectSemester(semester)">
+            <span ng-if="!selectedSemester">{{semester.name}}</span>
+            <span ng-if="selectedSemester">{{semester.code}}</span>
+        </a>
+    </div>
+
+    <div class="list-group" ng-class="{'col-md-4': !selectedSubject, 'col-md-2': selectedSubject}">
+        <a class="list-group-item" ng-repeat="subject in subjects"
+           ng-class="{active: subject.subjectCode == selectedSubject}" ng-click="selectSubject(subject)">
+            <span ng-if="!selectedSubject">{{subject.subjectCode}} - {{subject.subjectName}}</span>
+            <span ng-if="selectedSubject">{{subject.subjectCode}}</span>
+        </a>
+    </div>
+
+    <div class="list-group col-md-1">
+        <a class="list-group-item" ng-repeat="section in sections"
+           ng-class="{active: section.sectionNumber == selectedSection.sectionNumber}"
+           ng-click="selectSection(section)">
+            <span ng-if="!selectedSection">{{section.sectionNumber}}</span>
+            <span ng-if="selectedSection">{{section.sectionNumber}}</span>
+        </a>
+    </div>
+
+    <div class="well col-md-8" ng-if="selectedSection">
+        <pre>{{selectedSection.times | json}}</pre>
+    </div>
+
+</div>

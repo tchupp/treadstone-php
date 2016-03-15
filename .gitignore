@@ -1,5 +1,8 @@
 node_modules
-dist
+dist/api/vendor/phake
+dist/api/vendor/phpunit
+dist/api/vendor/sebastian
+dist/api/vendor/squizlabs
 .tmp
 .sass-cache
 bower_components

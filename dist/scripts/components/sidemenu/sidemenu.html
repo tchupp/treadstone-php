@@ -1,0 +1,59 @@
+<div class="side-menu sidemenu-inverse" ng-if="isAuthenticated()">
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="side-menu-container">
+
+            <div class="navbar-header">
+                <a class="navbar-brand" ng-href="#/landing">
+                    <div class="fa fa-ra icon"></div>
+                    <div class="title"><strong>Tread</strong>Course</div>
+                </a>
+                <button type="button" class="navbar-expand-toggle pull-right visible-xs"
+                        ng-click="toggleSideMenu()">
+                    <i class="fa fa-times icon"></i>
+                </button>
+            </div>
+
+            <ul class="nav navbar-nav">
+                <li ts-active-link="dashboard">
+                    <a ng-href="#/dashboard">
+                        <span class="icon fa fa-tachometer"></span>
+                        <span class="title">Dashboard</span>
+                    </a>
+                </li>
+                <li ts-active-link="courses">
+                    <a ng-href="#/courses">
+                        <span class="icon glyphicon glyphicon-list-alt"></span>
+                        <span class="title">Courses</span>
+                    </a>
+                </li>
+                <li class="panel panel-default dropdown" has-authority="ROLE_DEV">
+                    <a data-toggle="collapse" data-target="#dropdown-dev">
+                        <span class="icon fa fa-pencil"></span><span class="title">Dev</span>
+                    </a>
+
+                    <div id="dropdown-dev" class="panel-collapse collapse">
+                        <div class="panel-body">
+
+                            <ul class="nav navbar-nav">
+                                <li ts-active-link="about">
+                                    <a ng-href="#/about">
+                                        <span class="icon glyphicon glyphicon-th-list"></span>
+                                        <span class="title">About</span>
+                                    </a>
+                                </li>
+                                <li ts-active-link="docs">
+                                    <a ng-href="#/docs">
+                                        <span class="icon glyphicon glyphicon-book"></span>
+                                        <span class="title">Docs</span>
+                                    </a>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+        </div>
+    </nav>
+</div>
