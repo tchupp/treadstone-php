@@ -11,6 +11,10 @@ angular.module('treadstoneApp')
             },
             controller: ['$scope', 'Principal', function ($scope, Principal) {
                 $scope.isAuthenticated = Principal.isAuthenticated;
+
+                $scope.toggleSideMenu = function () {
+                    $scope.expanded = !$scope.expanded;
+                };
             }]
         };
     })
@@ -19,6 +23,7 @@ angular.module('treadstoneApp')
             restrict: 'A',
             link: function (scope, element, attributes) {
                 var path = attributes.tsActiveLink;
+
                 scope.location = $location;
                 scope.$watch('location.path()', function(newPath) {
                     newPath = newPath.substring(1);

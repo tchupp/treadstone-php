@@ -20,6 +20,7 @@ $fa-font-path: "../bower_components/components-font-awesome/fonts/";
 @import "sidemenu";
 @import "sidebody";
 @import "footer";
+@import "landing";
 
 /* Specials */
 .browsehappy {
@@ -37,18 +38,7 @@ $fa-font-path: "../bower_components/components-font-awesome/fonts/";
     left: 0;
     border: 0;
     z-index: 1000;
-    background: url("../images/development_ribbon.png") no-repeat center center;
-}
-
-/* Main marketing message and register button */
-.jumbotron {
-    text-align: center;
-    border-bottom: 0;
-
-    .btn {
-        font-size: 21px;
-        padding: 14px 24px;
-    }
+    background: url("../images/development_ribbon.png") no-repeat center;
 }
 
 /* Alerts */

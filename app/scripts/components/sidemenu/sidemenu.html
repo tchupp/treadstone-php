@@ -1,4 +1,4 @@
-<div class="side-menu sidemenu-inverse">
+<div class="side-menu sidemenu-inverse" ng-if="isAuthenticated()">
     <nav class="navbar navbar-default" role="navigation">
         <div class="side-menu-container">
 
@@ -8,7 +8,7 @@
                     <div class="title"><strong>Tread</strong>Course</div>
                 </a>
                 <button type="button" class="navbar-expand-toggle pull-right visible-xs"
-                        ng-click="expanded = !expanded">
+                        ng-click="toggleSideMenu()">
                     <i class="fa fa-times icon"></i>
                 </button>
             </div>
@@ -20,13 +20,13 @@
                         <span class="title">Dashboard</span>
                     </a>
                 </li>
-                <li ts-active-link="courses" ng-show="isAuthenticated()">
+                <li ts-active-link="courses">
                     <a ng-href="#/courses">
                         <span class="icon glyphicon glyphicon-list-alt"></span>
                         <span class="title">Courses</span>
                     </a>
                 </li>
-                <li class="panel panel-default dropdown" ng-show="isAuthenticated()" has-authority="ROLE_DEV">
+                <li class="panel panel-default dropdown" has-authority="ROLE_DEV">
                     <a data-toggle="collapse" data-target="#dropdown-dev">
                         <span class="icon fa fa-pencil"></span><span class="title">Dev</span>
                     </a>

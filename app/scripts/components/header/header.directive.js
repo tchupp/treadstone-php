@@ -9,22 +9,48 @@ angular.module('treadstoneApp')
             scope: {
                 sideMenuExpanded: '=expanded'
             },
-            controller: ['$scope', 'Auth', 'Principal', function ($scope, Auth, Principal) {
+            controller: ['$scope', '$window', 'Auth', 'Principal', function ($scope, $window, Auth, Principal) {
                 $scope.headerExpanded = false;
-
-                $scope.$on('$routeChangeSuccess', function (event, current) {
-                    $scope.title = current.$$route.data.pageTitle;
-                });
-
                 $scope.isAuthenticated = Principal.isAuthenticated;
 
                 $scope.logout = function () {
                     Auth.logout();
                 };
 
+                $scope.toggleSideMenu = function () {
+                    $scope.sideMenuExpanded = !$scope.sideMenuExpanded;
+                };
+
                 $scope.toggleHeader = function () {
                     $scope.headerExpanded = !$scope.headerExpanded;
                 };
+
+                $scope.window = $window;
+                $scope.$watch('window.document.title', function (title) {
+                    $scope.title = title.substring(0, title.indexOf(' |'));
+                });
             }]
+        };
+    })
+    .directive('tsAffix', function ($window) {
+        var checkPosition = function (offsetTop, element) {
+            var reset = 'affix affix-top affix-bottom', affix;
+
+            if ($window.pageYOffset <= offsetTop) {
+                affix = 'top';
+            } else {
+                affix = false;
+            }
+
+            element.removeClass(reset).addClass('affix' + (affix ? '-' + affix : ''));
+        };
+
+        return {
+            restrict: 'A',
+            link: function (scope, element, attributes) {
+                angular.element($window).bind('scroll', function () {
+                    checkPosition(attributes.tsAffix, element);
+                });
+            }
         };
     });

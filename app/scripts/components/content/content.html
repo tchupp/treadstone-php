@@ -1,8 +1,14 @@
-<div class="app-container" ng-class="{expanded: expanded}">
+<div class="app-container {{page}}-page" ng-class="{expanded: expanded}">
     <ts-header expanded="expanded"></ts-header>
     <ts-sidemenu expanded="expanded"></ts-sidemenu>
 
-    <div ng-transclude></div>
+    <ts-alert-toast></ts-alert-toast>
+
+    <div class="container-fluid">
+        <div ng-class="{'side-body padding-top': isAuthenticated()}">
+            <div ng-transclude></div>
+        </div>
+    </div>
 
     <ts-footer></ts-footer>
 </div>

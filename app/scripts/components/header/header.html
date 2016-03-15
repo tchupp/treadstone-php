@@ -1,10 +1,20 @@
-<nav class="navbar navbar-inverse navbar-fixed-top navbar-top">
-    <div class="container-fluid">
+<nav class="navbar navbar-inverse navbar-fixed-top" ts-affix="60"
+     ng-class="{'navbar-top': isAuthenticated(), 'navbar-affix': !isAuthenticated()}">
+    <div class="container" ng-if="!isAuthenticated()">
+        <div class="navbar-header">
+            <a class="navbar-brand" ng-href="#/landing">
+                <div class="fa fa-ra icon"></div>
+                <div class="title"><strong>Tread</strong>Course</div>
+            </a>
+        </div>
+    </div>
+
+    <div class="container-fluid" ng-if="isAuthenticated()">
 
         <div class="navbar-header">
 
             <button type="button" class="navbar-expand-toggle"
-                    ng-class="{'fa-rotate-90': sideMenuExpanded}" ng-click="sideMenuExpanded = !sideMenuExpanded">
+                    ng-class="{'fa-rotate-90': sideMenuExpanded}" ng-click="toggleSideMenu()">
                 <i class="fa fa-bars icon"></i>
             </button>
 
@@ -25,7 +35,7 @@
                 <i class="fa fa-times icon"></i>
             </button>
 
-            <li class="dropdown" ng-show="isAuthenticated()">
+            <li class="dropdown">
 
                 <a class="dropdown-toggle" data-toggle="dropdown" href="" id="account-menu">
                     <span>

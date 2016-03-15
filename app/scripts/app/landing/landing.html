@@ -1,42 +1,88 @@
 <div class="row">
-    <div class="col-md-8">
-        <div class="jumbotron">
-            <h1>Welcome to <strong>Tread</strong>Course!</h1>
-            <p class="lead">
-                <i class="fa fa-ra"></i><br>
-                The last organization tool you will need as a student.
-            </p>
-            <p>
-                <a class="btn btn-lg btn-success" ng-href="#/register">Register!
-                    <span class="glyphicon glyphicon-ok"></span>
+
+    <div class="jumbotron app-header">
+        <div class="container">
+
+            <h1 class="text-center">
+                <i class="app-logo fa fa-ra fa-2x color-white"></i>
+                <br>
+                <span class="color-white">Welcome to <strong>Tread</strong>Course!</span>
+            </h1>
+
+            <p class="text-center color-white"><br>The last organization tool you will need as a student.</p>
+
+            <p class="text-center">
+                <a class="btn btn-lg btn-success" ng-href="#/register" role="button">
+                    Register!&#xA0;<i class="glyphicon glyphicon-ok"></i>
                 </a>
             </p>
+
         </div>
     </div>
 
-    <div class="col-md-4">
-        <h2>Sign In</h2>
-
-        <div class="alert alert-danger" ng-show="authenticationError">
-            <strong>Failed to sign in!</strong> Please check your credentials and try again.
+    <div class="container-fluid app-content">
+        <div class="row text-center">
+            <div class="col-md-4 col-sm-6">
+                <span class="fa-stack fa-lg fa-5x">
+                    <i class="fa fa-circle-thin fa-stack-2x"></i>
+                    <i class="fa fa-inbox fa-stack-1x"></i>
+                </span>
+                <h2>Assignments</h2>
+                <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec
+                    elit. Cras mattis consectetur purus sit amet fermentum. Fusce dapibus, tellus ac cursus
+                    commodo, tortor mauris condimentum nibh.</p>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <span class="fa-stack fa-lg fa-5x">
+                    <i class="fa fa-circle-thin fa-stack-2x"></i>
+                    <i class="fa fa-comments-o fa-stack-1x"></i>
+                </span>
+                <h2>Alerts</h2>
+                <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec
+                    elit. Cras mattis consectetur purus sit amet fermentum. Fusce dapibus, tellus ac cursus
+                    commodo, tortor mauris condimentum nibh.</p>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <span class="fa-stack fa-lg fa-5x">
+                    <i class="fa fa-circle-thin fa-stack-2x"></i>
+                    <i class="fa fa-calendar fa-stack-1x"></i>
+                </span>
+                <h2>Calender</h2>
+                <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec
+                    elit. Cras mattis consectetur purus sit amet fermentum. Fusce dapibus, tellus ac cursus
+                    commodo, tortor mauris condimentum nibh.</p>
+            </div>
         </div>
+    </div>
 
-        <form class="well" ng-submit="submitLogin()">
+    <div class="container-fluid app-content-padding app-login">
+        <div class="container">
+            <div class=" col-md-offset-3 col-md-6">
 
-            <div class="form-group">
-                <label for="login">Login</label>
-                <input type="text" class="form-control" id="login" placeholder="Username" ng-model="login">
+                <h2>Sign In</h2>
+
+                <div class="alert alert-danger" ng-show="authenticationError">
+                    <strong>Failed to sign in!</strong> Please check your credentials and try again.
+                </div>
+
+                <form class="well" ng-submit="submitLogin()">
+
+                    <div class="form-group">
+                        <label for="login">Login</label>
+                        <input type="text" class="form-control" id="login" placeholder="Username" ng-model="login">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="Password"
+                               ng-model="password">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Sign in</button>
+                </form>
+
             </div>
-
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" placeholder="Password" ng-model="password">
-            </div>
-
-            <button type="submit" class="btn btn-primary">Sign in</button>
-
-        </form>
-
+        </div>
     </div>
 
 </div>

@@ -8,10 +8,12 @@
         bottom: 0;
         right: 0;
         left: 65px;
-        -webkit-transition: all 0.25s;
-        transition: all 0.25s;
+
         font-size: 12px;
         font-family: $font-family-roboto;
+
+        -webkit-transition: left 0.25s;
+        transition: left 0.25s;
 
         .wrapper {
             padding: 10px 35px 10px 25px;
