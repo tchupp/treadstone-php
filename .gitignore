@@ -5,4 +5,4 @@ dist/api/vendor/sebastian
 dist/api/vendor/squizlabs
 .tmp
 .sass-cache
-bower_components
+/bower_components
