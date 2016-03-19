@@ -1,18 +1,10 @@
 $icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/";
 $fa-font-path: "../bower_components/components-font-awesome/fonts/";
 
-//@import "bootswatch-scss/yeti/_variables.scss";
-//@import "bootswatch-scss/flatly/_variables.scss";
-//@import "bootswatch-scss/superhero/_variables.scss";
-
 // bower:scss
 @import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss";
 @import "components-font-awesome/scss/font-awesome.scss";
 // endbower
-
-//@import "bootswatch-scss/yeti/_bootswatch.scss";
-//@import "bootswatch-scss/flatly/_bootswatch.scss";
-//@import "bootswatch-scss/superhero/_bootswatch.scss";
 
 @import "globals";
 @import "bootstrap-wrap";
@@ -21,6 +13,7 @@ $fa-font-path: "../bower_components/components-font-awesome/fonts/";
 @import "sidebody";
 @import "footer";
 @import "landing";
+@import "components/profile";
 
 /* Specials */
 .browsehappy {

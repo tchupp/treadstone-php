@@ -1,0 +1,28 @@
+.profile {
+    .dropdown-menu {
+        width: 205px;
+        padding-bottom: 0;
+        text-align: center;
+
+        li.profile-img {
+            padding: 0;
+            max-height: 200px;
+            overflow: hidden;
+
+            .profile-img {
+                width: 100%;
+                height: auto;
+                margin: 0;
+                border: 0;
+            }
+        }
+
+        .profile-info {
+            padding: 15px;
+
+            .username {
+                font-size: 1.8em;
+            }
+        }
+    }
+}
