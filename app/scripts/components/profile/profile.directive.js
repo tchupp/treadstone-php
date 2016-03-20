@@ -8,9 +8,10 @@ angular.module('treadstoneApp')
             templateUrl: 'scripts/components/profile/profile.dropdown.html',
             controller: ['$scope', 'Account', function ($scope, Account) {
                 Account.get().$promise.then(function (account) {
-                    $scope.accountName = account.data.firstName + ' ' + account.data.lastName;
-                    $scope.email = account.data.email;
-                    // angular.element('#profile-img').jdenticon(account.data.hash);
+                    $scope.accountName = account.firstName + ' ' + account.lastName;
+                    $scope.email = account.email;
+
+                    angular.element('#profile-img').jdenticon(md5(account.login + account.email));
                 });
             }]
         };

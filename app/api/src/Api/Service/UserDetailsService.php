@@ -2,7 +2,6 @@
 
 namespace Api\Service;
 
-
 use Api\Database\UserRepository;
 use Exception;
 
