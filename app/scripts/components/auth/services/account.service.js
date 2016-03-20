@@ -7,7 +7,7 @@ angular.module('treadstoneApp')
                 method: 'GET', params: {}, isArray: false,
                 interceptor: {
                     response: function (response) {
-                        return response;
+                        return response.data;
                     }
                 }
             }

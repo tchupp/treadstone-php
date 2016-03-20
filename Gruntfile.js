@@ -254,8 +254,8 @@ module.exports = function (grunt) {
                 cwd: ''
             },
             app: {
-                src: ['<%= yeoman.app %>/index.html'],
-                ignorePath: /..\//
+                src: ['<%= yeoman.app %>/templates/index.tlp.html'],
+                ignorePath: /..\/..\//
             },
             sass: {
                 src: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
