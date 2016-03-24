@@ -5,9 +5,9 @@ angular.module('treadstoneApp')
         return {
             'responseError': function (response) {
                 if (!(response.status === 401 && response.data.path.indexOf('/account') === 0)) {
-                    $rootScope.$emit('treadstoneApp.httpError', response);
+                    $rootScope.$emit('treadstoneApp.httpError', response.data);
                 }
-                return $q.reject(response);
+                return $q.reject(response.data);
             }
         };
     });

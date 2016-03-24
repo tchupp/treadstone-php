@@ -3,7 +3,7 @@
 angular.module('treadstoneApp')
     .config(function ($routeProvider) {
         $routeProvider.when('/about', {
-            templateUrl: 'scripts/app/about/about.html',
+            templateUrl: 'scripts/app/dev/about/about.html',
             controller: 'AboutController',
             data: {
                 roles: ['ROLE_DEV'],

@@ -8,7 +8,8 @@ angular.module('treadstoneApp')
             templateUrl: 'scripts/components/docs/endpoints.html',
             scope: {
                 resource: '=',
-                endpoints: '='
+                endpoints: '=',
+                parent: '@'
             },
             controller: ['$scope', function ($scope) {
                 $scope.arrow = function () {

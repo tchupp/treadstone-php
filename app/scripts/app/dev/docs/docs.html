@@ -4,6 +4,6 @@
 
     <div id="endpointsGroup" class="panel-group">
         <ts-endpoints ng-repeat="(resource, endpoints) in docs"
-                      resource="resource" endpoints="endpoints"></ts-endpoints>
+                      resource="resource" endpoints="endpoints" parent="endpointsGroup"></ts-endpoints>
     </div>
 </div>

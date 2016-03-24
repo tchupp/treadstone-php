@@ -13,25 +13,28 @@
                 </button>
             </div>
 
-            <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav" id="sidemenuGroup">
+
                 <li ts-active-link="dashboard">
                     <a ng-href="#/dashboard">
                         <span class="icon fa fa-tachometer"></span>
                         <span class="title">Dashboard</span>
                     </a>
                 </li>
+
                 <li ts-active-link="courses">
                     <a ng-href="#/courses">
                         <span class="icon glyphicon glyphicon-list-alt"></span>
                         <span class="title">Courses</span>
                     </a>
                 </li>
+
                 <li class="panel panel-default dropdown" has-authority="ROLE_DEV">
                     <a data-toggle="collapse" data-target="#dropdown-dev">
                         <span class="icon fa fa-pencil"></span><span class="title">Dev</span>
                     </a>
 
-                    <div id="dropdown-dev" class="panel-collapse collapse">
+                    <div id="dropdown-dev" class="panel-collapse collapse" data-parent="#sidemenuGroup">
                         <div class="panel-body">
 
                             <ul class="nav navbar-nav">
@@ -45,6 +48,27 @@
                                     <a ng-href="#/docs">
                                         <span class="icon glyphicon glyphicon-book"></span>
                                         <span class="title">Docs</span>
+                                    </a>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </li>
+
+                <li class="panel panel-default dropdown" has-authority="ROLE_ADMIN">
+                    <a data-toggle="collapse" data-target="#dropdown-admin">
+                        <span class="icon glyphicon glyphicon-tower"></span><span class="title">Admin</span>
+                    </a>
+
+                    <div id="dropdown-admin" class="panel-collapse collapse" data-parent="#sidemenuGroup">
+                        <div class="panel-body">
+
+                            <ul class="nav navbar-nav">
+                                <li ts-active-link="database">
+                                    <a ng-href="#/database">
+                                        <span class="icon fa fa-database"></span>
+                                        <span class="title">Database Management</span>
                                     </a>
                                 </li>
                             </ul>

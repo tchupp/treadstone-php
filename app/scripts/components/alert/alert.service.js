@@ -4,7 +4,7 @@ angular.module('treadstoneApp')
     .factory('AlertService', function ($timeout) {
         var alertId = 0;
         var alerts = [];
-        var timeout = 10000;
+        var timeout = 5000;
 
         function closeAlertByIndex(index) {
             return alerts.splice(index, 1);

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('treadstoneApp')
-    .directive('tsAlertToast', function ($rootScope, AlertService) {
+    .directive('tsAlertToast', function ($rootScope, AlertService, Principal) {
         return {
             restrict: 'E',
             templateUrl: 'scripts/components/alert/alert.toast.html',
@@ -9,7 +9,9 @@ angular.module('treadstoneApp')
                 $scope.alerts = AlertService.get();
 
                 $rootScope.$on('treadstoneApp.httpError', function (event, httpResponse) {
-                    addErrorAlert(httpResponse.data.description);
+                    if (Principal.hasAuthority('ROLE_DEV')) {
+                        addErrorAlert(httpResponse.description);
+                    }
                 });
 
                 $scope.$on('$destroy', function () {
