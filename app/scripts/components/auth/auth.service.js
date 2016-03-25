@@ -7,6 +7,8 @@ angular.module('treadstoneApp')
                 var cb = callback || angular.noop;
                 var deferred = $q.defer();
 
+                credentials = btoa(credentials);
+
                 AuthServerProvider.login(credentials).then(function (data) {
                     Principal.identity(true).then(function () {
                         deferred.resolve(data);

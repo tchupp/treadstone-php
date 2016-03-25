@@ -14,18 +14,18 @@ class UserXAuthTokenController {
     }
 
     public static function documentation() {
-        $authSchema = array('login' => 'string', 'password' => 'string');
-        $tokenSchema = array('expires' => 'int', 'authToken' => 'string');
-        $errorSchema = array('status' => 'int', 'statusText' => 'string', 'description' => 'string');
+        $authSchema = ['login' => 'string', 'password' => 'string'];
+        $tokenSchema = ['expires' => 'int', 'authToken' => 'string'];
+        $errorSchema = ['status' => 'int', 'statusText' => 'string', 'description' => 'string'];
 
-        $docs[] = array('uri' => '/authenticate', 'method' => 'POST',
-            'request' => array('body' => $authSchema),
-            'responses' => array(
-                array('status' => 200,
-                    'body' => $tokenSchema),
-                array('status' => 401,
-                    'body' => $errorSchema)
-            ));
+        $docs[] = ['uri'       => '/authenticate', 'method' => 'POST',
+                   'request'   => ['body' => $authSchema],
+                   'responses' => [
+                       ['status' => 200,
+                        'body'   => $tokenSchema],
+                       ['status' => 401,
+                        'body'   => $errorSchema]
+                   ]];
         return $docs;
     }
 

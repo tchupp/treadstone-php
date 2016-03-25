@@ -14,22 +14,10 @@ class BCryptPasswordEncoder {
     public function verify($hash, $password) {
         $salt = substr($hash, 0, 29);
         $newHash = crypt($password, $salt);
-        return self::timeConstantEquals($hash, $newHash);
+        return hash_equals($hash, $newHash);
     }
 
     private static function uniqueSalt() {
         return substr(bin2hex(openssl_random_pseudo_bytes(30)), 0, 22);
-    }
-
-    private static function timeConstantEquals($a, $b) {
-        if (strlen($a) !== strlen($b)) {
-            return false;
-        } else {
-            $equal = 0;
-            for ($i = 0; $i < strlen($a); $i++) {
-                $equal |= $a[$i] ^ $b[$i];
-            }
-            return $equal === 0;
-        }
     }
 }
