@@ -2,6 +2,8 @@
 
 namespace Api\Security;
 
+use Api\Security\Util\SecurityUtil;
+
 class TokenProvider {
 
     private $secretKey;
@@ -15,7 +17,7 @@ class TokenProvider {
     public function createToken($login, $password) {
         $expires = time() + $this->tokenDuration;
         $authToken = $login . ":$expires:" . $this->computeSignature($login, $password, $expires);
-        return array('expires' => $expires, 'authToken' => $authToken);
+        return ['expires' => $expires, 'authToken' => $authToken];
     }
 
     public function getLoginFromToken($authToken) {
@@ -32,7 +34,7 @@ class TokenProvider {
         $signature = $parts[2];
         $signatureToMatch = $this->computeSignature($login, $password, $expires);
 
-        return $expires >= time() && self::timeConstantEquals($signature, $signatureToMatch);
+        return $expires >= time() && SecurityUtil::timeConstantEquals($signature, $signatureToMatch);
     }
 
     private function computeSignature($username, $password, $expires) {
@@ -42,18 +44,6 @@ class TokenProvider {
         $signature .= $this->secretKey;
 
         return md5($signature);
-    }
-
-    private static function timeConstantEquals($a, $b) {
-        if (strlen($a) !== strlen($b)) {
-            return false;
-        } else {
-            $equal = true;
-            for ($i = 0; $i < strlen($a); $i++) {
-                $equal = $equal && ($a[$i] === $b[$i]);
-            }
-            return $equal;
-        }
     }
 
     private function initConfiguration() {
