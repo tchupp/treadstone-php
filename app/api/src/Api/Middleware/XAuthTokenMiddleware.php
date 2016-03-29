@@ -4,19 +4,18 @@ namespace Api\Middleware;
 
 use Api\Security\TokenProvider;
 use Api\Service\UserDetailsService;
+use Api\Web\Rest\UserXAuthTokenResource;
 use Slim\Http\Request;
 use Slim\Middleware;
 
 class XAuthTokenMiddleware extends Middleware {
 
-    private static $XAUTH_TOKEN_HEADER = "x-auth-token";
-
-    private $userDetailService;
+    private $userDetailsService;
     private $tokenProvider;
     private $protectedResource;
 
     public function __construct(UserDetailsService $userDetailService, TokenProvider $tokenProvider, $protectedResources = []) {
-        $this->userDetailService = $userDetailService;
+        $this->userDetailsService = $userDetailService;
         $this->tokenProvider = $tokenProvider;
         $this->protectedResource = $protectedResources;
     }
@@ -26,7 +25,7 @@ class XAuthTokenMiddleware extends Middleware {
         $res = $this->app->response;
 
         if ($this->needsAuthentication($req)) {
-            $xAuthHeader = $req->headers(self::$XAUTH_TOKEN_HEADER);
+            $xAuthHeader = $req->headers(UserXAuthTokenResource::$XAUTH_TOKEN_HEADER);
             if (empty($xAuthHeader)) {
                 $res->status(401);
                 $res->body(json_encode([
@@ -41,7 +40,7 @@ class XAuthTokenMiddleware extends Middleware {
             $login = $this->tokenProvider->getLoginFromToken($xAuthHeader);
             $req->headers->set('User', $login);
 
-            $user = $this->userDetailService->loadUserByLogin($login);
+            $user = $this->userDetailsService->loadUserByLogin($login);
             if (!$this->tokenProvider->validateToken($xAuthHeader, $user['login'], $user['password'])) {
                 $res->status(401);
                 $res->body(json_encode([

@@ -17,7 +17,7 @@ class DocumentationResource {
             $docs['AccountResource'] = AccountResource::documentation();
             $docs['CourseResource'] = CourseResource::documentation();
             $docs['FeaturesResource'] = FeaturesResource::documentation();
-            $docs['UserXAuthTokenController'] = UserXAuthTokenController::documentation();
+            $docs['UserXAuthTokenController'] = UserXAuthTokenResource::documentation();
 
             $response->setStatus(200);
             $response->body(json_encode($docs, JSON_PRETTY_PRINT));

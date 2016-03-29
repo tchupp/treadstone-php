@@ -6,7 +6,7 @@ use Api\Web\Rest\AccountResource;
 use Api\Web\Rest\CourseResource;
 use Api\Web\Rest\DocumentationResource;
 use Api\Web\Rest\FeaturesResource;
-use Api\Web\Rest\UserXAuthTokenController;
+use Api\Web\Rest\UserXAuthTokenResource;
 use Exception;
 use Slim\Http\Response;
 use Slim\Middleware;
@@ -43,7 +43,7 @@ class Application extends Slim {
         AccountResource::registerApi($this);
         CourseResource::registerApi($this);
         FeaturesResource::registerApi($this);
-        UserXAuthTokenController::registerApi($this);
+        UserXAuthTokenResource::registerApi($this);
 
         DocumentationResource::registerApi($this);
     }
