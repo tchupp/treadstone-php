@@ -8,6 +8,7 @@
       <excludeFolder url="file://$MODULE_DIR$/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/.sass-cache" />
       <excludeFolder url="file://$MODULE_DIR$/.tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/app/api/build/logs" />
       <excludeFolder url="file://$MODULE_DIR$/app/api/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/app/api/vendor/phake/phake" />
       <excludeFolder url="file://$MODULE_DIR$/app/api/vendor/phpunit/php-code-coverage" />

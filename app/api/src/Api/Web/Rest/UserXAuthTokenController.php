@@ -34,7 +34,7 @@ class UserXAuthTokenController {
             $request = $app->request;
             $response = $app->response;
 
-            $body = json_decode($request->getBody());
+            $body = json_decode(base64_decode($request->getBody()));
 
             $login = $body->login;
             $password = $body->password;
