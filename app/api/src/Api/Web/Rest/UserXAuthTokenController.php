@@ -18,7 +18,7 @@ class UserXAuthTokenController {
         $tokenSchema = ['expires' => 'int', 'authToken' => 'string'];
         $errorSchema = ['status' => 'int', 'statusText' => 'string', 'description' => 'string'];
 
-        $docs[] = ['uri'       => '/authenticate', 'method' => 'POST',
+        $docs[] = ['uri'       => '/authenticate', 'method' => 'POST', 'roles' => [],
                    'request'   => ['body' => $authSchema],
                    'responses' => [
                        ['status' => 200,

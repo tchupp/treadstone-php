@@ -39,7 +39,7 @@ class AccountResource {
 //        $resetRequestSchema = array('email' => 'string');
 //        $resetFinalizeSchema = array('resetKey' => 'string', 'password' => 'string');
 
-        $docs[] = ['uri'       => '/register', 'method' => 'POST',
+        $docs[] = ['uri'       => '/register', 'method' => 'POST', 'roles' => [],
                    'request'   => ['body' => $registerSchema],
                    'responses' => [
                        ['status' => 201],
@@ -48,7 +48,7 @@ class AccountResource {
                        ['status' => 500,
                         'body'   => $errorSchema]
                    ]];
-        $docs[] = ['uri'       => '/activate', 'method' => 'GET',
+        $docs[] = ['uri'       => '/activate', 'method' => 'GET', 'roles' => [],
                    'request'   => ['key' => 'string'],
                    'responses' => [
                        ['status' => 200],
@@ -57,7 +57,7 @@ class AccountResource {
                        ['status' => 500,
                         'body'   => $errorSchema]
                    ]];
-        $docs[] = ['uri'       => '/account', 'method' => 'GET',
+        $docs[] = ['uri'       => '/account', 'method' => 'GET', 'roles' => ['ROLE_USER'],
                    'responses' => [
                        ['status' => 200,
                         'body'   => $accountSchema],
@@ -66,7 +66,7 @@ class AccountResource {
                        ['status' => 500,
                         'body'   => $errorSchema]
                    ]];
-        $docs[] = ['uri'       => '/account', 'method' => 'POST',
+        $docs[] = ['uri'       => '/account', 'method' => 'POST', 'roles' => ['ROLE_USER'],
                    'request'   => ['body' => $updateAccountSchema],
                    'responses' => [
                        ['status' => 200],
@@ -75,7 +75,7 @@ class AccountResource {
                        ['status' => 401,
                         'body'   => $errorSchema],
                    ]];
-        $docs[] = ['uri'       => '/account/change_password', 'method' => 'POST',
+        $docs[] = ['uri'       => '/account/change_password', 'method' => 'POST', 'roles' => ['ROLE_USER'],
                    'request'   => ['body' => $passwordSchema],
                    'responses' => [
                        ['status' => 200,
@@ -85,7 +85,7 @@ class AccountResource {
                        ['status' => 500,
                         'body'   => $errorSchema]
                    ]];
-        /*$docs[] = array('uri' => '/account/reset_password/init', 'method' => 'POST',
+        /*$docs[] = array('uri' => '/account/reset_password/init', 'method' => 'POST', 'roles' => ['ROLE_USER'],
             'request' => array('body' => $resetRequestSchema),
             'responses' => array(
                 array('status' => 200),
@@ -98,7 +98,7 @@ class AccountResource {
                 array('status' => 500,
                     'body' => $errorSchema)
             ));
-        $docs[] = array('uri' => '/account/reset_password/init', 'method' => 'POST',
+        $docs[] = array('uri' => '/account/reset_password/init', 'method' => 'POST', 'roles' => ['ROLE_USER'],
             'request' => array('body' => $resetFinalizeSchema),
             'responses' => array(
                 array('status' => 200),

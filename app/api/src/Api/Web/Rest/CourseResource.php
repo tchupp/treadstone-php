@@ -33,7 +33,7 @@ class CourseResource {
                           ]];
         $errorSchema = ['status' => 'int', 'statusText' => 'string', 'description' => 'string', 'path' => 'string'];
 
-        $docs[] = ['uri'       => '/semesters', 'method' => 'GET',
+        $docs[] = ['uri'       => '/semesters', 'method' => 'GET', 'roles' => ['ROLE_USER'],
                    'responses' => [
                        ['status' => 200,
                         'body'   => ['string' => [$semesterSchema]]],
@@ -42,7 +42,7 @@ class CourseResource {
                        ['status' => 404,
                         'body'   => $errorSchema]
                    ]];
-        $docs[] = ['uri'       => '/semesters/:semester', 'method' => 'GET',
+        $docs[] = ['uri'       => '/semesters/:semester', 'method' => 'GET', 'roles' => ['ROLE_USER'],
                    'responses' => [
                        ['status' => 200,
                         'body'   => $semesterSchema],
@@ -51,7 +51,7 @@ class CourseResource {
                        ['status' => 404,
                         'body'   => $errorSchema]
                    ]];
-        $docs[] = ['uri'       => '/semesters/:semester/subjects', 'method' => 'GET',
+        $docs[] = ['uri'       => '/semesters/:semester/subjects', 'method' => 'GET', 'roles' => ['ROLE_USER'],
                    'responses' => [
                        ['status' => 200,
                         'body'   => [$subjectSchema]],
@@ -60,7 +60,7 @@ class CourseResource {
                        ['status' => 404,
                         'body'   => $errorSchema]
                    ]];
-        $docs[] = ['uri'       => '/semesters/:semester/subjects/:subject', 'method' => 'GET',
+        $docs[] = ['uri'       => '/semesters/:semester/subjects/:subject', 'method' => 'GET', 'roles' => ['ROLE_USER'],
                    'responses' => [
                        ['status' => 200,
                         'body'   => $subjectSchema],
@@ -69,7 +69,7 @@ class CourseResource {
                        ['status' => 404,
                         'body'   => $errorSchema]
                    ]];
-        $docs[] = ['uri'       => '/semesters/:semester/subjects/:subject/sections', 'method' => 'GET',
+        $docs[] = ['uri'       => '/semesters/:semester/subjects/:subject/sections', 'method' => 'GET', 'roles' => ['ROLE_USER'],
                    'responses' => [
                        ['status' => 200,
                         'body'   => [$sectionSchema]],
@@ -78,7 +78,7 @@ class CourseResource {
                        ['status' => 404,
                         'body'   => $errorSchema]
                    ]];
-        $docs[] = ['uri'       => '/semesters/:semester/subjects/:subject/sections/:number', 'method' => 'GET',
+        $docs[] = ['uri'       => '/semesters/:semester/subjects/:subject/sections/:number', 'method' => 'GET', 'roles' => ['ROLE_USER'],
                    'responses' => [
                        ['status' => 200,
                         'body'   => $sectionSchema],

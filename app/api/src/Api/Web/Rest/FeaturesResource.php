@@ -17,12 +17,12 @@ class FeaturesResource {
         $featureSchema = ['id' => 'string', 'name' => 'string', 'description' => 'string', 'href' => 'string'];
         $errorSchema = ['status' => 'int', 'statusText' => 'string', 'description' => 'string', 'path' => 'string'];
 
-        $docs[] = ['uri'       => '/features', 'method' => 'GET',
+        $docs[] = ['uri'       => '/features', 'method' => 'GET', 'roles' => ['ROLE_DEV'],
                    'responses' => [
                        ['status' => 200,
                         'body'   => [$featureSchema]]
                    ]];
-        $docs[] = ['uri'       => '/features/:id', 'method' => 'GET',
+        $docs[] = ['uri'       => '/features/:id', 'method' => 'GET', 'roles' => ['ROLE_DEV'],
                    'responses' => [
                        ['status' => 200,
                         'body'   => $featureSchema],
