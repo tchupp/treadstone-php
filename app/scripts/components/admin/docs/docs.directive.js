@@ -5,7 +5,7 @@ angular.module('treadstoneApp')
         return {
             replace: true,
             restrict: 'E',
-            templateUrl: 'scripts/components/docs/endpoints.html',
+            templateUrl: 'scripts/components/admin/docs/endpoints.html',
             scope: {
                 resource: '=',
                 endpoints: '=',
@@ -22,7 +22,7 @@ angular.module('treadstoneApp')
         return {
             replace: true,
             restrict: 'E',
-            templateUrl: 'scripts/components/docs/endpoint.html',
+            templateUrl: 'scripts/components/admin/docs/endpoint.html',
             scope: {
                 resource: '=',
                 endpoint: '='
