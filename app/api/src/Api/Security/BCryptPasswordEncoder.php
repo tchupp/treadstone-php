@@ -2,8 +2,6 @@
 
 namespace Api\Security;
 
-use Api\Security\Util\SecurityUtil;
-
 class BCryptPasswordEncoder {
 
     private static $algorithm = '$2a';
@@ -16,7 +14,7 @@ class BCryptPasswordEncoder {
     public function verify($hash, $password) {
         $salt = substr($hash, 0, 29);
         $newHash = crypt($password, $salt);
-        return SecurityUtil::timeConstantEquals($hash, $newHash);
+        return hash_equals($hash, $newHash);
     }
 
     private static function uniqueSalt() {

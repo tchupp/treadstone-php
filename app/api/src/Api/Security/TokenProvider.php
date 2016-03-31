@@ -2,8 +2,6 @@
 
 namespace Api\Security;
 
-use Api\Security\Util\SecurityUtil;
-
 class TokenProvider {
 
     private $secretKey;
@@ -34,7 +32,7 @@ class TokenProvider {
         $signature = $parts[2];
         $signatureToMatch = $this->computeSignature($login, $password, $expires);
 
-        return $expires >= time() && SecurityUtil::timeConstantEquals($signature, $signatureToMatch);
+        return $expires >= time() && hash_equals($signature, $signatureToMatch);
     }
 
     private function computeSignature($username, $password, $expires) {

@@ -13,7 +13,7 @@ use Slim\Middleware;
 use Slim\Slim;
 
 class Application extends Slim {
-    public $configDirectory;
+    private $configDirectory;
     public $config;
 
     protected function initConfig() {
@@ -40,12 +40,7 @@ class Application extends Slim {
         $this->configDirectory = __DIR__ . '/../../' . $configDirectory;
         $this->config = $this->initConfig();
 
-        AccountResource::registerApi($this);
-        CourseResource::registerApi($this);
-        FeaturesResource::registerApi($this);
-        UserXAuthTokenResource::registerApi($this);
-
-        DocumentationResource::registerApi($this);
+        $this->registerEndpoints();
     }
 
     public function handleNotFound() {
@@ -80,5 +75,14 @@ class Application extends Slim {
         }
         $this->response()->finalize();
         return $this->response();
+    }
+
+    private function registerEndpoints() {
+        AccountResource::registerApi($this);
+        CourseResource::registerApi($this);
+        FeaturesResource::registerApi($this);
+        UserXAuthTokenResource::registerApi($this);
+
+        DocumentationResource::registerApi($this);
     }
 }

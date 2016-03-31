@@ -71,20 +71,11 @@ class UserXAuthTokenResource {
             $request = $app->request;
             $response = $app->response;
 
-            $xAuthHeader = $request->headers(UserXAuthTokenResource::$XAUTH_TOKEN_HEADER);
-            if (empty($xAuthHeader)) {
-                throw new Exception("Authentication Missing", 401);
-            }
-            
             $userDetailsService = UserDetailsService::autowire();
             $tokenProvider = new TokenProvider();
 
-            $login = $tokenProvider->getLoginFromToken($xAuthHeader);
+            $login = $request->headers('User');
             $user = $userDetailsService->loadUserByLogin($login);
-
-            if (!$tokenProvider->validateToken($xAuthHeader, $user['login'], $user['password'])) {
-                throw new Exception("Authentication Failed", 401);
-            }
 
             $token = $tokenProvider->createToken($user['login'], $user['password']);
 

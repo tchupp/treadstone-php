@@ -31,7 +31,7 @@ try {
     $userDetailService = UserDetailsService::autowire();
     $authorityProtectedResources = ['/features' => ['method' => 'get', 'role' => 'ROLE_DEV'],
                                     '/docs'     => ['method' => 'get', 'role' => 'ROLE_DEV']];
-    $authenticationProtectedResources = ['/features', '/account', '/semesters', '/docs'];
+    $authenticationProtectedResources = ['/features', '/account', '/semesters', '/docs', '/renew'];
 
     // (Middleware) first one added -> last one run
     $app->add(new UserAuthorityMiddleware($userDetailService, $authorityProtectedResources));
