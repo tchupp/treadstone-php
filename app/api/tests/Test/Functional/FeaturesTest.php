@@ -62,7 +62,7 @@ class FeaturesTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(json_encode([
             'status'      => 404,
             'statusText'  => 'Not Found',
-            'description' => 'Resource /features/unknown using GET method does not exist.',
+            'description' => "Resource '/features/unknown' using 'GET' method does not exist.",
             'path'        => '/features/unknown'
         ]), $response->getBody());
         $this->assertEquals(404, $response->getStatus());

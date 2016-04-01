@@ -5,6 +5,7 @@ namespace Api\Middleware;
 use Api\Security\TokenProvider;
 use Api\Service\UserDetailsService;
 use Api\Web\Rest\UserXAuthTokenResource;
+use Exception;
 use Slim\Http\Request;
 use Slim\Middleware;
 
@@ -21,43 +22,28 @@ class XAuthTokenMiddleware extends Middleware {
     }
 
     public function call() {
-        $req = $this->app->request;
-        $res = $this->app->response;
+        $request = $this->app->request;
 
-        if ($this->needsAuthentication($req)) {
-            $xAuthHeader = $req->headers(UserXAuthTokenResource::$XAUTH_TOKEN_HEADER);
+        if ($this->needsAuthentication($request)) {
+            $xAuthHeader = $request->headers(UserXAuthTokenResource::$XAUTH_TOKEN_HEADER);
             if (empty($xAuthHeader)) {
-                $res->status(401);
-                $res->body(json_encode([
-                    'status'      => 401,
-                    'statusText'  => 'Unauthorized',
-                    'description' => 'Authentication Missing',
-                    'path'        => $req->getResourceUri()
-                ]));
-                return;
+                throw new Exception('Authentication Missing', 401);
             }
 
             $login = $this->tokenProvider->getLoginFromToken($xAuthHeader);
-            $req->headers->set('User', $login);
+            $request->headers->set('User', $login);
 
             $user = $this->userDetailsService->loadUserByLogin($login);
             if (!$this->tokenProvider->validateToken($xAuthHeader, $user['login'], $user['password'])) {
-                $res->status(401);
-                $res->body(json_encode([
-                    'status'      => 401,
-                    'statusText'  => 'Unauthorized',
-                    'description' => 'Authentication Failed',
-                    'path'        => $req->getResourceUri()
-                ]));
-                return;
+                throw new Exception('Authentication Failed', 401);
             }
         }
         $this->next->call();
     }
 
-    private function needsAuthentication(Request $req) {
+    private function needsAuthentication(Request $request) {
         foreach ($this->protectedResource as $resource) {
-            if (strpos($req->getResourceUri(), $resource) === 0) {
+            if (strpos($request->getResourceUri(), $resource) === 0) {
                 return true;
             }
         }

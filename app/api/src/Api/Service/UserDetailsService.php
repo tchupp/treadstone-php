@@ -3,6 +3,7 @@
 namespace Api\Service;
 
 use Api\Database\UserRepository;
+use Api\Model\User;
 use Exception;
 
 class UserDetailsService {
@@ -18,13 +19,14 @@ class UserDetailsService {
     }
 
     public function loadUserByLogin($login) {
+        /** @var User $userFromDatabase */
         $userFromDatabase = $this->userRepository->findOneByLogin($login);
 
         if (empty($userFromDatabase)) {
-            throw new Exception("User " . $login . " was not found in the database", 404);
+            throw new Exception("User '$login' was not found in the database", 404);
         }
         if ($userFromDatabase->getActivated() != true) {
-            throw new Exception("User " . $login . " was not activated", 401);
+            throw new Exception("User '$login' was not activated", 401);
         }
 
         $user = ['login'    => $userFromDatabase->getLogin(),

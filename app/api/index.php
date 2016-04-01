@@ -1,5 +1,6 @@
 <?php
 use Api\Application;
+use Api\Middleware\ExceptionHandlingMiddleware;
 use Api\Middleware\JsonMiddleware;
 use Api\Middleware\UserAuthorityMiddleware;
 use Api\Middleware\XAuthTokenMiddleware;
@@ -37,6 +38,7 @@ try {
     $app->add(new UserAuthorityMiddleware($userDetailService, $authorityProtectedResources));
     $app->add(new XAuthTokenMiddleware($userDetailService, new TokenProvider(), $authenticationProtectedResources));
     $app->add(new JsonMiddleware('/'));
+    $app->add(new ExceptionHandlingMiddleware());
 
     $app->run();
 

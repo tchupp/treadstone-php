@@ -44,11 +44,9 @@ class Application extends Slim {
     }
 
     public function handleNotFound() {
-        throw new Exception(
-            'Resource ' . $this->request->getResourceUri() .
-            ' using ' . $this->request->getMethod() . ' method does not exist.',
-            404
-        );
+        $resourceUri = $this->request->getResourceUri();
+        $method = $this->request->getMethod();
+        throw new Exception("Resource '$resourceUri' using '$method' method does not exist.", 404);
     }
 
     public function handleException(Exception $e) {

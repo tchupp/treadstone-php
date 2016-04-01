@@ -53,7 +53,7 @@ class UserDetailsServiceTest extends PHPUnit_Framework_TestCase {
 
             $this->fail("Should have thrown an exception");
         } catch (Exception $ex) {
-            $expectedMessage = "User " . $login . " was not found in the database";
+            $expectedMessage = "User '$login' was not found in the database";
             $expectedCode = 404;
 
             $this->assertEquals($expectedMessage, $ex->getMessage());
@@ -78,7 +78,7 @@ class UserDetailsServiceTest extends PHPUnit_Framework_TestCase {
 
             $this->fail("Should have thrown an exception");
         } catch (Exception $ex) {
-            $expectedMessage = "User " . $login . " was not activated";
+            $expectedMessage = "User '$login' was not activated";
             $expectedCode = 401;
 
             $this->assertEquals($expectedMessage, $ex->getMessage());

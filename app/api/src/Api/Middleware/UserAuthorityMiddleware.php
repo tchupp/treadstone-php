@@ -3,6 +3,7 @@
 namespace Api\Middleware;
 
 use Api\Service\UserDetailsService;
+use Exception;
 use Slim\Http\Request;
 use Slim\Middleware;
 
@@ -17,41 +18,26 @@ class UserAuthorityMiddleware extends Middleware {
     }
 
     public function call() {
-        $req = $this->app->request;
-        $res = $this->app->response;
+        $request = $this->app->request;
 
-        if ($role = $this->needsAuthority($req)) {
-            $login = $req->headers->get('User');
+        if ($role = $this->needsAuthority($request)) {
+            $login = $request->headers->get('User');
             if (empty($login)) {
-                $res->status(401);
-                $res->body(json_encode([
-                    'status'      => 401,
-                    'statusText'  => 'Unauthorized',
-                    'description' => 'Authentication Missing',
-                    'path'        => $req->getResourceUri()
-                ]));
-                return;
+                throw new Exception('Authentication Missing', 401);
             }
 
             $user = $this->userDetailService->loadUserByLogin($login);
             if (!in_array($role, $user['roles'])) {
-                $res->status(403);
-                $res->body(json_encode([
-                    'status'      => 403,
-                    'statusText'  => 'Forbidden',
-                    'description' => 'Authority Missing',
-                    'path'        => $req->getResourceUri()
-                ]));
-                return;
+                throw new Exception('Authority Missing', 403);
             }
         }
         $this->next->call();
     }
 
-    private function needsAuthority(Request $req) {
-        $method = strtolower($req->getMethod());
+    private function needsAuthority(Request $request) {
+        $method = strtolower($request->getMethod());
         foreach (array_keys($this->protectedResource) as $resourceUri) {
-            if (strpos($req->getResourceUri(), $resourceUri) === 0
+            if (strpos($request->getResourceUri(), $resourceUri) === 0
                 && $method === $this->protectedResource[$resourceUri]['method']) {
                 return $this->protectedResource[$resourceUri]['role'];
             }
